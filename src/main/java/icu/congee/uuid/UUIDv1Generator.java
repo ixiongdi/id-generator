@@ -1,89 +1,82 @@
 package icu.congee.uuid;
 
 import java.net.NetworkInterface;
-import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Enumeration;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class UUIDv1Generator {
-    // 单例实例
-    private static final UUIDv1Generator INSTANCE = new UUIDv1Generator();
-    
-    // RFC 4122时间起点偏移量（1582-10-15至1970-01-01的100ns差值）
+    // 时间基准：1582-10-15 00:00:00 UTC（RFC 4122标准）
     private static final long START_EPOCH = 0x01B21DD213814000L;
+    private static final AtomicLong lastTimestamp = new AtomicLong(0);
+    private static final AtomicInteger clockSequence = new AtomicInteger(new SecureRandom().nextInt(0x3FFF));
     
-    // 时钟序列和节点配置
-    private final short clockSequence;
-    private final byte[] nodeIdentifier;
-    private final AtomicLong lastTimestamp = new AtomicLong(0);
-
-    // 私有构造器
-    private UUIDv1Generator() {
-        this.clockSequence = generateClockSequence();
-        this.nodeIdentifier = getNodeIdentifier();
-    }
-
-    public static UUIDv1Generator getInstance() {
-        return INSTANCE;
-    }
-
-    // 核心生成方法（线程安全）
-    public synchronized String generate() {
-        long timestamp = (System.currentTimeMillis() * 10_000) + START_EPOCH;
-        
-        // 处理时间回拨
-        if (timestamp <= lastTimestamp.get()) {
-            timestamp = lastTimestamp.incrementAndGet();
-        } else {
-            lastTimestamp.set(timestamp);
-        }
-
-        // 构建UUID字节数组
-        ByteBuffer buffer = ByteBuffer.allocate(16)
-            .putLong((timestamp << 16) | 0x1000L) // 时间戳+版本号[1,8](@ref)
-            .putShort((short) ((clockSequence & 0x3FFF) | 0x8000)) // 变体+时钟序列[1,4](@ref)
-            .put(nodeIdentifier); // 48位节点标识[1,8](@ref)
-
-        return formatUUID(buffer.array());
-    }
-
-    // 时钟序列生成（基于安全随机数）
-    private short generateClockSequence() {
-        return (short) new SecureRandom().nextInt(0x3FFF);
-    }
-
-    // 节点标识获取（MAC地址优先，失败时伪随机）
-    private byte[] getNodeIdentifier() {
+    // 节点信息缓存（MAC地址或伪随机）
+    private static final byte[] NODE_ID = new byte[6];
+    static {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
-                NetworkInterface network = interfaces.nextElement();
-                if (!network.isLoopback() && network.isUp()) {
-                    byte[] mac = network.getHardwareAddress();
-                    if (mac != null && mac.length == 6) {
-                        mac[0] &= 0xFE; // 清除多播位[8](@ref)
-                        return mac;
-                    }
+                NetworkInterface ni = interfaces.nextElement();
+                if (!ni.isLoopback() && ni.getHardwareAddress() != null) {
+                    byte[] mac = ni.getHardwareAddress();
+                    System.arraycopy(mac, 0, NODE_ID, 0, 6);
+                    break;
                 }
             }
         } catch (Exception e) {
-            byte[] node = new byte[6];
-            new SecureRandom().nextBytes(node);
-            node[0] |= 0x01; // 设置本地管理位[8](@ref)
-            return node;
+            new SecureRandom().nextBytes(NODE_ID); // 伪随机回退方案
         }
-        return new byte[6]; // Fallback
+        NODE_ID[0] |= 0x01; // 设置组播位符合RFC规范
     }
 
-    // 标准化UUID字符串格式
-    private String formatUUID(byte[] bytes) {
-        return String.format("%08x-%04x-%04x-%04x-%012x",
-            ByteBuffer.wrap(bytes, 0, 4).getInt(),
-            ByteBuffer.wrap(bytes, 4, 2).getShort(),
-            ByteBuffer.wrap(bytes, 6, 2).getShort(),
-            ByteBuffer.wrap(bytes, 8, 2).getShort(),
-            ByteBuffer.wrap(bytes, 10, 6).getLong() & 0x0000FFFFFFFFFFFFL
-        );
+    // 批量生成接口
+    public static UUID[] generateBatch(int batchSize) {
+        UUID[] uuids = new UUID[batchSize];
+        long baseTime = getAdjustedTimestamp();
+        for (int i = 0; i < batchSize; i++) {
+            uuids[i] = generate(baseTime + i);
+        }
+        return uuids;
+    }
+
+    // 原子化时间戳处理
+    private static synchronized long getAdjustedTimestamp() {
+        long ts = (System.currentTimeMillis() * 10000) + (System.nanoTime() % 10000) + START_EPOCH;
+        if (ts <= lastTimestamp.get()) {
+            clockSequence.incrementAndGet();
+            ts = lastTimestamp.incrementAndGet();
+        } else {
+            lastTimestamp.set(ts);
+        }
+        return ts;
+    }
+
+    // 单例生成核心
+    private static UUID generate(long timestamp) {
+        long msb = ((timestamp & 0xFFFFFFFFFFFF0000L) << 16) 
+                 | ((timestamp & 0x0000000000000FFFL) << 48)
+                 | 0x1000L; // 设置版本号1
+        
+        long lsb = ((clockSequence.get() & 0x3FFFL) << 48)
+                 | 0x8000000000000000L // 设置变体号10b
+                 | ((NODE_ID[0] & 0xFFL) << 40)
+                 | ((NODE_ID[1] & 0xFFL) << 32)
+                 | ((NODE_ID[2] & 0xFFL) << 24)
+                 | ((NODE_ID[3] & 0xFFL) << 16)
+                 | ((NODE_ID[4] & 0xFFL) << 8)
+                 | (NODE_ID[5] & 0xFFL);
+        
+        return new UUID(msb, lsb);
+    }
+
+    // 测试用例
+    public static void main(String[] args) {
+        UUID uuid = generate(getAdjustedTimestamp());
+        System.out.println("UUIDv1: " + uuid);
+        System.out.println("Version: " + uuid.version()); // 应输出7
+        System.out.println("Variant: " + uuid.variant()); // 应输出2
     }
 }
