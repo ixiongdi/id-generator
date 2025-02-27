@@ -10,10 +10,10 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
         Log log = Log.get();
-        UUID uuid = UUIDv7Generator.generate();
-        log.info(uuid.toString());
-        log.info(String.valueOf(uuid.version()));
-        log.info(String.valueOf(uuid.variant()));
+//        UUID uuid = UUIDv7Generator.generate();
+//        log.info(uuid.toString());
+//        log.info(String.valueOf(uuid.version()));
+//        log.info(String.valueOf(uuid.variant()));
 
 //        for(int i = 0; i < 100; i++) {
 //            Instant timestamp = Instant.now();

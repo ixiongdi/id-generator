@@ -2,35 +2,27 @@ package icu.congee.uuid;
 
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.UUID;
 
 public class UUIDv7Generator {
-    // 时间戳起始点：2020-01-01 00:00:00 UTC（可自定义）
     private static final long EPOCH_OFFSET = Instant.parse("2020-01-01T00:00:00Z").toEpochMilli();
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    
-    // 线程本地变量提升性能
+    private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
     private static final ThreadLocal<byte[]> RANDOM_BUFFER = ThreadLocal.withInitial(() -> new byte[10]);
+    private static final ThreadLocal<char[]> STRING_BUFFER = ThreadLocal.withInitial(() -> new char[36]);
 
-    public static UUID generate() {
-        // 1. 48位时间戳（毫秒级）
+    public static String generate() {
         long timestamp = System.currentTimeMillis() - EPOCH_OFFSET;
-        long msb = (timestamp << 16) & 0xFFFFFFFFFFFF0000L; // 保留高48位
-        
-        // 2. 版本号设置（第49-52位）
-        msb |= 0x7000L; // 0x7 << 12
+        long msb = (timestamp << 16) & 0xFFFFFFFFFFFF0000L;
+        msb |= 0x7000L; // Version 7
 
-        // 3. 填充随机数（12位随机数 + 62位随机数）
         byte[] randBytes = RANDOM_BUFFER.get();
         SECURE_RANDOM.nextBytes(randBytes);
-        
-        // 构造高位（MSB）
+
         msb |= ((randBytes[0] & 0xFFL) << 8) | (randBytes[1] & 0xFFL);
         msb |= (randBytes[2] & 0xFFL) << 24;
 
-        // 构造低位（LSB）
-        long lsb = (0x8000L << 48) // 变体号10b（第65-66位）
+        long lsb = (0x8000L << 48) // Variant 10b
                 | ((randBytes[3] & 0xFFL) << 48)
                 | ((randBytes[4] & 0xFFL) << 40)
                 | ((randBytes[5] & 0xFFL) << 32)
@@ -39,30 +31,76 @@ public class UUIDv7Generator {
                 | ((randBytes[8] & 0xFFL) << 8)
                 | (randBytes[9] & 0xFFL);
 
-        return new UUID(msb, lsb);
+        return toString(msb, lsb);
     }
 
-    // 批量生成优化版（约200万/秒）
-    public static UUID[] generateBatch(int size) {
-        UUID[] batch = new UUID[size];
+    public static String[] generateBatch(int size) {
+        String[] result = new String[size];
         long baseTimestamp = System.currentTimeMillis() - EPOCH_OFFSET;
         byte[] bulkRand = new byte[size * 10];
         SECURE_RANDOM.nextBytes(bulkRand);
-        
+
         for (int i = 0; i < size; i++) {
             int offset = i * 10;
             long ts = (baseTimestamp << 16) | (i & 0xFFFF);
             long msb = (ts & 0xFFFFFFFFFFFF0000L) | 0x7000L;
-            // ... 类似单例生成逻辑
+
+            msb |= ((bulkRand[offset] & 0xFFL) << 8) | (bulkRand[offset + 1] & 0xFFL);
+            msb |= (bulkRand[offset + 2] & 0xFFL) << 24;
+
+            long lsb = (0x8000L << 48)
+                    | ((bulkRand[offset + 3] & 0xFFL) << 48)
+                    | ((bulkRand[offset + 4] & 0xFFL) << 40)
+                    | ((bulkRand[offset + 5] & 0xFFL) << 32)
+                    | ((bulkRand[offset + 6] & 0xFFL) << 24)
+                    | ((bulkRand[offset + 7] & 0xFFL) << 16)
+                    | ((bulkRand[offset + 8] & 0xFFL) << 8)
+                    | (bulkRand[offset + 9] & 0xFFL);
+
+            result[i] = toString(msb, lsb);
         }
-        return batch;
+        return result;
     }
 
-    // 测试用例
+    private static String toString(long msb, long lsb) {
+        char[] buf = STRING_BUFFER.get();
+
+        // Format: 8-4-4-4-12 (36 chars with hyphens)
+        writeHex(buf, 0, msb >>> 32, 8);
+        buf[8] = '-';
+        writeHex(buf, 9, msb >>> 16, 4);
+        buf[13] = '-';
+        writeHex(buf, 14, msb, 4);
+        buf[18] = '-';
+        writeHex(buf, 19, lsb >>> 48, 4);
+        buf[23] = '-';
+        writeHex(buf, 24, lsb, 12);
+
+        return new String(buf);
+    }
+
+    private static void writeHex(char[] buf, int offset, long value, int digits) {
+        for (int i = digits - 1; i >= 0; i--) {
+            int digit = (int) (value & 0xF);
+            buf[offset + i] = HEX_CHARS[digit];
+            value >>>= 4;
+        }
+    }
+
     public static void main(String[] args) {
-        UUID uuid = generate();
+        // Single UUID test
+        String uuid = generate();
         System.out.println("UUIDv7: " + uuid);
-        System.out.println("Version: " + uuid.version()); // 应输出7
-        System.out.println("Variant: " + uuid.variant()); // 应输出2
+        UUID parsed = UUID.fromString(uuid);
+        System.out.println("Version: " + parsed.version()); // Should be 7
+        System.out.println("Variant: " + parsed.variant()); // Should be 2
+
+        // Performance test
+        long start = System.currentTimeMillis();
+        int batchSize = 1_000_000;
+        String[] batch = generateBatch(batchSize);
+        long end = System.currentTimeMillis();
+        System.out.printf("Generated %d UUIDs in %d ms (%.2f UUIDs/sec)%n",
+                batchSize, (end - start), batchSize * 1000.0 / (end - start));
     }
 }
