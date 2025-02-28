@@ -2,6 +2,7 @@ package icu.congee;
 
 import cn.hutool.core.util.IdUtil;
 import com.fasterxml.uuid.Generators;
+import icu.congee.uuid.HighPerformanceCustomUUIDv8;
 import icu.congee.uuid.UUIDv7Generator;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -14,144 +15,92 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.SECONDS)
+@Fork(value = 1, warmups = 0)
+@Threads(4) // 设置并发线程数为4
 public class IDGeneraterBenchmark {
 
+    @Benchmark
+    public void generateCustomUUIDv8(Blackhole bh) {
+        bh.consume(HighPerformanceCustomUUIDv8.generateCustomUUIDv8());
+    }
 
     // 测试单个 ID 生成性能
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void UUIDv7Generator(Blackhole bh) {
         bh.consume(UUIDv7Generator.generate());
     }
 
     // 测试单个 ID 生成性能
     @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
     public void jdkRandomUUID(Blackhole bh) {
         bh.consume(UUID.randomUUID());
     }
 
     // 测试单个 ID 生成性能
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void nameUUIDFromBytes(Blackhole bh) {
         bh.consume(UUID.nameUUIDFromBytes("randomUUID".getBytes()));
     }
 
     // 测试单个 ID 生成性能
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void randomUUID(Blackhole bh) {
         bh.consume(IdUtil.randomUUID());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void simpleUUID(Blackhole bh) {
         bh.consume(IdUtil.simpleUUID());
     }
 
     @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
     public void fastUUID(Blackhole bh) {
         bh.consume(IdUtil.fastUUID());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void fastSimpleUUID(Blackhole bh) {
         bh.consume(IdUtil.fastSimpleUUID());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void objectId(Blackhole bh) {
         bh.consume(IdUtil.objectId());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void nanoId(Blackhole bh) {
         bh.consume(IdUtil.nanoId());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void timeBasedGenerator(Blackhole bh) {
         bh.consume(Generators.timeBasedGenerator().generate());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void randomBasedGenerator(Blackhole bh) {
         bh.consume(Generators.randomBasedGenerator().generate());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void nameBasedGenerator(Blackhole bh) {
         bh.consume(Generators.nameBasedGenerator().generate("string to hash"));
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void timeBasedReorderedGenerator(Blackhole bh) {
         bh.consume(Generators.timeBasedReorderedGenerator().generate());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void timeBasedEpochGenerator(Blackhole bh) {
         bh.consume(Generators.timeBasedEpochGenerator().generate());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.Throughput)
-    @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value = 1, warmups = 0)
-    @Threads(4) // 设置并发线程数为4
+//    @Benchmark
     public void timeBasedEpochRandomGenerator(Blackhole bh) {
         bh.consume(Generators.timeBasedEpochRandomGenerator().generate());
     }
@@ -161,6 +110,8 @@ public class IDGeneraterBenchmark {
         Options opt = new OptionsBuilder()
                 .include(IDGeneraterBenchmark.class.getSimpleName())
                 .forks(1)
+                .warmupIterations(1) // 预热迭代次数
+                .measurementIterations(5)
                 .build();
         new Runner(opt).run();
     }
