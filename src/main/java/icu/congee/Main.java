@@ -1,23 +1,34 @@
 package icu.congee;
 
 import cn.hutool.log.Log;
-import icu.congee.uuid.UUIDv1Generator;
-import icu.congee.uuid.UUIDv7Generator;
+import icu.congee.LexicalUUID.LexicalUUID;
+import icu.congee.LexicalUUID.MicrosecondEpochClock;
+import icu.congee.cuid.CUID;
+import icu.congee.ulid.ULID;
 
-import java.time.Instant;
-import java.util.UUID;
 
 public class Main {
-    public static void main(String[] args) {
-        Log log = Log.get();
-//        UUID uuid = UUIDv7Generator.generate();
-//        log.info(uuid.toString());
-//        log.info(String.valueOf(uuid.version()));
-//        log.info(String.valueOf(uuid.variant()));
+    private static final Log log = Log.get();
 
-//        for(int i = 0; i < 100; i++) {
-//            Instant timestamp = Instant.now();
-//            log.info("timestamp = {}",timestamp);
-//        }
+    public static void main(String[] args) {
+
+        /**
+         * import de.huxhorn.sulky.ulid.ULID;
+         *
+         * ULID ulid = new ULID();
+         */
+        ULID ulid = new ULID();
+        log.info("ulid={}", ulid.nextULID());
+        for(int i = 0; i < 10; i++) {
+            LexicalUUID lexicalUUID = LexicalUUID.create(MicrosecondEpochClock.getInstance());
+            log.info("lexicalUUID={}", lexicalUUID);
+        }
+
+        for(int i = 0; i < 10; i++) {
+            log.info("cuid1={}", CUID.randomCUID1());
+        }
+        for(int i = 0; i < 10; i++) {
+            log.info("cuid2={}", CUID.randomCUID2());
+        }
     }
 }

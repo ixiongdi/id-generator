@@ -16,22 +16,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.fasterxml.uuid</groupId>
-            <artifactId>java-uuid-generator</artifactId>
-            <version>5.1.0</version>
-<!--            <type>bundle</type>-->
-        </dependency>
-        <dependency>
-            <groupId>com.github.stephenc.eaio-uuid</groupId>
-            <artifactId>uuid</artifactId>
-            <version>3.4.2</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.17.1</version>
-        </dependency>
-        <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>5.8.36</version>
