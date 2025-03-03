@@ -19,16 +19,17 @@
 
 package icu.congee.elasticflake;
 
+import cn.hutool.log.Log;
+
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 public class MacAddressProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(MacAddressProvider.class);
+    private static final Log logger = Log.get();
 
     private static byte[] getMacAddress() throws SocketException {
         Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();

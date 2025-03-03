@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Fork(value = 1, warmups = 0)
-@Threads(4) // 设置并发线程数为4
+@Threads(24) // 设置并发线程数为4
 public class IdGeneratorBenchmark {
 
 
@@ -45,5 +45,25 @@ public class IdGeneratorBenchmark {
     @Benchmark
     public void nextFlakeId() {
         IdUtil.nextFlakeId();
+    }
+
+    @Benchmark
+    public void nextObjectId() {
+        IdUtil.nextObjectId();
+    }
+
+    @Benchmark
+    public void nextCuid1() {
+        IdUtil.nextCuid1();
+    }
+
+    @Benchmark
+    public void nextCuid2() {
+        IdUtil.nextCuid2();
+    }
+
+    @Benchmark
+    public void nextUUIDv8() {
+        IdUtil.nextUUIDv8();
     }
 }
