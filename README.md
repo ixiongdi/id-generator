@@ -13,12 +13,12 @@
 ### Snowflake及其变体
 
 应该说目前Snowflake是非常流行的，但是Snowflake方案始终绕不过去的一道坎就是如何分配dataCenterId和workerId。如果手动分配会非常繁琐，增加了运维的工作量。
-如果是自动分配，则需要引入中间件。带来不必要的复杂的。
+如果是自动分配，则需要引入中间件。带来不必要的复杂度。
 所以我认为Snowflake方案其实更加适合单体架构和小规模系统的ID生成。
-下面就是我认为的Snowflake的两种最佳实践
+下面就是我认为的Snowflake的两种最佳实践。
 
 #### 1. 基于时间排序的强业务关联的ID
-其组成由精确到秒的时间字符串`yyMMddHHmmss`加上0-9999的序列号组成，总长度16个支持JavaScript，类似下面这些
+其组成由精确到秒的时间字符串`yyMMddHHmmss`加上0-9999的序列号组成，总长度为16，支持JavaScript，类似下面这样
 ```markdown
 2503041526330000
 2503041526330001
@@ -28,7 +28,7 @@
 2. 不占用空间，可排序
 3. 可阅读，时间可读
 4. 强业务，序列号有很强的业务关联性，适合业务量不大的场景
-5. JavaScript友好，不要转字符串
+5. JavaScript友好，不需要转字符串
 
 缺点：
 1. 只支持单机
@@ -48,6 +48,7 @@
 2. 不占用空间，可排序
 3. 随机性强，不可猜测
 4. 在并发不大的情况下可分布式
+
 缺点：
 1. 默认的起始时间是2024年5月，纪念UUID v7正式发布，大概能用到2092年
 2. 碰撞几率高于UUID v7
@@ -121,54 +122,9 @@ custom_c：随机数，牺牲一点碰撞性换来更高的易用性
 4. 随机性强，碰撞性极低
 5. 可分布式，无依赖
 6. 序列号，具有业务可追溯性
+
 缺点：
 1. 长度略长
 2. 个别数据库支持度不佳
 3. 序列号有暴露隐私风险
 
-## ULID
-[规范](https://github.com/ulid/spec)
-[实现](https://github.com/huxi/sulky/tree/master/sulky-ulid)
-
-## LexicalUUID
-[规范](https://github.com/twitter-archive/cassie)
-[实现](https://github.com/twitter-archive/cassie/blob/master/cassie-core/src/main/scala/com/twitter/cassie/types/LexicalUUID.scala)
-
-## Snowflake
-[](https://github.com/twitter-archive/snowflake)
-[](https://github.com/twitter-archive/snowflake/releases/tag/snowflake-2010)
-
-## flake
-[](https://github.com/boundary/flake)
-[]()
-
-## ShardingID
-[](https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c)
-
-## KSUID
-[](https://github.com/segmentio/ksuid)
-
-
-## Elasticflake
-
-## FlakeID
-
-## Sonyflake
-[](https://github.com/sony/sonyflake)
-
-## orderedUuid
-[](https://itnext.io/laravel-the-mysterious-ordered-uuid-29e7500b4f8)
-
-## COMBGUID
-
-## SID
-
-## pushID
-
-## XID
-
-## ObjectID
-[](https://www.mongodb.com/zh-cn/docs/manual/reference/method/ObjectId/)
-
-## CUID
-[](https://github.com/paralleldrive/cuid)
