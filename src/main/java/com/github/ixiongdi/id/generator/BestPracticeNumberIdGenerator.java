@@ -1,7 +1,7 @@
 package com.github.ixiongdi.id.generator;
 
-import icu.congee.custom.TimeBasedAndBusinessIdGenerator;
-import icu.congee.custom.TimeBasedAndRandomIdGenerator;
+import com.github.ixiongdi.id.generator.custom.TimeBasedAndBusinessIdGenerator;
+import com.github.ixiongdi.id.generator.custom.TimeBasedAndRandomIdGenerator;
 
 public class BestPracticeNumberIdGenerator implements NumberIdGenerator {
 

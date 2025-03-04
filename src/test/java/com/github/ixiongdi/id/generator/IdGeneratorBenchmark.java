@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Fork(value = 1, warmups = 0)
-@Threads(24) // 设置并发线程数为4
+@Threads(16) // 设置并发线程数为4
 public class IdGeneratorBenchmark {
 
     // main 方法，用于运行基准测试
@@ -38,12 +38,12 @@ public class IdGeneratorBenchmark {
     }
 
     @Benchmark
-    public void customUUID() {
-        BestPracticeStringIdGenerator.customUUID();
+    public void unixTimeBasedUUID() {
+        BestPracticeStringIdGenerator.unixTimeBasedUUID();
     }
 
     @Benchmark
-    public void unixTimeBasedUUID() {
-        BestPracticeStringIdGenerator.unixTimeBasedUUID();
+    public void customUUID() {
+        BestPracticeStringIdGenerator.customUUID();
     }
 }

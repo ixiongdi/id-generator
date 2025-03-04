@@ -128,3 +128,44 @@ custom_c：随机数，牺牲一点碰撞性换来更高的易用性
 2. 个别数据库支持度不佳
 3. 序列号有暴露隐私风险
 
+## 快速开始
+
+### 食用方法
+```java
+package com.github.ixiongdi.id.generator;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        /** 业务ID，适用于单机环境，和业务强关联的场景 */
+        for (int i = 0; i < 10; i++) {
+            System.out.println("business id: " + IdUtil.businessId());
+        }
+
+        /** 随机ID，短小精悍，适用于单机和小微规模的分布式场景 */
+        for (int i = 0; i < 10; i++) {
+            System.out.println("random id: " + IdUtil.randomId());
+        }
+
+        /** UUID v7，适用于大规模、高并发场景，单机每秒上亿次ID生成 */
+        for (int i = 0; i < 10; i++) {
+            System.out.println("uuid v7: " + IdUtil.v7UUID());
+        }
+
+        /** UUID v8，和v7类似，牺牲一点随机性换来业务相关性，万金油ID生成方案，个人推荐 */
+        for (int i = 0; i < 10; i++) {
+            System.out.println("uuid v8: " + IdUtil.v8UUID());
+        }
+    }
+}
+```
+
+### 性能测试
+```
+Benchmark                                  Mode  Cnt           Score   Error  Units
+IdGeneratorBenchmark.customUUID           thrpt       1953303886.153          ops/s
+IdGeneratorBenchmark.timeBasedBusinessId  thrpt             9838.683          ops/s
+IdGeneratorBenchmark.timeBasedRandomId    thrpt        817282145.506          ops/s
+IdGeneratorBenchmark.unixTimeBasedUUID    thrpt       2074523226.222          ops/s
+```

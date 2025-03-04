@@ -1,11 +1,12 @@
 package com.github.ixiongdi.id.generator.uuid;
 
-import icu.congee.IdGenerator;
+import com.github.ixiongdi.id.generator.IdGenerator;
+import com.github.ixiongdi.id.generator.StringIdGenerator;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class UUIDv7Generator implements IdGenerator {
+public class UUIDv7Generator implements StringIdGenerator {
     // 时间戳掩码，用于提取低 48 位时间戳
     private static final long TIMESTAMP_MASK = 0xFFFFFFFFFFFFL;
     // 版本号 7 的二进制表示，占 4 位
@@ -49,7 +50,7 @@ public class UUIDv7Generator implements IdGenerator {
     }
 
     @Override
-    public Object generate() {
-        return next();
+    public String generate() {
+        return next().toString();
     }
 }

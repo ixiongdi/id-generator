@@ -1,7 +1,7 @@
 package com.github.ixiongdi.id.generator;
 
-import icu.congee.uuid.UUIDv7Generator;
-import icu.congee.uuid.UUIDv8Generator;
+import com.github.ixiongdi.id.generator.uuid.UUIDv7Generator;
+import com.github.ixiongdi.id.generator.uuid.UUIDv8Generator;
 
 import java.util.UUID;
 

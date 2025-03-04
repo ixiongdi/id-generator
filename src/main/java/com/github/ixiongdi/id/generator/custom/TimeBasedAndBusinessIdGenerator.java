@@ -1,6 +1,6 @@
 package com.github.ixiongdi.id.generator.custom;
 
-import icu.congee.NumberIdGenerator;
+import com.github.ixiongdi.id.generator.NumberIdGenerator;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TimeBasedAndBusinessIdGenerator implements NumberIdGenerator {
     // 定义日期时间格式化器，将当前时间格式化为 "yyMMddHHmmss" 格式的字符串
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyMMddHHmmss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyMMddHHmmss");
     // 用于记录同一时间戳内生成的 ID 数量，使用 AtomicInteger 保证线程安全
     private static final AtomicInteger COUNTER = new AtomicInteger(0);
     // 用于生成 4 位序列号，使用 AtomicInteger 保证线程安全

@@ -1,6 +1,7 @@
 package com.github.ixiongdi.id.generator.uuid;
 
-import icu.congee.IdGenerator;
+import com.github.ixiongdi.id.generator.IdGenerator;
+import com.github.ixiongdi.id.generator.StringIdGenerator;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author [您的姓名]
  */
-public class UUIDv8Generator implements IdGenerator {
+public class UUIDv8Generator implements StringIdGenerator {
 
     // 常量定义，用于位掩码和版本/变体的标识
     /** 时间戳掩码，占用 48 位 */
@@ -47,8 +48,8 @@ public class UUIDv8Generator implements IdGenerator {
     }
 
     @Override
-    public Object generate() {
-        return next();
+    public String generate() {
+        return next().toString();
     }
 
     /** 线程本地序列持有者。 每个线程拥有独立的序列号，以避免线程间的竞争。 */
