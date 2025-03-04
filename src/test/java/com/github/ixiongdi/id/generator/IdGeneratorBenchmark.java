@@ -6,6 +6,7 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
@@ -28,22 +29,23 @@ public class IdGeneratorBenchmark {
     }
 
     @Benchmark
-    public void timeBasedBusinessId() {
-        BestPracticeNumberIdGenerator.timeBasedBusinessId();
+    public void businessId() {
+        IdUtil.businessId();
     }
 
     @Benchmark
-    public void timeBasedRandomId() {
-        BestPracticeNumberIdGenerator.timeBasedRandomId();
+    public void randomId() {
+        IdUtil.randomId();
     }
 
     @Benchmark
     public void unixTimeBasedUUID() {
-        BestPracticeStringIdGenerator.unixTimeBasedUUID();
+        IdUtil.unixTimeBasedUUID();
     }
+
 
     @Benchmark
     public void customUUID() {
-        BestPracticeStringIdGenerator.customUUID();
+        IdUtil.customUUID();
     }
 }

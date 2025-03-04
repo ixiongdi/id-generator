@@ -131,6 +131,7 @@ custom_c：随机数，牺牲一点碰撞性换来更高的易用性
 ## 快速开始
 
 ### 食用方法
+
 ```java
 package com.github.ixiongdi.id.generator;
 
@@ -150,12 +151,12 @@ public class Main {
 
         /** UUID v7，适用于大规模、高并发场景，单机每秒上亿次ID生成 */
         for (int i = 0; i < 10; i++) {
-            System.out.println("uuid v7: " + IdUtil.v7UUID());
+            System.out.println("uuid v7: " + IdUtil.unixTimeBasedUUID());
         }
 
         /** UUID v8，和v7类似，牺牲一点随机性换来业务相关性，万金油ID生成方案，个人推荐 */
         for (int i = 0; i < 10; i++) {
-            System.out.println("uuid v8: " + IdUtil.v8UUID());
+            System.out.println("uuid v8: " + IdUtil.customUUID());
         }
     }
 }

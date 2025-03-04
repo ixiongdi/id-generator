@@ -1,27 +1,29 @@
 package com.github.ixiongdi.id.generator;
 
-import com.github.ixiongdi.id.generator.custom.TimeBasedAndBusinessIdGenerator;
-import com.github.ixiongdi.id.generator.custom.TimeBasedAndRandomIdGenerator;
+import com.github.ixiongdi.id.generator.custom.TimeBasedBusinessIdGenerator;
+import com.github.ixiongdi.id.generator.custom.TimeBasedRandomIdGenerator;
 import com.github.ixiongdi.id.generator.uuid.UUIDv7Generator;
 import com.github.ixiongdi.id.generator.uuid.UUIDv8Generator;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 public class IdUtil {
 
     public static Long businessId() {
-        return TimeBasedAndBusinessIdGenerator.next();
+        return TimeBasedBusinessIdGenerator.next();
     }
 
     public static Long randomId() {
-        return TimeBasedAndRandomIdGenerator.next();
+        return TimeBasedRandomIdGenerator.next();
     }
 
-    public static UUID v7UUID() {
+    public static UUID unixTimeBasedUUID() {
         return UUIDv7Generator.next();
     }
 
-    public static UUID v8UUID() {
+
+    public static UUID customUUID() {
         return UUIDv8Generator.next();
     }
 }

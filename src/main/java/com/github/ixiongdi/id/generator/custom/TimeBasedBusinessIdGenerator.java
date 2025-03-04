@@ -1,12 +1,10 @@
 package com.github.ixiongdi.id.generator.custom;
 
-import com.github.ixiongdi.id.generator.NumberIdGenerator;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TimeBasedAndBusinessIdGenerator implements NumberIdGenerator {
+public class TimeBasedBusinessIdGenerator  {
     // 定义日期时间格式化器，将当前时间格式化为 "yyMMddHHmmss" 格式的字符串
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyMMddHHmmss");
@@ -55,13 +53,4 @@ public class TimeBasedAndBusinessIdGenerator implements NumberIdGenerator {
         return Long.parseLong(String.format("%s%04d", currentTime, currentSequenceValue));
     }
 
-    /**
-     * 实现 NumberIdGenerator 接口的 generate 方法，调用 next 方法生成唯一的数字 ID
-     *
-     * @return 生成的唯一数字 ID
-     */
-    @Override
-    public Number generate() {
-        return next();
-    }
 }

@@ -1,8 +1,5 @@
 package com.github.ixiongdi.id.generator.uuid;
 
-import com.github.ixiongdi.id.generator.IdGenerator;
-import com.github.ixiongdi.id.generator.StringIdGenerator;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -10,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author [您的姓名]
  */
-public class UUIDv8Generator implements StringIdGenerator {
+public class UUIDv8Generator {
 
     // 常量定义，用于位掩码和版本/变体的标识
     /** 时间戳掩码，占用 48 位 */
@@ -26,11 +23,13 @@ public class UUIDv8Generator implements StringIdGenerator {
     private static final long VARIANT_IDENTIFIER = 0x8000000000000000L;
 
     /** 随机数掩码，占用 62 位 */
-    private static final long RANDOM_MASK = 0x3FFFFFFFFFFFFFFFL;
+    private static final long anInt = (1 << 30) - 1;
 
     // 线程本地的序列生成器，用于确保线程间的唯一性
     private static final ThreadLocal<ThreadLocalSequence> threadLocalTimestampSeq =
             ThreadLocal.withInitial(ThreadLocalSequence::new);
+
+    private static long counter = 0;
 
     /**
      * 生成一个自定义的 UUID v8。 该方法使用当前时间戳、线程本地序列和随机数构建 UUID。
@@ -40,16 +39,13 @@ public class UUIDv8Generator implements StringIdGenerator {
     public static java.util.UUID next() {
         ThreadLocalSequence seq = threadLocalTimestampSeq.get();
         long timestamp = System.currentTimeMillis() & TIMESTAMP_MASK;
-        long sequence = seq.sequence++ & SEQUENCE_MASK;
-        long mostSigBits = (timestamp << 16) | VERSION_IDENTIFIER | sequence;
+        long sequence = seq.sequence++ & 0x3FFF;
+        long mostSigBits = (timestamp << 16) | VERSION_IDENTIFIER | (counter++ & SEQUENCE_MASK);
         long leastSigBits =
-                VARIANT_IDENTIFIER | (ThreadLocalRandom.current().nextLong() & RANDOM_MASK);
+                VARIANT_IDENTIFIER
+                        | (sequence << 48)
+                        | (ThreadLocalRandom.current().nextLong() & 0xFFFFFFFFFFFFL);
         return new java.util.UUID(mostSigBits, leastSigBits);
-    }
-
-    @Override
-    public String generate() {
-        return next().toString();
     }
 
     /** 线程本地序列持有者。 每个线程拥有独立的序列号，以避免线程间的竞争。 */
