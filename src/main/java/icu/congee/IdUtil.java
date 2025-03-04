@@ -7,15 +7,16 @@ import icu.congee.flake.FlakeIdGenerator;
 import icu.congee.objectid.ObjectId;
 import icu.congee.snowflake.OptimizedSnowflakeIdGenerator;
 import icu.congee.ulid.ULID;
-import icu.congee.uuid.HighPerformanceCustomUUIDv8;
+import icu.congee.uuid.UUIDv8Generator;
 
 import java.util.Arrays;
 
 public class IdUtil {
 
-    public static final OptimizedSnowflakeIdGenerator snowflakeIdGenerator = new OptimizedSnowflakeIdGenerator(0, 0);
+    public static final OptimizedSnowflakeIdGenerator snowflakeIdGenerator =
+            new OptimizedSnowflakeIdGenerator(0, 0);
     private static final ULID ulid = new ULID();
-    private  static final FlakeIdGenerator flakeIdGenerator = new FlakeIdGenerator(0);
+    private static final FlakeIdGenerator flakeIdGenerator = new FlakeIdGenerator(0);
 
     public static String nextULID() {
         return ulid.nextULID();
@@ -44,12 +45,4 @@ public class IdUtil {
     public static String nextCuid2() {
         return CUID.randomCUID2().toString();
     }
-
-    public static String nextUUIDv8() {
-        return HighPerformanceCustomUUIDv8.generateCustomUUIDv8().toString();
-    }
-
-
-
-
 }

@@ -15,55 +15,35 @@ import java.util.concurrent.TimeUnit;
 @Threads(24) // 设置并发线程数为4
 public class IdGeneratorBenchmark {
 
-
     // main 方法，用于运行基准测试
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(IdGeneratorBenchmark.class.getSimpleName())
-                .forks(1)
-                .warmupIterations(1) // 预热迭代次数
-                .measurementIterations(1)
-                .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(IdGeneratorBenchmark.class.getSimpleName())
+                        .forks(1)
+                        .warmupIterations(1) // 预热迭代次数
+                        .measurementIterations(1)
+                        .build();
         new Runner(opt).run();
     }
 
     @Benchmark
-    public void nextULID() {
-        IdUtil.nextULID();
+    public void timeBasedBusinessId() {
+        BestPracticeNumberIdGenerator.timeBasedBusinessId();
     }
 
     @Benchmark
-    public void nextLexicalUUID() {
-        IdUtil.nextLexicalUUID();
+    public void timeBasedRandomId() {
+        BestPracticeNumberIdGenerator.timeBasedRandomId();
     }
 
     @Benchmark
-    public void nextSnowflakeId() {
-        IdUtil.nextSnowflakeId();
+    public void customUUID() {
+        BestPracticeStringIdGenerator.customUUID();
     }
 
     @Benchmark
-    public void nextFlakeId() {
-        IdUtil.nextFlakeId();
-    }
-
-    @Benchmark
-    public void nextObjectId() {
-        IdUtil.nextObjectId();
-    }
-
-    @Benchmark
-    public void nextCuid1() {
-        IdUtil.nextCuid1();
-    }
-
-    @Benchmark
-    public void nextCuid2() {
-        IdUtil.nextCuid2();
-    }
-
-    @Benchmark
-    public void nextUUIDv8() {
-        IdUtil.nextUUIDv8();
+    public void unixTimeBasedUUID() {
+        BestPracticeStringIdGenerator.unixTimeBasedUUID();
     }
 }
