@@ -29,25 +29,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>github</id>
-            <repositories>
-                <repository>
-                    <id>central</id>
-                    <url>https://repo1.maven.org/maven2</url>
-                </repository>
-                <repository>
-                    <id>github</id>
-                    <url>https://maven.pkg.github.com/ixiongdi/id-generator</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-        </profile>
-    </profiles>
-
-
 </project>
