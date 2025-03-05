@@ -45,7 +45,7 @@ public class TimeBasedRandomIdGenerator {
         // ThreadLocalRandom.current() - 获取当前线程的随机数生成器实例
         // .nextInt() - 生成一个随机整数
         // & 0xFFFFFFFFL - 使用按位与操作只保留低32位，确保随机部分为正数
-        long randomPart = ThreadLocalRandom.current().nextInt() & 0xFFFFFFFFL;
+        long randomPart = ThreadLocalRandom.current().nextLong() & 0xFFFFFFFFL;
 
         // 组合时间戳和随机数
         // timestamp << 32 - 将时间戳左移32位，放置在高32位位置

@@ -1,7 +1,5 @@
 package com.github.ixiongdi.id.generator;
 
-import java.util.concurrent.TimeUnit;
-
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -15,6 +13,8 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.concurrent.TimeUnit;
+
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
@@ -24,13 +24,24 @@ public class IdGeneratorBenchmark {
 
     // main 方法，用于运行基准测试
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(IdGeneratorBenchmark.class.getSimpleName())
-                .forks(1)
-                .warmupIterations(1) // 预热迭代次数
-                .measurementIterations(1)
-                .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(IdGeneratorBenchmark.class.getSimpleName())
+                        .forks(1)
+                        .warmupIterations(1) // 预热迭代次数
+                        .measurementIterations(1)
+                        .build();
         new Runner(opt).run();
+    }
+
+    @Benchmark
+    public void ulid() {
+        IdUtil.ulid();
+    }
+
+    @Benchmark
+    public void lexicalUUID() {
+        IdUtil.lexicalUUID();
     }
 
     @Benchmark
@@ -45,7 +56,17 @@ public class IdGeneratorBenchmark {
 
     @Benchmark
     public void unixTimeBasedUUID() {
-        IdUtil.unixTimeBasedUUID();
+        IdUtil.unixTimeBasedUUID().toString();
+    }
+    
+    @Benchmark
+    public void fastUnixTimeBasedUUID() {
+        IdUtil.fastToString(IdUtil.unixTimeBasedUUID());
+    }
+    
+    @Benchmark
+    public void fastUUIDv7String() {
+        IdUtil.fastUUIDv7String();
     }
 
     @Benchmark

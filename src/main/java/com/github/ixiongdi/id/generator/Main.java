@@ -35,5 +35,15 @@ public class Main {
         for (int i = 0; i < 10; i++) {
             System.out.println("uuid v8: " + IdUtil.customUUID());
         }
+
+        // UUID v8，和v7类似，牺牲一点随机性换来业务相关性，万金油ID生成方案，个人推荐
+        for (int i = 0; i < 10; i++) {
+            System.out.println("ulid: " + IdUtil.ulid());
+        }
+
+        // UUID v8，和v7类似，牺牲一点随机性换来业务相关性，万金油ID生成方案，个人推荐
+        for (int i = 0; i < 10; i++) {
+            System.out.println("lexicalUUID: " + IdUtil.lexicalUUID());
+        }
     }
 }
