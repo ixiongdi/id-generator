@@ -33,7 +33,7 @@
 缺点：
 1. 只支持单机
 2. 序列号有限，每秒并发只有10000
-3. 由于只有16位有效数字，大概能用到2090年
+3. 由于只有16位有效数字（JavaScript中Number.MAX_SAFE_INTEGER是9007199254740991），大概能用到2090年
 
 #### 2. 基于时间排序的强随机ID
 该算法启发自UUID v7，给不希望使用字符串作为ID，并发量不那么大的情况下，可支持分布式
@@ -50,7 +50,7 @@
 4. 在并发不大的情况下可分布式
 
 缺点：
-1. 默认的起始时间是2024年5月，纪念UUID v7正式发布，大概能用到2092年
+1. 默认的起始时间是2022年2月，大概能用到2090年
 2. 碰撞几率高于UUID v7
 
 ### UUID v7和自定义的UUID v8
@@ -149,7 +149,7 @@ public class Main {
             System.out.println("random id: " + IdUtil.randomId());
         }
 
-        /** UUID v7，适用于大规模、高并发场景，单机每秒上亿次ID生成 */
+        /** UUID v7，适用于大规模、高并发场景，单机每秒数十亿次以上ID生成 */
         for (int i = 0; i < 10; i++) {
             System.out.println("uuid v7: " + IdUtil.unixTimeBasedUUID());
         }

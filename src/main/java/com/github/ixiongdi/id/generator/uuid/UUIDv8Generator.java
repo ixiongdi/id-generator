@@ -29,7 +29,6 @@ public class UUIDv8Generator {
     private static final ThreadLocal<ThreadLocalSequence> threadLocalTimestampSeq =
             ThreadLocal.withInitial(ThreadLocalSequence::new);
 
-    private static long counter = 0;
 
     /**
      * 生成一个自定义的 UUID v8。 该方法使用当前时间戳、线程本地序列和随机数构建 UUID。
@@ -40,11 +39,9 @@ public class UUIDv8Generator {
         ThreadLocalSequence seq = threadLocalTimestampSeq.get();
         long timestamp = System.currentTimeMillis() & TIMESTAMP_MASK;
         long sequence = seq.sequence++ & 0x3FFF;
-        long mostSigBits = (timestamp << 16) | VERSION_IDENTIFIER | (counter++ & SEQUENCE_MASK);
+        long mostSigBits = (timestamp << 16) | VERSION_IDENTIFIER | (sequence & SEQUENCE_MASK);
         long leastSigBits =
-                VARIANT_IDENTIFIER
-                        | (sequence << 48)
-                        | (ThreadLocalRandom.current().nextLong() & 0xFFFFFFFFFFFFL);
+                VARIANT_IDENTIFIER | (ThreadLocalRandom.current().nextLong() & 0x3FFFFFFFFFFFFFFFL);
         return new java.util.UUID(mostSigBits, leastSigBits);
     }
 

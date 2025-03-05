@@ -1,13 +1,19 @@
 package com.github.ixiongdi.id.generator;
 
-import org.openjdk.jmh.annotations.*;
+import java.util.concurrent.TimeUnit;
+
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-
-import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
@@ -18,13 +24,12 @@ public class IdGeneratorBenchmark {
 
     // main 方法，用于运行基准测试
     public static void main(String[] args) throws RunnerException {
-        Options opt =
-                new OptionsBuilder()
-                        .include(IdGeneratorBenchmark.class.getSimpleName())
-                        .forks(1)
-                        .warmupIterations(1) // 预热迭代次数
-                        .measurementIterations(1)
-                        .build();
+        Options opt = new OptionsBuilder()
+                .include(IdGeneratorBenchmark.class.getSimpleName())
+                .forks(1)
+                .warmupIterations(1) // 预热迭代次数
+                .measurementIterations(1)
+                .build();
         new Runner(opt).run();
     }
 
@@ -43,6 +48,15 @@ public class IdGeneratorBenchmark {
         IdUtil.unixTimeBasedUUID();
     }
 
+    @Benchmark
+    public void unixTimeBasedUUID1() {
+        IdUtil.unixTimeBasedUUID1();
+    }
+
+    @Benchmark
+    public void unixTimeBasedUUID2() {
+        IdUtil.unixTimeBasedUUID2();
+    }
 
     @Benchmark
     public void customUUID() {
