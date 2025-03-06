@@ -2,6 +2,9 @@
 package com.github.ixiongdi.id.generator.custom;
 
 // 导入Java并发包中的ThreadLocalRandom类，用于生成线程安全的随机数
+import com.github.ixiongdi.id.generator.IdGenerator;
+import com.github.ixiongdi.id.generator.IdType;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -16,13 +19,15 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2024-05-01
  * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
  */
-public class TimeBasedRandomIdGenerator {
+public class TimeBasedRandomIdGenerator implements IdGenerator  {
     
     /**
      * Tuesday, February 22, 2022 2:22:22.00 PM GMT-05:00
      * 该值是RFC中测试时多次提到的值
      */
     private static final long EPOCH = 1645557742L;
+
+    private static final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     /**
      * 生成一个新的基于时间和随机数的ID
@@ -45,12 +50,22 @@ public class TimeBasedRandomIdGenerator {
         // ThreadLocalRandom.current() - 获取当前线程的随机数生成器实例
         // .nextInt() - 生成一个随机整数
         // & 0xFFFFFFFFL - 使用按位与操作只保留低32位，确保随机部分为正数
-        long randomPart = ThreadLocalRandom.current().nextLong() & 0xFFFFFFFFL;
+        long randomPart = random.nextLong() & 0xFFFFFFFFL;
 
         // 组合时间戳和随机数
         // timestamp << 32 - 将时间戳左移32位，放置在高32位位置
         // | randomPart - 使用按位或操作将随机数部分放在低32位位置
         // 返回组合后的64位长整型ID
         return timestamp << 32 | randomPart;
+    }
+
+    @Override
+    public Long generate() {
+        return next();
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.CUSTOM_TIME_BASED_RANDOM_ID;
     }
 }

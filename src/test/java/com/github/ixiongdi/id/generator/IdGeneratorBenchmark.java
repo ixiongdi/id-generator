@@ -56,17 +56,7 @@ public class IdGeneratorBenchmark {
 
     @Benchmark
     public void unixTimeBasedUUID() {
-        IdUtil.unixTimeBasedUUID().toString();
-    }
-    
-    @Benchmark
-    public void fastUnixTimeBasedUUID() {
-        IdUtil.fastToString(IdUtil.unixTimeBasedUUID());
-    }
-    
-    @Benchmark
-    public void fastUUIDv7String() {
-        IdUtil.fastUUIDv7String();
+        IdUtil.unixTimeBasedUUID();
     }
 
     @Benchmark

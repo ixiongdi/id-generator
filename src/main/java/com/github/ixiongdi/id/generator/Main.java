@@ -2,6 +2,8 @@ package com.github.ixiongdi.id.generator;
 
 import com.github.ixiongdi.id.generator.uuid.MonotonicRandomUUIDv7Generator;
 
+import java.util.ServiceLoader;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -23,12 +25,15 @@ public class Main {
 
         // UUID v7，单调随机
         for (int i = 0; i < 10; i++) {
-            System.out.println("uuid v7 Monotonic Random: " + MonotonicRandomUUIDv7Generator.next());
+            System.out.println(
+                    "uuid v7 Monotonic Random: " + MonotonicRandomUUIDv7Generator.next());
         }
 
         // UUID v7，单调随机+不可猜测
         for (int i = 0; i < 10; i++) {
-            System.out.println("uuid v7 Monotonic Random unguessability: " + MonotonicRandomUUIDv7Generator.next(true));
+            System.out.println(
+                    "uuid v7 Monotonic Random unguessability: "
+                            + MonotonicRandomUUIDv7Generator.next(true));
         }
 
         // UUID v8，和v7类似，牺牲一点随机性换来业务相关性，万金油ID生成方案，个人推荐
@@ -44,6 +49,21 @@ public class Main {
         // UUID v8，和v7类似，牺牲一点随机性换来业务相关性，万金油ID生成方案，个人推荐
         for (int i = 0; i < 10; i++) {
             System.out.println("lexicalUUID: " + IdUtil.lexicalUUID());
+        }
+        
+        // 薄雾算法，高性能分布式ID生成方案
+        for (int i = 0; i < 10; i++) {
+            System.out.println("mist id: " + IdUtil.mistId());
+        }
+
+        ServiceLoader<IdGenerator> loader = ServiceLoader.load(IdGenerator.class);
+
+        for (IdGenerator generator : loader) {
+
+            for(int i = 0; i < 10; i++) {
+                System.out.printf("%s: ", generator.idType());
+                System.out.println(generator.generate());
+            }
         }
     }
 }

@@ -1,10 +1,13 @@
 package com.github.ixiongdi.id.generator.custom;
 
+import com.github.ixiongdi.id.generator.IdGenerator;
+import com.github.ixiongdi.id.generator.IdType;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TimeBasedBusinessIdGenerator  {
+public class TimeBasedBusinessIdGenerator implements IdGenerator {
     // 定义日期时间格式化器，将当前时间格式化为 "yyMMddHHmmss" 格式的字符串
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyMMddHHmmss");
@@ -53,4 +56,13 @@ public class TimeBasedBusinessIdGenerator  {
         return Long.parseLong(String.format("%s%04d", currentTime, currentSequenceValue));
     }
 
+    @Override
+    public Long generate() {
+        return next();
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.CUSTOM_TIME_BASED_BUSINESS_ID;
+    }
 }

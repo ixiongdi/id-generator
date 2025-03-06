@@ -4,6 +4,7 @@ import com.github.ixiongdi.id.generator.custom.TimeBasedBusinessIdGenerator;
 import com.github.ixiongdi.id.generator.custom.TimeBasedRandomIdGenerator;
 import com.github.ixiongdi.id.generator.lexical.LexicalUUID;
 import com.github.ixiongdi.id.generator.lexical.MicrosecondEpochClock;
+import com.github.ixiongdi.id.generator.mist.MistGenerator;
 import com.github.ixiongdi.id.generator.ulid.ULIDGenerator;
 import com.github.ixiongdi.id.generator.uuid.DedicatedCounterUUIDv7Generator;
 import com.github.ixiongdi.id.generator.uuid.FastUUIDToString;
@@ -64,5 +65,14 @@ public class IdUtil {
      */
     public static String fastUUIDv7String() {
         return FastUUIDToString.toString(unixTimeBasedUUID());
+    }
+    
+    /**
+     * 生成一个薄雾算法ID
+     *
+     * @return 薄雾算法生成的唯一ID
+     */
+    public static long mistId() {
+        return MistGenerator.next();
     }
 }
