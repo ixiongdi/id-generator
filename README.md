@@ -135,6 +135,8 @@ custom_c：随机数，牺牲一点碰撞性换来更高的易用性
 ```java
 package com.github.ixiongdi.id.generator;
 
+import com.github.ixiongdi.id.util.IdUtil;
+
 public class Main {
 
     public static void main(String[] args) {

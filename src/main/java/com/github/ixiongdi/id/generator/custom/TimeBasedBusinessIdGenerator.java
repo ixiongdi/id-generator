@@ -1,7 +1,7 @@
 package com.github.ixiongdi.id.generator.custom;
 
-import com.github.ixiongdi.id.generator.IdGenerator;
-import com.github.ixiongdi.id.generator.IdType;
+import com.github.ixiongdi.id.core.IdGenerator;
+import com.github.ixiongdi.id.core.IdType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +54,11 @@ public class TimeBasedBusinessIdGenerator implements IdGenerator {
 
         // 将格式化后的时间戳和 4 位序列号拼接成字符串，并转换为 Long 类型返回
         return Long.parseLong(String.format("%s%04d", currentTime, currentSequenceValue));
+    }
+
+    @Override
+    public IdGenerator getInstance(IdType idType) {
+        return new TimeBasedBusinessIdGenerator();
     }
 
     @Override

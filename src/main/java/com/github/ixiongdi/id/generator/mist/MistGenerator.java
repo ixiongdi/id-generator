@@ -1,10 +1,6 @@
 package com.github.ixiongdi.id.generator.mist;
 
-import java.security.SecureRandom;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.LongAdder;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.ThreadLocalRandom;
+import com.github.ixiongdi.id.core.IdGenerator;
 
 /**
  * 薄雾算法 Java 实现
@@ -28,29 +24,4 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 薄雾算法接口
  */
-public interface MistGenerator {
-    /**
-     * 生成唯一编号
-     * 
-     * @return 生成的唯一ID
-     */
-    long generate();
-
-    /**
-     * 获取MistGenerator的实例
-     * 
-     * @return MistGenerator实例
-     */
-    static MistGenerator getInstance() {
-        return StandardMistGenerator.getInstance();
-    }
-
-    /**
-     * 静态方法生成ID
-     * 
-     * @return 生成的唯一ID
-     */
-    static long next() {
-        return getInstance().generate();
-    }
-}
+public interface MistGenerator extends IdGenerator { }

@@ -1,5 +1,8 @@
 package com.github.ixiongdi.id.generator;
 
+import com.github.ixiongdi.id.core.IdGenerator;
+import com.github.ixiongdi.id.generator.mist.HighPerformanceMistGenerator;
+import com.github.ixiongdi.id.util.IdUtil;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -32,6 +35,10 @@ public class IdGeneratorBenchmark {
                         .measurementIterations(1)
                         .build();
         new Runner(opt).run();
+    }
+
+    @Benchmark
+    public void mist() {
     }
 
     @Benchmark

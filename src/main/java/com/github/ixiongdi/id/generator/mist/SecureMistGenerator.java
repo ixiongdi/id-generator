@@ -1,5 +1,7 @@
 package com.github.ixiongdi.id.generator.mist;
 
+import com.github.ixiongdi.id.core.IdType;
+
 import java.security.SecureRandom;
 
 /**
@@ -21,7 +23,8 @@ public class SecureMistGenerator implements MistGenerator {
      * @return 生成的唯一ID
      */
     @Override
-    public synchronized long generate() {
+    public synchronized Long generate() {
+        random.ints();
         // 自增
         long increasValue = ++increas;
 
@@ -47,5 +50,10 @@ public class SecureMistGenerator implements MistGenerator {
      */
     public static SecureMistGenerator getInstance() {
         return SingletonHolder.INSTANCE;
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.MIST_SECURE_ID;
     }
 }

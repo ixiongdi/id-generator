@@ -2,40 +2,32 @@
 package com.github.ixiongdi.id.generator.custom;
 
 // 导入Java并发包中的ThreadLocalRandom类，用于生成线程安全的随机数
-import com.github.ixiongdi.id.generator.IdGenerator;
-import com.github.ixiongdi.id.generator.IdType;
+import com.github.ixiongdi.id.core.IdGenerator;
+import com.github.ixiongdi.id.core.IdType;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 基于时间戳和随机数的ID生成器
- * <p>
- * 该类用于生成64位长整型ID，其中高32位为时间戳（相对于自定义纪元），低32位为随机数。
- * 这种设计可以保证ID按时间递增，同时在同一时间点生成的ID具有唯一性。
- * </p>
- * 
+ *
+ * <p>该类用于生成64位长整型ID，其中高32位为时间戳（相对于自定义纪元），低32位为随机数。 这种设计可以保证ID按时间递增，同时在同一时间点生成的ID具有唯一性。
+ *
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
  * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
  */
-public class TimeBasedRandomIdGenerator implements IdGenerator  {
-    
-    /**
-     * Tuesday, February 22, 2022 2:22:22.00 PM GMT-05:00
-     * 该值是RFC中测试时多次提到的值
-     */
+public class TimeBasedRandomIdGenerator implements IdGenerator {
+
+    /** Tuesday, February 22, 2022 2:22:22.00 PM GMT-05:00 该值是RFC中测试时多次提到的值 */
     private static final long EPOCH = 1645557742L;
 
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     /**
      * 生成一个新的基于时间和随机数的ID
-     * <p>
-     * 该方法创建并返回一个64位长整型ID，其结构如下：
-     * - 高32位：当前时间（秒级）减去自定义纪元时间
-     * - 低32位：随机数
-     * </p>
+     *
+     * <p>该方法创建并返回一个64位长整型ID，其结构如下： - 高32位：当前时间（秒级）减去自定义纪元时间 - 低32位：随机数
      *
      * @return 新生成的64位长整型ID
      */

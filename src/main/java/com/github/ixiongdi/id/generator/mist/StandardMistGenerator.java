@@ -1,5 +1,7 @@
 package com.github.ixiongdi.id.generator.mist;
 
+import com.github.ixiongdi.id.core.IdType;
+
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -22,7 +24,7 @@ public class StandardMistGenerator implements MistGenerator {
      * @return 生成的唯一ID
      */
     @Override
-    public long generate() {
+    public Long generate() {
         // 自增
         long increasValue = increas.incrementAndGet();
 
@@ -48,5 +50,10 @@ public class StandardMistGenerator implements MistGenerator {
      */
     public static StandardMistGenerator getInstance() {
         return SingletonHolder.INSTANCE;
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.MIST_DEFAULT_ID;
     }
 }
