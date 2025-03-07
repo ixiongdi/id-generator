@@ -1,5 +1,33 @@
 # Java ID Generator
 
+```bash
+scp ruoyi-modules-app.jar root@gingshan.cn:/data/gingshan/workspace/ruoyi/server/jar/deploy/
+scp ruoyi-modules-share.jar root@gingshan.cn:/data/gingshan/workspace/ruoyi/server/jar/deploy/
+scp ruoyi-modules-composite.jar root@gingshan.cn:/data/gingshan/workspace/ruoyi/server/jar/deploy/
+```
+
+本项目汇集了全网几乎所有的Id生成算法，并提供了标准实现、严格实现、快速实现，以及各种算法可自定义部分的实现。
+
+本项目总结出了一些Id的特性，并给他们打分，以供作为选取的标准。
+
+| ID          | 唯一性 | 单调性 | 去中心化 | 长度 | 可靠性 | 性能 | 不可猜测性 | 业务含义 | 易用性 | 可使用年限 | 隐私性 | 随机性
+|-------------|-----|-----|------|----|-----|----|-------|------|-----|
+| UUIDv1      |  ★★★☆☆   |     |      |    |     |    |       |      |     |
+| UUIDv2      |     |     |      |    |     |    |       |      |     |
+| UUIDv3      |     |     |      |    |     |    |       |      |     |
+| UUIDv4      |     |     |      |    |     |    |       |      |     |
+| UUIDv5      |     |     |      |    |     |    |       |      |     |
+| UUIDv6      |     |     |      |    |     |    |       |      |     |
+| UUIDv7      |     |     |      |    |     |    |       |      |     |
+| ULID        |     |     |      |    |     |    |       |      |     |
+| SnowflakeID |     |     |      |    |     |    |       |      |     |
+
+
+本项目特色：
+零依赖：不依赖任何第三方库，仅需要Java 8+即可
+高性能：全部ID生成器都有高性能版本，满足高并发要求
+多版本：中心化部署为可选项
+
 ## 简介
 
 本项目是基于互联网上比较流行的ID生成方案，结合个人实战，总结出的一套ID生成方案的最佳实践。
