@@ -1,27 +1,18 @@
 package icu.congee.id.base;
 
-import icu.congee.id.generator.custom.TimeBasedRandomIdGenerator;
-
-import java.util.ServiceLoader;
-
 public interface IdGenerator {
+    Object generate();
 
-    default Object generate() {
-        return TimeBasedRandomIdGenerator.next();
-    }
-
-    default IdType idType() {
-        return IdType.valueOf(this.getClass().getSimpleName());
-    };
-
-    default IdGenerator getInstance(IdType idType) {
-        ServiceLoader<IdGenerator> loader = ServiceLoader.load(IdGenerator.class);
-        while (loader.iterator().hasNext()) {
-            IdGenerator generator = loader.iterator().next();
-            if (idType == generator.idType()) {
-                return generator;
-            }
+    default Object[] generate(int count) {
+        if (count <= 0) {
+            throw new IllegalArgumentException("count must be positive");
         }
-        return this;
+        Object[] ids = new Object[count];
+        for (int i = 0; i < count; i++) {
+            ids[i] = generate();
+        }
+        return ids;
     }
+
+    IdType idType();
 }

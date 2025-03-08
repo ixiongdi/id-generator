@@ -1,5 +1,8 @@
 package icu.congee.id.generator.uuid;
 
+import icu.congee.id.base.IdGenerator;
+import icu.congee.id.base.IdType;
+
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2024-05-01
  * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
  */
-public class UUIDv4Generator {
+public class UUIDv4Generator implements IdGenerator {
     // 常量定义，用于位掩码和版本/变体的标识
     /** UUID 版本 4 的标识符 */
     private static final long VERSION_IDENTIFIER = 0x4000L;
@@ -53,17 +56,15 @@ public class UUIDv4Generator {
         // 使用构建好的MSB和LSB创建并返回一个新的UUID实例
         return new UUID(msb, lsb);
     }
-    
-    /**
-     * 生成一个标准的随机UUID
-     * <p>
-     * 该方法是对Java标准库中UUID.randomUUID()的封装，提供了与next()方法相同的功能，
-     * 但直接使用了Java内置的随机UUID生成机制。
-     * </p>
-     *
-     * @return 新生成的随机UUID实例
-     */
-    public static UUID randomUUID() {
-        return UUID.randomUUID();
+
+
+    @Override
+    public Object generate() {
+        return next().toString();
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.UUIDv4;
     }
 }

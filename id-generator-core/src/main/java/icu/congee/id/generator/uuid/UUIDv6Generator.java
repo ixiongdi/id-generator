@@ -1,5 +1,8 @@
 package icu.congee.id.generator.uuid;
 
+import icu.congee.id.base.IdGenerator;
+import icu.congee.id.base.IdType;
+
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2024-05-01
  * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
  */
-public class UUIDv6Generator {
+public class UUIDv6Generator implements IdGenerator {
     // 常量定义，用于位掩码和版本/变体的标识
     /** 格里高利时间戳掩码，占用 60 位 */
     private static final long GREGORIAN_TIMESTAMP_MASK = 0xFFFFFFFFFFFFFL;
@@ -72,6 +75,16 @@ public class UUIDv6Generator {
 
         // 使用构建好的MSB和LSB创建并返回一个新的UUID实例
         return new UUID(msb, lsb);
+    }
+
+    @Override
+    public Object generate() {
+        return next().toString();
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.UUIDv6;
     }
 
     /** 线程本地序列持有者。每个线程拥有独立的序列号，以避免线程间的竞争。 */

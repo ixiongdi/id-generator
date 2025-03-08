@@ -2,6 +2,9 @@
 package icu.congee.id.generator.uuid;
 
 // 导入Java标准库中的UUID类，用于创建和操作UUID
+import icu.congee.id.base.IdGenerator;
+import icu.congee.id.base.IdType;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,7 +25,7 @@ import java.util.concurrent.atomic.LongAdder;
  * @since 2024-05-01
  * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
  */
-public class UUIDv7Generator {
+public class UUIDv7Generator implements IdGenerator {
     /**
      * 生成一个新的UUIDv7
      * <p>
@@ -55,4 +58,13 @@ public class UUIDv7Generator {
     }
 
 
+    @Override
+    public String generate() {
+        return next().toString();
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.UUIDv7;
+    }
 }

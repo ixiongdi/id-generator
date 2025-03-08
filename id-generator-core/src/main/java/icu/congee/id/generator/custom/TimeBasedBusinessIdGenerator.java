@@ -56,10 +56,6 @@ public class TimeBasedBusinessIdGenerator implements IdGenerator {
         return Long.parseLong(String.format("%s%04d", currentTime, currentSequenceValue));
     }
 
-    @Override
-    public IdGenerator getInstance(IdType idType) {
-        return new TimeBasedBusinessIdGenerator();
-    }
 
     @Override
     public Long generate() {
@@ -68,6 +64,6 @@ public class TimeBasedBusinessIdGenerator implements IdGenerator {
 
     @Override
     public IdType idType() {
-        return IdType.CUSTOM_TIME_BASED_BUSINESS_ID;
+        return IdType.CustomTimeBasedBusinessId;
     }
 }

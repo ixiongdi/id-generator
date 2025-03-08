@@ -1,5 +1,8 @@
 package icu.congee.id.generator.uuid;
 
+import icu.congee.id.base.IdGenerator;
+import icu.congee.id.base.IdType;
+
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,7 +36,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2024-05-01
  * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
  */
-public class UUIDv1Generator {
+public class UUIDv1Generator implements IdGenerator {
     // 常量定义
     private static final long VERSION = 0x1000L;
     private static final long VARIANT = 0x8000000000000000L;
@@ -50,7 +53,7 @@ public class UUIDv1Generator {
     /**
      * 生成符合RFC 4122的UUIDv1
      */
-    public static UUID generate() {
+    public static UUID next() {
         // 获取当前时间戳（转换为100ns单位的格里高利历）
         long timestamp = (System.currentTimeMillis() * 10_000 + 0x01B21DD213814000L) & TIMESTAMP_MASK;
         
@@ -63,5 +66,15 @@ public class UUIDv1Generator {
                  | NODE_ID;
 
         return new UUID(msb, lsb);
+    }
+
+    @Override
+    public String generate() {
+        return next().toString();
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.UUIDv1;
     }
 }

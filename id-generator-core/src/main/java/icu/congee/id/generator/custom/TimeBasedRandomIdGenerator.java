@@ -58,6 +58,6 @@ public class TimeBasedRandomIdGenerator implements IdGenerator {
 
     @Override
     public IdType idType() {
-        return IdType.CUSTOM_TIME_BASED_RANDOM_ID;
+        return IdType.CustomTimeBasedRandomId;
     }
 }

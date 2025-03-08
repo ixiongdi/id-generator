@@ -54,6 +54,6 @@ public class StandardMistGenerator implements MistGenerator {
 
     @Override
     public IdType idType() {
-        return IdType.MIST_DEFAULT_ID;
+        return IdType.MIST_ID;
     }
 }

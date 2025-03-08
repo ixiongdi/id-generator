@@ -1,8 +1,16 @@
+icu.congee.id.generator.cosid.CosIdGenerator
 icu.congee.id.generator.custom.TimeBasedBusinessIdGenerator
 icu.congee.id.generator.custom.TimeBasedRandomIdGenerator
+icu.congee.id.generator.js.JavaScriptSafetyIdGenerator
+icu.congee.id.generator.lexical.LexicalUUIDGenerator
 icu.congee.id.generator.mist.HighPerformanceMistGenerator
 icu.congee.id.generator.mist.SecureMistGenerator
 icu.congee.id.generator.mist.StandardMistGenerator
 icu.congee.id.generator.nano.NanoIdGenerator
 icu.congee.id.generator.ulid.ULIDGenerator
-icu.congee.id.generator.cosid.CosIdGenerator
+icu.congee.id.generator.uuid.UUIDv1Generator
+icu.congee.id.generator.uuid.UUIDv2Generator
+icu.congee.id.generator.uuid.UUIDv4Generator
+icu.congee.id.generator.uuid.UUIDv6Generator
+icu.congee.id.generator.uuid.UUIDv7Generator
+icu.congee.id.generator.uuid.UUIDv8Generator

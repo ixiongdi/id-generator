@@ -358,4 +358,14 @@ public final class ULIDGenerator implements IdGenerator {
         }
         return output;
     }
+
+    @Override
+    public Object generate() {
+        return next();
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.ULID;
+    }
 }

@@ -1,5 +1,9 @@
 package icu.congee.id.generator.uuid;
 
+import icu.congee.id.base.IdGenerator;
+import icu.congee.id.base.IdType;
+
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -7,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author [您的姓名]
  */
-public class UUIDv8Generator {
+public class UUIDv8Generator implements IdGenerator {
 
     // 常量定义，用于位掩码和版本/变体的标识
     /** 时间戳掩码，占用 48 位 */
@@ -29,13 +33,12 @@ public class UUIDv8Generator {
     private static final ThreadLocal<ThreadLocalSequence> threadLocalTimestampSeq =
             ThreadLocal.withInitial(ThreadLocalSequence::new);
 
-
     /**
      * 生成一个自定义的 UUID v8。 该方法使用当前时间戳、线程本地序列和随机数构建 UUID。
      *
      * @return 一个新的自定义 UUID v8
      */
-    public static java.util.UUID next() {
+    public static UUID next() {
         ThreadLocalSequence seq = threadLocalTimestampSeq.get();
         long timestamp = System.currentTimeMillis() & TIMESTAMP_MASK;
         long sequence = seq.sequence++ & 0x3FFF;
@@ -43,6 +46,16 @@ public class UUIDv8Generator {
         long leastSigBits =
                 VARIANT_IDENTIFIER | (ThreadLocalRandom.current().nextLong() & 0x3FFFFFFFFFFFFFFFL);
         return new java.util.UUID(mostSigBits, leastSigBits);
+    }
+
+    @Override
+    public String generate() {
+        return next().toString();
+    }
+
+    @Override
+    public IdType idType() {
+        return IdType.UUIDv8;
     }
 
     /** 线程本地序列持有者。 每个线程拥有独立的序列号，以避免线程间的竞争。 */

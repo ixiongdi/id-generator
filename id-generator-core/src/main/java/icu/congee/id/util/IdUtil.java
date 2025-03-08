@@ -3,8 +3,9 @@ package icu.congee.id.util;
 import icu.congee.id.generator.cosid.CosIdGenerator;
 import icu.congee.id.generator.custom.TimeBasedBusinessIdGenerator;
 import icu.congee.id.generator.custom.TimeBasedRandomIdGenerator;
-import icu.congee.id.generator.lexical.LexicalUUID;
+import icu.congee.id.generator.lexical.LexicalUUIDGenerator;
 import icu.congee.id.generator.lexical.MicrosecondEpochClock;
+import icu.congee.id.generator.ulid.ULIDGenerator;
 import icu.congee.id.generator.uuid.DedicatedCounterUUIDv7Generator;
 import icu.congee.id.generator.uuid.FastUUIDToString;
 import icu.congee.id.generator.uuid.IncreasedClockPrecisionUUIDv7Generator;
@@ -40,7 +41,7 @@ public class IdUtil {
     }
 
     public static String ulid() {
-        return null;
+        return "";
     }
 
     public static String cosid() {
@@ -48,7 +49,7 @@ public class IdUtil {
     }
 
     public static String lexicalUUID() {
-        return LexicalUUID.generate(MicrosecondEpochClock.getInstance()).toString();
+        return LexicalUUIDGenerator.generate(MicrosecondEpochClock.getInstance()).toString();
     }
     
     /**

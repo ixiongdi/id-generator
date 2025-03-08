@@ -41,71 +41,26 @@ public class NanoIdGenerator implements IdGenerator {
      * 默认随机数生成器
      */
     private static final SecureRandom DEFAULT_RANDOM = new SecureRandom();
-    
-    /**
-     * 生成默认长度（21个字符）的NanoId
-     * 
-     * @return 生成的NanoId字符串
-     */
-    public String generate() {
-        return generate(DEFAULT_SIZE);
+
+    public static String next() {
+        byte[] randomBytes = new byte[DEFAULT_SIZE];
+        DEFAULT_RANDOM.nextBytes(randomBytes);
+        
+        char[] buffer = new char[DEFAULT_SIZE];
+        for (int i = 0; i < DEFAULT_SIZE; i++) {
+            buffer[i] = DEFAULT_ALPHABET[(randomBytes[i] & 0xFF) % DEFAULT_ALPHABET.length];
+        }
+        return new String(buffer);
     }
 
     @Override
-    public IdType idType() {
-        return IdType.NANO_ID;
+    public Object generate() {
+        return next();
     }
-
-    /**
-     * 生成指定长度的NanoId
-     * 
-     * @param size NanoId的长度
-     * @return 生成的NanoId字符串
-     */
-    public static String generate(int size) {
-        return generate(DEFAULT_RANDOM, DEFAULT_ALPHABET, size);
+    @Override
+    public IdType idType() {
+        return IdType.NanoId;
     }
     
-    /**
-     * 使用自定义随机数生成器和字符集生成NanoId
-     * 
-     * @param random 随机数生成器
-     * @param alphabet 字符集
-     * @param size NanoId的长度
-     * @return 生成的NanoId字符串
-     */
-    public static String generate(Random random, char[] alphabet, int size) {
-        if (size <= 0) {
-            throw new IllegalArgumentException("Size must be greater than zero");
-        }
-        
-        if (alphabet == null || alphabet.length == 0 || alphabet.length >= 256) {
-            throw new IllegalArgumentException("Alphabet must contain between 1 and 255 symbols");
-        }
-        
-        if (random == null) {
-            throw new IllegalArgumentException("Random cannot be null");
-        }
-        
-        int mask = (2 << (int) Math.floor(Math.log(alphabet.length - 1) / Math.log(2))) - 1;
-        int step = (int) Math.ceil(1.6 * mask * size / alphabet.length);
-        
-        StringBuilder idBuilder = new StringBuilder(size);
-        byte[] bytes = new byte[step];
-        
-        while (true) {
-            random.nextBytes(bytes);
-            
-            for (int i = 0; i < step; i++) {
-                int alphabetIndex = bytes[i] & mask;
-                
-                if (alphabetIndex < alphabet.length) {
-                    idBuilder.append(alphabet[alphabetIndex]);
-                    if (idBuilder.length() == size) {
-                        return idBuilder.toString();
-                    }
-                }
-            }
-        }
+    
     }
-}
