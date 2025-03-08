@@ -1,11 +1,5 @@
 # Java ID Generator
 
-```bash
-scp ruoyi-modules-app.jar root@gingshan.cn:/data/gingshan/workspace/ruoyi/server/jar/deploy/
-scp ruoyi-modules-share.jar root@gingshan.cn:/data/gingshan/workspace/ruoyi/server/jar/deploy/
-scp ruoyi-modules-composite.jar root@gingshan.cn:/data/gingshan/workspace/ruoyi/server/jar/deploy/
-```
-
 本项目汇集了全网几乎所有的Id生成算法，并提供了标准实现、严格实现、快速实现，以及各种算法可自定义部分的实现。
 
 本项目总结出了一些Id的特性，并给他们打分，以供作为选取的标准。
@@ -161,9 +155,9 @@ custom_c：随机数，牺牲一点碰撞性换来更高的易用性
 ### 食用方法
 
 ```java
-package com.github.ixiongdi.id.generator;
+package icu.congee.id.generator;
 
-import com.github.ixiongdi.id.util.IdUtil;
+import icu.congee.id.util.IdUtil;
 
 public class Main {
 

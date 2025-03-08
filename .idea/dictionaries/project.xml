@@ -3,8 +3,10 @@
     <words>
       <w>abcdefghjkmnpqrstvwxyz</w>
       <w>combguid</w>
+      <w>cosid</w>
       <w>cuid</w>
       <w>elasticflake</w>
+      <w>ixiongdi</w>
       <w>ksuid</w>
       <w>sonyflake</w>
       <w>ulid</w>
