@@ -25,6 +25,7 @@ public enum IdType {
     ShardingID("sharding_id", "数据库分片友好的分布式标识符格式"),
     SID("sid", "会话标识符格式，内嵌过期时间戳"),
     Snowflake("snowflake", "Twitter雪花标识符，64位时间+工作机器+序列号"),
+    Sonyflake("sonyflake", "Twitter雪花标识符，64位时间+工作机器+序列号"),
     ULID("ulid", "可排序的通用唯一标识符"),
     UUIDv1("uuid_v1", "基于MAC地址和时间戳的UUID"),
     UUIDv2("uuid_v2", "DCE安全版本，使用POSIX UID/GID"),

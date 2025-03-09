@@ -1,0 +1,1 @@
+Pearcy, P., "Sequential UUID / Flake ID generator pulled out of elasticsearch common", commit dd71c21, January 2015, https://github.com/ppearcy/elasticflake.
