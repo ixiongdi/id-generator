@@ -1,5 +1,7 @@
 package icu.congee.id.util;
 
+import icu.congee.id.base.IdGenerator;
+import icu.congee.id.base.IdType;
 import icu.congee.id.generator.cosid.CosIdGenerator;
 import icu.congee.id.generator.custom.TimeBasedBusinessIdGenerator;
 import icu.congee.id.generator.custom.TimeBasedRandomIdGenerator;
@@ -12,6 +14,9 @@ import icu.congee.id.generator.uuid.IncreasedClockPrecisionUUIDv7Generator;
 import icu.congee.id.generator.uuid.UUIDv7Generator;
 import icu.congee.id.generator.uuid.UUIDv8Generator;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.UUID;
 
 public class IdUtil {
@@ -49,7 +54,7 @@ public class IdUtil {
     }
 
     public static String lexicalUUID() {
-        return LexicalUUIDGenerator.generate(MicrosecondEpochClock.getInstance()).toString();
+        return LexicalUUIDGenerator.next();
     }
     
     /**
@@ -69,6 +74,15 @@ public class IdUtil {
      */
     public static String fastUUIDv7String() {
         return FastUUIDToString.toString(unixTimeBasedUUID());
+    }
+
+    public static Map<IdType, IdGenerator> getIdGeneratorMap() {
+        ServiceLoader<IdGenerator> loader = ServiceLoader.load(IdGenerator.class);
+        Map<IdType, IdGenerator> map = new HashMap<>();
+        for (IdGenerator generator : loader) {
+            map.put(generator.idType(), generator);
+        }
+        return map;
     }
 
 }

@@ -38,6 +38,7 @@
         <module>id-generator-core</module>
         <module>id-generator-benchmark</module>
         <module>id-generator-spring-redis</module>
+        <module>id-generator-spring-redis-demo</module>
         <module>id-generator-web</module>
     </modules>
 

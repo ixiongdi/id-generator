@@ -1,9 +1,11 @@
 package icu.congee.id.base;
 
 public enum IdType {
+    BroId("bro_id", "brother id"),
     COMBGUID("comb_guid", "组合全局唯一标识符，具有时间排序字节以提高数据库效率"),
     CosId("cos_id", "标准Cos标识符实现，具有均衡的功能特性"),
-    CUID("cuid", "具有加密元素的防碰撞唯一标识符"),
+    CUIDv1("cuid_v1", "具有加密元素的防碰撞唯一标识符"),
+    CUIDv2("cuid_v2", "具有加密元素的防碰撞唯一标识符"),
     CustomJavaScriptSafetyId("js_safety_id", ""),
     CustomTimeBasedBusinessId(
             "business_id", "自定义基于时间的业务标识符，内嵌时间戳"),

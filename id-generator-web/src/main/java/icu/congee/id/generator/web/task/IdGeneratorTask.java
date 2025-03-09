@@ -31,11 +31,11 @@ public class IdGeneratorTask {
         return StrUtil.toUnderlineCase(simpleName);
     }
 
-    @Scheduled(fixedRate = 1)
+    @Scheduled(fixedRate = 1000)
     public void generate() {
         for (IdGenerator generator : loader) {
             Object id = generator.generate();
-            idService.insert(convertClassNameToTableName(generator.getClass().getSimpleName()), id);
+            idService.insert(generator.idType().getName(), id);
             logger.info(StrUtil.format("Generated id [{}]", id));
         }
     }
