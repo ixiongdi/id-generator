@@ -20,3 +20,4 @@ icu.congee.id.generator.objectid.ObjectIdGenerator
 icu.congee.id.generator.xid.XidGenerator
 icu.congee.id.generator.pushid.PushIDGenerator
 icu.congee.id.generator.sid.SIDGenerator
+icu.congee.id.generator.combguid.CombGuidGenerator
