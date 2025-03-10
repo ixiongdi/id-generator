@@ -1,5 +1,7 @@
 package icu.congee.id.generator.broid;
 
+import icu.congee.id.base.IdType;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +132,7 @@ public class BroIdExample {
             System.out.println("BroId encode crock ford base32: " + uuidGenerator.next().toCrockfordBase32String());
             System.out.println("BroId encode hex: " + uuidGenerator.next().toHexString());
             System.out.println("BroId encode uuid: " + uuidGenerator.next().toUUID());
+            System.out.println("BroId encode uuid: " + uuidGenerator.next().toUUID(IdType.UUIDv8));
         }
     }
 }
