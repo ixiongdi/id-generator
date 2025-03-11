@@ -7,8 +7,6 @@ import icu.congee.id.generator.cosid.CosIdGenerator;
 import icu.congee.id.generator.custom.TimeBasedBusinessIdGenerator;
 import icu.congee.id.generator.custom.TimeBasedRandomIdGenerator;
 import icu.congee.id.generator.lexical.LexicalUUIDGenerator;
-import icu.congee.id.generator.lexical.MicrosecondEpochClock;
-import icu.congee.id.generator.ulid.ULIDGenerator;
 import icu.congee.id.generator.uuid.DedicatedCounterUUIDv7Generator;
 import icu.congee.id.generator.uuid.FastUUIDToString;
 import icu.congee.id.generator.uuid.IncreasedClockPrecisionUUIDv7Generator;
@@ -21,6 +19,8 @@ import java.util.ServiceLoader;
 import java.util.UUID;
 
 public class IdUtil {
+
+    private static final UUIDv8BroIdGenerator broIdGenerator = UUIDv8BroIdGenerator.getInstance();
 
     public static Long businessId() {
         return TimeBasedBusinessIdGenerator.next();
@@ -45,8 +45,6 @@ public class IdUtil {
     public static UUID customUUID() {
         return UUIDv8Generator.next();
     }
-
-    private static final UUIDv8BroIdGenerator broIdGenerator = UUIDv8BroIdGenerator.getInstance();
 
     public static UUID broId() {
         return broIdGenerator.next().toUUID();

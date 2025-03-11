@@ -27,8 +27,8 @@ public class IdGeneratorTask {
         // 生成多个ID
         Object[] ids = idGeneratorService.generate(IdType.CosId, 100);
         logger.info("id count: {}", ids.length);
-        for (int i = 0; i < ids.length; i++) {
-            logger.info("Cos Id: {}", ids[i]);
+        for (Object o : ids) {
+            logger.info("Cos Id: {}", o);
         }
     }
 }

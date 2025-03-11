@@ -307,8 +307,8 @@ public final class ULIDGenerator implements IdGenerator {
      */
     protected static long toLong(char[] input) {
         long n = 0;
-        for (int i = 0; i < input.length; i++) {
-            int d = decodeBase32(input[i]);
+        for (char c : input) {
+            int d = decodeBase32(c);
             n = 32 * n + d;
         }
         return n;
@@ -328,8 +328,8 @@ public final class ULIDGenerator implements IdGenerator {
      */
     private static boolean containsValidBase32Chars(final char[] chars) {
         char[] input = toUpperCase(chars);
-        for (int i = 0; i < input.length; i++) {
-            if (!isBase32Char(input[i])) {
+        for (char c : input) {
+            if (!isBase32Char(c)) {
                 return false;
             }
         }
@@ -340,8 +340,8 @@ public final class ULIDGenerator implements IdGenerator {
      * 检查提供的字符是否为有效的base32字符。
      */
     private static boolean isBase32Char(char c) {
-        for (int j = 0; j < ENCODING_CHARS.length; j++) {
-            if (c == ENCODING_CHARS[j]) {
+        for (char encodingChar : ENCODING_CHARS) {
+            if (c == encodingChar) {
                 return true;
             }
         }

@@ -535,11 +535,10 @@ public final class Ksuid implements Serializable, Comparable<Ksuid> {
 		int[] number = new int[KSUID_INTS];
 		char[] chars = toCharArray(string);
 
-		for (int i = 0; i < chars.length; i++) {
-			final int remainder = BASE62_MAP[chars[i]];
-			final int[] product = multiply(number, BASE62_RADIX, remainder, true);
-			number = product;
-		}
+        for (char aChar : chars) {
+            final int remainder = BASE62_MAP[aChar];
+            number = multiply(number, BASE62_RADIX, remainder, true);
+        }
 
 		return new Ksuid(number);
 	}
@@ -613,11 +612,11 @@ public final class Ksuid implements Serializable, Comparable<Ksuid> {
 		if (chars == null || chars.length != KSUID_CHARS) {
 			return false; // null or wrong size!
 		}
-		for (int i = 0; i < chars.length; i++) {
-			if (BASE62_MAP[chars[i]] == -1) {
-				return false; // invalid character!
-			}
-		}
+        for (char aChar : chars) {
+            if (BASE62_MAP[aChar] == -1) {
+                return false; // invalid character!
+            }
+        }
 		return true; // It seems to be OK.
 	}
 }

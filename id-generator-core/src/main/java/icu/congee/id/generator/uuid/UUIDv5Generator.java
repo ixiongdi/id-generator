@@ -1,4 +1,4 @@
-package com.github.ixiongdi.id.generator.uuid;
+package icu.congee.id.generator.uuid;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

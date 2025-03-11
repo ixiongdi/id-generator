@@ -1,4 +1,4 @@
-package com.github.ixiongdi.id.generator.uuid;
+package icu.congee.id.generator.uuid;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
