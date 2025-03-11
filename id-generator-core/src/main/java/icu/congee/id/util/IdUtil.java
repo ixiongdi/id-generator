@@ -2,6 +2,7 @@ package icu.congee.id.util;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
+import icu.congee.id.generator.broid.impl.UUIDv8BroIdGenerator;
 import icu.congee.id.generator.cosid.CosIdGenerator;
 import icu.congee.id.generator.custom.TimeBasedBusinessIdGenerator;
 import icu.congee.id.generator.custom.TimeBasedRandomIdGenerator;
@@ -43,6 +44,12 @@ public class IdUtil {
 
     public static UUID customUUID() {
         return UUIDv8Generator.next();
+    }
+
+    private static final UUIDv8BroIdGenerator broIdGenerator = UUIDv8BroIdGenerator.getInstance();
+
+    public static UUID broId() {
+        return broIdGenerator.next().toUUID();
     }
 
     public static String ulid() {

@@ -28,3 +28,4 @@ icu.congee.id.generator.elasticflake.ElasticflakeIdGenerator
 icu.congee.id.generator.ksuid.KsuidGenerator
 icu.congee.id.generator.shardingid.ShardingIdGenerator
 icu.congee.id.generator.flake.FlakeIdGenerator
+icu.congee.id.generator.broid.impl.UUIDv8BroIdGenerator

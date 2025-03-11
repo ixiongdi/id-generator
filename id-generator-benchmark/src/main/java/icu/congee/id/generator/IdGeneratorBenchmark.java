@@ -36,7 +36,8 @@ public class IdGeneratorBenchmark {
     }
 
     @Benchmark
-    public void mist() {
+    public void broId() {
+        IdUtil.broId();
     }
 
     @Benchmark
