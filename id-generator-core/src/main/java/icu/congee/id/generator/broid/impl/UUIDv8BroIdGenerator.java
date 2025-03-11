@@ -6,8 +6,6 @@ import icu.congee.id.generator.broid.BroIdGenerator;
 import icu.congee.id.generator.broid.BroIdLayout;
 import icu.congee.id.generator.broid.BroIdPart;
 import icu.congee.id.generator.broid.part.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
