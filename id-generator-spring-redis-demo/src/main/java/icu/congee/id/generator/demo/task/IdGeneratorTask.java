@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 public class IdGeneratorTask {
 
@@ -19,7 +21,7 @@ public class IdGeneratorTask {
 
     @Resource IdGeneratorService idGeneratorService;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.SECONDS)
     public void generate() throws InterruptedException {
         // 生成一个ID
         Object id = idGeneratorService.generate(IdType.CosId);

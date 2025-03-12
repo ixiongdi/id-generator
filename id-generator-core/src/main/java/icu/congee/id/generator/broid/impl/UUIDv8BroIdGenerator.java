@@ -57,8 +57,8 @@ public class UUIDv8BroIdGenerator extends BroIdGenerator<UUIDv8BroId> implements
     }
 
     @Override
-    public UUID generate() {
-        return next().toUUID();
+    public String generate() {
+        return next().toUUID().toString();
     }
 
     @Override
