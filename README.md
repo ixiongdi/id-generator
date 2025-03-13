@@ -1,11 +1,23 @@
-# Java ID Generator
+# Java ID Generator (BroId)
 
-BroId
+[![Maven Central](https://img.shields.io/maven-central/v/icu.congee/id-generator-core.svg)](https://search.maven.org/search?q=g:icu.congee%20AND%20a:id-generator-core)
+[![License](https://img.shields.io/badge/license-MIT%20AND%20Apache--2.0-blue.svg)](LICENSE)
+[![Java Version](https://img.shields.io/badge/Java-8%2B-blue.svg)](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
+
 旨在提供简单、全面、高性能、基于最佳实践的本机和分布式 ID 生成器。
 
 本项目汇集了全网几乎所有的Id生成算法，并提供了标准实现、严格实现、快速实现，以及各种算法可自定义部分的实现。
 
-本项目总结出了一些Id的特性，并给他们打分，以供作为选取的标准。
+## 特性
+
+- **零依赖**：不依赖任何第三方库，仅需要Java 8+即可
+- **高性能**：全部ID生成器都有高性能版本，满足高并发要求
+- **多版本**：中心化部署为可选项
+- **全面覆盖**：支持16种不同的ID生成算法
+- **最佳实践**：基于互联网上流行的ID生成方案，结合实战经验总结
+- **符合RFC标准**：实现了最新的UUID标准(RFC 9562)
+
+## ID生成器特性对比
 
 | ID          | 唯一性 | 单调性 | 去中心化 | 长度 | 可靠性 | 性能 | 不可猜测性 | 业务含义 | 易用性 | 可使用年限 | 隐私性 | 随机性 |
 |-------------|---------|---------|-----------|--------|---------|--------|-------------|-----------|---------|------------|---------|----------|
@@ -18,202 +30,135 @@ BroId
 | UUIDv7      | ★★★★★    | ★★★★★    | ★★★★★      | ★★★☆☆   | ★★★★★    | ★★★★★   | ★★★★☆      | ★★☆☆☆    | ★★★★★  | ★★★★★     | ★★★★☆  | ★★★★☆   |
 | ULID        | ★★★★★    | ★★★★★    | ★★★★★      | ★★★☆☆   | ★★★★★    | ★★★★★   | ★★★★☆      | ★★☆☆☆    | ★★★★★  | ★★★★★     | ★★★★☆  | ★★★★☆   |
 | SnowflakeID | ★★★★★    | ★★★★★    | ★★★☆☆      | ★★★★★   | ★★★★☆    | ★★★★★   | ★★★☆☆      | ★★★★☆    | ★★★☆☆  | ★★★★☆     | ★★★☆☆  | ★★★☆☆   |
-| CosId       | ★★★★★ | ★★★★★ | ★★★★★ | ★★★☆☆ | ★★★★★ | ★★★★★ | ★★★★☆ | ★★★★☆ | ★★★★★ |
-
-
-本项目特色：
-零依赖：不依赖任何第三方库，仅需要Java 8+即可
-
-高性能：全部ID生成器都有高性能版本，满足高并发要求
-
-多版本：中心化部署为可选项
-
-## 简介
-
-本项目是基于互联网上比较流行的ID生成方案，结合个人实战，总结出的一套ID生成方案的最佳实践。
-2024年5月关于UUID的最新标准[RFC 9652](https://www.rfc-editor.org/rfc/rfc9562.html)发布了，该标准发布时参考了16种ID生成方案。
-我阅读了其中每一种方案，发现这些方案基本有两种路线：
-1. 基于Snowflake及其变体的的64bit整数方案
-2. 基于UUID极其魔改的128bit字符串方案
-
-接下来我将分析其方案的优劣，及提出我自己的方案。
-
-### Snowflake及其变体
-
-应该说目前Snowflake是非常流行的，但是Snowflake方案始终绕不过去的一道坎就是如何分配dataCenterId和workerId。如果手动分配会非常繁琐，增加了运维的工作量。
-如果是自动分配，则需要引入中间件。带来不必要的复杂度。
-所以我认为Snowflake方案其实更加适合单体架构和小规模系统的ID生成。
-下面就是我认为的Snowflake的两种最佳实践。
-
-#### 1. 基于时间排序的强业务关联的ID
-其组成由精确到秒的时间字符串`yyMMddHHmmss`加上0-9999的序列号组成，总长度为16，支持JavaScript，类似下面这样
-```markdown
-2503041526330000
-2503041526330001
-```
-优点：
-1. 64bit整数，对数据库和编程语言都有良好的支持
-2. 不占用空间，可排序
-3. 可阅读，时间可读
-4. 强业务，序列号有很强的业务关联性，适合业务量不大的场景
-5. JavaScript友好，不需要转字符串
-
-缺点：
-1. 只支持单机
-2. 序列号有限，每秒并发只有10000
-3. 由于只有16位有效数字（JavaScript中Number.MAX_SAFE_INTEGER是9007199254740991），大概能用到2090年
-
-#### 2. 基于时间排序的强随机ID
-该算法启发自UUID v7，给不希望使用字符串作为ID，并发量不那么大的情况下，可支持分布式
-其是一个64bit的整型，其中高位的32bit是精确到秒的时间戳，低位的32bit是随机数
-```markdown
-159081573901068181
-159081575217301057
-```
-
-优点：
-1. 64bit整数，对数据库和编程语言都有良好的支持
-2. 不占用空间，可排序
-3. 随机性强，不可猜测
-4. 在并发不大的情况下可分布式
-
-缺点：
-1. 默认的起始时间是2022年2月，大概能用到2090年
-2. 碰撞几率高于UUID v7
-
-### UUID v7和自定义的UUID v8
-
-其实只要认真阅读了RFC9562标准及其参考文献，就能知道UUID的前序标准RFC4122已经不满足当前计算机应用的需求了，于是才有了新的标准
-UUID v6、UUID v7、UUIDv8。
-新增的标准是基于前序标准的扩展，也是基于现在互联网上流行方案的整合。
-其中UUID v6更多的是对以前UUID的兼容处理，有暴露隐私的风险。所以这里主要介绍UUID v7、UUIDv8。
-
-新的UUID都会把可排序放在最重要的位置，这也是几乎所以的ID生成方案都需要遵循的，这是由现代数据库的特性决定的。
-
-#### 基于unix时间排序的UUID v7
-
-其由48bit的毫秒级时间戳和74bit的随机数组成，类似下面这样的结构
-```markdown
--------------------------------------------
-field       bits value
--------------------------------------------
-unix_ts_ms  48   0x017F22E279B0
-ver          4   0x7
-rand_a      12   0xCC3
-var          2   0b10
-rand_b      62   0b01, 0x8C4DC0C0C07398F
--------------------------------------------
-total       128
--------------------------------------------
-final: 017F22E2-79B0-7CC3-98C4-DC0C0C07398F
-```
-
-优点：
-1. 128bit长，对编程语言来说是长度36字节的字符串，对数据库来说是UUID类型（postgresql）或者128bit binary（mysql）
-2. 可排序
-3. 随机性强，不可猜测
-4. 随机性强，碰撞性极低
-5. 可分布式，无依赖
-
-缺点：
-1. 长度略长
-2. 个别数据库支持度不佳
-
-#### CombGuid
-CombGuid是一种基于RT.Comb实现的可排序UUID变体，通过将时间戳信息编码到UUID中，解决了标准UUID不可排序的问题。
-
-其结构如下：
-- 前6字节：Unix时间戳（精确到毫秒）
-- 后10字节：随机UUID数据
-
-优点：
-1. 可排序性：基于时间戳的前缀支持时间排序
-2. 高性能：生成过程简单，无需额外排序
-3. 分布式友好：无需中心化协调
-4. 兼容性：与标准UUID格式兼容
-5. 时间可追溯：可从ID提取生成时间
-
-缺点：
-1. 时间戳精度限制：仅支持毫秒级精度
-2. 非标准实现：某些场景可能需要特殊处理
-
-#### 完全自定义UUID v8
-
-UUID v8的出现就是因为市面上的ID生成方案百花齐放，但又缺乏统一的标准。她的出现可以把之前的大部分ID方案纳入进来且以标准的UUID出现。
-
-```markdown
--------------------------------------------
-field     bits value
--------------------------------------------
-custom_a  48   0x2489E9AD2EE2
-ver        4   0x8
-custom_b  12   0xE00
-var        2   0b10
-custom_c  62   0b00, 0xEC932D5F69181C0
--------------------------------------------
-total     128
--------------------------------------------
-final: 2489E9AD-2EE2-8E00-8EC9-32D5F69181C0
-```
-其由三段自定义部分组成，当然各部分都可以自定义。我这里提出我的一些最佳实践。
-custom_a：和UUID v7一样的毫秒级时间戳，前面说了可排序性是第一位的
-custom_b：seq，12bit的具有业务含义的序列号，支持0-4095，总4096个，因为有随机数的存在，这里重复了也不要紧
-custom_c：随机数，牺牲一点碰撞性换来更高的易用性
-
-优点：
-1. 128bit长，对编程语言来说是长度36字节的字符串，对数据库来说是UUID类型（postgresql）或者128bit binary（mysql）
-2. 可排序
-3. 随机性强，不可猜测
-4. 随机性强，碰撞性极低
-5. 可分布式，无依赖
-6. 序列号，具有业务可追溯性
-
-缺点：
-1. 长度略长
-2. 个别数据库支持度不佳
-3. 序列号有暴露隐私风险
+| CosId       | ★★★★★    | ★★★★★    | ★★★★★      | ★★★☆☆   | ★★★★★    | ★★★★★   | ★★★★☆      | ★★★★☆    | ★★★★★  | ★★★★★     | ★★★★☆  | ★★★★☆   |
 
 ## 快速开始
 
-### 食用方法
+### Maven
+
+```xml
+<dependency>
+    <groupId>icu.congee</groupId>
+    <artifactId>id-generator-core</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+### Gradle
+
+```groovy
+implementation 'icu.congee:id-generator-core:0.1.0'
+```
+
+### 基本使用
 
 ```java
-package icu.congee.id.generator;
+// 使用UUID v7生成器
+UUIDv7Generator generator = new StandardUUIDv7Generator();
+UUID uuid = generator.generate();
+System.out.println(uuid);
 
-import icu.congee.id.util.IdUtil;
+// 使用雪花算法生成器
+SnowflakeIdGenerator snowflake = new SnowflakeIdGenerator(1, 1);
+long id = snowflake.nextId();
+System.out.println(id);
 
-public class Main {
-
-    public static void main(String[] args) {
-
-        /** 业务ID，适用于单机环境，和业务强关联的场景 */
-        for (int i = 0; i < 10; i++) {
-            System.out.println("business id: " + IdUtil.businessId());
-        }
-
-        /** 随机ID，短小精悍，适用于单机和小微规模的分布式场景 */
-        for (int i = 0; i < 10; i++) {
-            System.out.println("random id: " + IdUtil.randomId());
-        }
-
-        /** UUID v7，适用于大规模、高并发场景，单机每秒数十亿次以上ID生成 */
-        for (int i = 0; i < 10; i++) {
-            System.out.println("uuid v7: " + IdUtil.unixTimeBasedUUID());
-        }
-
-        /** UUID v8，和v7类似，牺牲一点随机性换来业务相关性，万金油ID生成方案，个人推荐 */
-        for (int i = 0; i < 10; i++) {
-            System.out.println("uuid v8: " + IdUtil.customUUID());
-        }
-    }
-}
+// 使用ULID生成器
+ULIDGenerator ulid = new ULIDGenerator();
+String id = ulid.generate();
+System.out.println(id);
 ```
 
-### 性能测试
+## 支持的ID生成器
+
+本项目支持以下ID生成算法：
+
+### UUID系列
+- **UUIDv1** - 基于时间和MAC地址的UUID
+- **UUIDv2** - DCE安全UUID
+- **UUIDv3** - 基于名字和MD5的UUID
+- **UUIDv4** - 随机UUID
+- **UUIDv5** - 基于名字和SHA-1的UUID
+- **UUIDv6** - 基于时间的UUID（改进版UUIDv1）
+- **UUIDv7** - 基于Unix时间戳的UUID（最新RFC标准）
+- **UUIDv8** - 自定义UUID
+
+### 其他ID生成器
+- **Snowflake** - Twitter的雪花算法
+- **ULID** - 可排序的UUID
+- **ObjectId** - MongoDB的ObjectId
+- **Sonyflake** - Sony的分布式ID生成器
+- **CombGuid** - 结合GUID和时间戳的ID
+- **Xid** - 全局唯一ID生成器
+- **CosId** - 腾讯云的分布式ID生成器
+- **Cuid2** - 安全、可排序的ID
+- **FlakeId** - 分布式ID生成器
+
+## 高级用法
+
+### 自定义UUID v7生成器
+
+```java
+// 使用增强时钟精度的UUID v7生成器
+UUIDv7Generator precisionGenerator = new IncreasedClockPrecisionUUIDv7Generator();
+UUID uuid = precisionGenerator.generate();
+
+// 使用单调随机的UUID v7生成器
+UUIDv7Generator monotonicGenerator = new MonotonicRandomUUIDv7Generator();
+UUID uuid = monotonicGenerator.generate();
 ```
-Benchmark                                  Mode  Cnt           Score   Error  Units
-IdGeneratorBenchmark.customUUID           thrpt       1953303886.153          ops/s
-IdGeneratorBenchmark.timeBasedBusinessId  thrpt             9838.683          ops/s
-IdGeneratorBenchmark.timeBasedRandomId    thrpt        817282145.506          ops/s
-IdGeneratorBenchmark.unixTimeBasedUUID    thrpt       2074523226.222          ops/s
+
+### 分布式ID生成
+
+```java
+// 使用Redis作为中央节点的分布式ID生成器
+// 需要添加id-generator-spring-redis依赖
+RedisSnowflakeIdGenerator redisSnowflake = new RedisSnowflakeIdGenerator(redisTemplate);
+long id = redisSnowflake.nextId();
 ```
+
+## 性能基准测试
+
+本项目包含了各种ID生成器的性能基准测试，可以通过以下方式运行：
+
+```bash
+mvn clean package -DskipTests
+java -jar id-generator-benchmark/target/id-generator-benchmark.jar
+```
+
+## 项目结构
+
+- **id-generator-core** - 核心ID生成器实现
+- **id-generator-spring-redis** - 基于Spring Redis的分布式ID生成器
+- **id-generator-spring-redis-demo** - Spring Redis分布式ID生成器示例
+- **id-generator-benchmark** - 性能基准测试
+- **id-generator-web** - Web API接口
+- **id-generator-bom** - Bill of Materials
+- **id-generator-dependencies** - 依赖管理
+
+## 贡献指南
+
+欢迎贡献代码、报告问题或提出改进建议。请遵循以下步骤：
+
+1. Fork本仓库
+2. 创建您的特性分支 (`git checkout -b feature/amazing-feature`)
+3. 提交您的更改 (`git commit -m 'Add some amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 打开一个Pull Request
+
+## 许可证
+
+本项目采用双重许可：
+
+- [MIT License](LICENSE)
+- [Apache License 2.0](LICENSE-APACHE)
+
+## 联系方式
+
+- 作者：熊迪
+- 邮箱：ixiongdi@gmail.com
+- GitHub：[https://github.com/ixiongdi](https://github.com/ixiongdi)
+
+## 致谢
+
+感谢所有为各种ID生成算法做出贡献的开发者和组织。

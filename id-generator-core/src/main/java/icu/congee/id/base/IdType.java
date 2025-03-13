@@ -13,6 +13,7 @@ public enum IdType {
     ElasticFlake("elastic_flake", "兼容Elasticsearch的雪花标识符，支持分片"),
     Flake("flake", "Twitter风格的雪花标识符，包含时间+工作机器+序列号"),
     FlakeID("flake_id", "扩展的雪花标识符，具有额外的元数据位"),
+    FlexId("flex_id", "MyBatis-Flex中内置的Id生成器"),
     KSUID("ksuid", "可排序的唯一标识符，使用base62编码"),
     LexicalUUID("lexical_uuid", "具有字典序排序能力的UUID变体"),
     MIST_ID("mist_id", "标准Mist标识符实现，具有均衡的功能特性"),
@@ -35,6 +36,7 @@ public enum IdType {
     UUIDv6("uuid_v6", "重排序的格里高利时间UUID（RFC草案）"),
     UUIDv7("uuid_v7", "基于Unix纪元时间戳的时间排序UUID"),
     UUIDv8("uuid_v8", "自定义UUID格式，支持供应商特定数据"),
+    WxSeq("wx_seq", "微信序列号生成器"),
     XID("xid", "全局唯一标识符，具有4字节前缀用于多系统协调");
 
     private final String name;
