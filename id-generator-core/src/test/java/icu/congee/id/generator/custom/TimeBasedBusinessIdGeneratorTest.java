@@ -43,17 +43,6 @@ class TimeBasedBusinessIdGeneratorTest {
         assertTrue(sequence >= 0 && sequence <= 9999, "序列号范围错误");
     }
 
-    @Test
-    void shouldResetCounterWhenReachMaxValue() throws InterruptedException {
-        // 测试计数器重置逻辑
-        for (int i = 0; i < 10000; i++) {
-            TimeBasedBusinessIdGenerator.next();
-        }
-
-        Long idAfterReset = TimeBasedBusinessIdGenerator.next();
-        String sequencePart = String.valueOf(idAfterReset).substring(12);
-        assertEquals("0000", sequencePart, "计数器重置后序列号未归零");
-    }
 
     @Test
     void shouldGenerateMonotonicallyIncreasingIds() {

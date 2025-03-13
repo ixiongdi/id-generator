@@ -10,6 +10,45 @@
     </parent>
 
     <artifactId>id-generator-spring-redis-demo</artifactId>
+    
+    <name>ID Generator Spring Redis Demo</name>
+    <description>ID Generator Spring Redis Demo Module</description>
+    <url>https://github.com/ixiongdi/id-generator</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/ixiongdi/id-generator.git</connection>
+        <developerConnection>scm:git:git@github.com:ixiongdi/id-generator.git</developerConnection>
+        <url>https://github.com/ixiongdi/id-generator</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>ixiongdi</id>
+            <name>熊迪</name>
+            <email>ixiongdi@gmail.com</email>
+            <url>https://github.com/ixiongdi</url>
+            <organization>Congee</organization>
+            <organizationUrl>https://congee.icu</organizationUrl>
+            <roles>
+                <role>Project Lead</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>Asia/Shanghai</timezone>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
@@ -33,6 +72,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.7.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>published</waitUntil>
+                </configuration>
             </plugin>
         </plugins>
     </build>
