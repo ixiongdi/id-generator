@@ -1,5 +1,8 @@
 package icu.congee.id.base;
 
+import lombok.Getter;
+
+@Getter
 public enum IdType {
     BroId("bro_id", "brother id"),
     COMBGUID("comb_guid", "组合全局唯一标识符，具有时间排序字节以提高数据库效率"),
@@ -47,11 +50,4 @@ public enum IdType {
         this.desc = desc;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
 }
