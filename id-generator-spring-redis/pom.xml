@@ -10,6 +10,12 @@
     </parent>
 
     <artifactId>id-generator-spring-redis</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     
     <name>ID Generator Spring Redis</name>
     <description>ID Generator Spring Redis Module</description>
@@ -54,7 +60,7 @@
         <dependency>
             <groupId>icu.congee</groupId>
             <artifactId>id-generator-core</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

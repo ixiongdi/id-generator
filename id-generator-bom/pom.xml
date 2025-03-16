@@ -61,16 +61,6 @@
                 <artifactId>id-generator-spring-redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>icu.congee</groupId>
-                <artifactId>id-generator-benchmark</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>icu.congee</groupId>
-                <artifactId>id-generator-web</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
