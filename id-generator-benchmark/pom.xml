@@ -10,6 +10,45 @@
     </parent>
 
     <artifactId>id-generator-benchmark</artifactId>
+    
+    <name>ID Generator Benchmark</name>
+    <description>ID Generator Benchmark Module</description>
+    <url>https://github.com/ixiongdi/id-generator</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/ixiongdi/id-generator.git</connection>
+        <developerConnection>scm:git:git@github.com:ixiongdi/id-generator.git</developerConnection>
+        <url>https://github.com/ixiongdi/id-generator</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>ixiongdi</id>
+            <name>熊迪</name>
+            <email>ixiongdi@gmail.com</email>
+            <url>https://github.com/ixiongdi</url>
+            <organization>Congee</organization>
+            <organizationUrl>https://congee.icu</organizationUrl>
+            <roles>
+                <role>Project Lead</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>Asia/Shanghai</timezone>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
