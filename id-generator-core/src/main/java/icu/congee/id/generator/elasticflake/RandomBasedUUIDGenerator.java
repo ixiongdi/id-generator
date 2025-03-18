@@ -1,20 +1,23 @@
 /*
- * Licensed to Elasticsearch under one or more contributor
- * license agreements. See the NOTICE file distributed with
- * this work for additional information regarding copyright
- * ownership. Elasticsearch licenses this file to you under
- * the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * MIT License
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2024 ixiongdi
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  */
 
 package icu.congee.id.generator.elasticflake;
@@ -41,21 +44,26 @@ class RandomBasedUUIDGenerator implements UUIDGenerator {
     public String getBase64UUID(Random random) {
         final byte[] randomBytes = new byte[16];
         random.nextBytes(randomBytes);
-        /* Set the version to version 4 (see http://www.ietf.org/rfc/rfc4122.txt)
+        /*
+         * Set the version to version 4 (see http://www.ietf.org/rfc/rfc4122.txt)
          * The randomly or pseudo-randomly generated version.
          * The version number is in the most significant 4 bits of the time
-         * stamp (bits 4 through 7 of the time_hi_and_version field).*/
-        randomBytes[6] &= 0x0f;  /* clear the 4 most significant bits for the version  */
-        randomBytes[6] |= 0x40;  /* set the version to 0100 / 0x40 */
-        
-        /* Set the variant: 
+         * stamp (bits 4 through 7 of the time_hi_and_version field).
+         */
+        randomBytes[6] &= 0x0f; /* clear the 4 most significant bits for the version */
+        randomBytes[6] |= 0x40; /* set the version to 0100 / 0x40 */
+
+        /*
+         * Set the variant:
          * The high field of th clock sequence multiplexed with the variant.
-         * We set only the MSB of the variant*/
-        randomBytes[8] &= 0x3f;  /* clear the 2 most significant bits */
-        randomBytes[8] |= 0x80;  /* set the variant (MSB is set)*/
+         * We set only the MSB of the variant
+         */
+        randomBytes[8] &= 0x3f; /* clear the 2 most significant bits */
+        randomBytes[8] |= 0x80; /* set the variant (MSB is set) */
         try {
             byte[] encoded = Base64.encodeBytesToBytes(randomBytes, 0, randomBytes.length, Base64.URL_SAFE);
-            // we know the bytes are 16, and not a multi of 3, so remove the 2 padding chars that are added
+            // we know the bytes are 16, and not a multi of 3, so remove the 2 padding chars
+            // that are added
             assert encoded[encoded.length - 1] == '=';
             assert encoded[encoded.length - 2] == '=';
             return new String(encoded, 0, encoded.length - 2, Base64.PREFERRED_ENCODING);

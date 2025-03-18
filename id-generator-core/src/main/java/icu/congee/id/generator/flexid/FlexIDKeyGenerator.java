@@ -1,17 +1,23 @@
 /*
- *  Copyright (c) 2022-2025, Mybatis-Flex (fuhai999@gmail.com).
- *  <p>
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *  <p>
- *  http://www.apache.org/licenses/LICENSE-2.0
- *  <p>
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * MIT License
+ *
+ * Copyright (c) 2024 ixiongdi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  */
 package icu.congee.id.generator.flexid;
 
@@ -34,16 +40,17 @@ import java.util.concurrent.ThreadLocalRandom;
  * 1、每台机器允许最大的并发量为 10w/s。
  * 2、出现时间回拨，重启机器时，在时间回拨未恢复的情况下，可能出现 id 重复。
  * <p>
- * ID组成：时间（7+）| 毫秒内的时间自增 （00~99：2）| 机器ID（00 ~ 99：2）| 随机数（00~99：2）用于分库分表时，通过 id 取模，保证分布均衡。
+ * ID组成：时间（7+）| 毫秒内的时间自增 （00~99：2）| 机器ID（00 ~ 99：2）| 随机数（00~99：2）用于分库分表时，通过 id
+ * 取模，保证分布均衡。
  */
 public class FlexIDKeyGenerator implements IdGenerator {
 
     private static final long INITIAL_TIMESTAMP = 1680411660000L;
     private static final long MAX_CLOCK_SEQ = 99;
 
-    private long lastTimeMillis = 0;//最后一次生成 ID 的时间
-    private long clockSeq = 0;      //时间序列
-    private long workId = 1;        //机器 ID
+    private long lastTimeMillis = 0;// 最后一次生成 ID 的时间
+    private long clockSeq = 0; // 时间序列
+    private long workId = 1; // 机器 ID
 
     public FlexIDKeyGenerator() {
     }
@@ -52,10 +59,9 @@ public class FlexIDKeyGenerator implements IdGenerator {
         this.workId = workId;
     }
 
-
     private synchronized long nextId() {
 
-        //当前时间
+        // 当前时间
         long currentTimeMillis = System.currentTimeMillis();
 
         if (currentTimeMillis == lastTimeMillis) {
@@ -66,7 +72,7 @@ public class FlexIDKeyGenerator implements IdGenerator {
             }
         }
 
-        //出现时间回拨
+        // 出现时间回拨
         else if (currentTimeMillis < lastTimeMillis) {
             currentTimeMillis = lastTimeMillis;
             clockSeq++;
@@ -83,15 +89,13 @@ public class FlexIDKeyGenerator implements IdGenerator {
 
         long diffTimeMillis = currentTimeMillis - INITIAL_TIMESTAMP;
 
-        //ID组成：时间（7+）| 毫秒内的时间自增 （00~99：2）| 机器ID（00 ~ 99：2）| 随机数（00~99：2）
+        // ID组成：时间（7+）| 毫秒内的时间自增 （00~99：2）| 机器ID（00 ~ 99：2）| 随机数（00~99：2）
         return diffTimeMillis * 1000000 + clockSeq * 10000 + workId * 100 + getRandomInt();
     }
-
 
     private int getRandomInt() {
         return ThreadLocalRandom.current().nextInt(100);
     }
-
 
     @Override
     public Long generate() {

@@ -1,4 +1,27 @@
-// 定义包路径，指明该类所在的包结构
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 ixiongdi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package icu.congee.id.generator.uuid;
 
 // 导入Java标准库中的UUID类，用于创建和操作UUID
@@ -23,7 +46,7 @@ import java.util.concurrent.atomic.LongAdder;
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
- * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
+ * &#064;copyright (c) 2024 ixiongdi. All rights reserved.
  */
 public class UUIDv7Generator implements IdGenerator {
     /**
@@ -45,18 +68,17 @@ public class UUIDv7Generator implements IdGenerator {
         // ThreadLocalRandom.current().nextInt() - 获取一个线程安全的随机整数
         // & 0xFFF - 使用按位与操作只保留随机数的低12位
         long msb = System.currentTimeMillis() << 16 | 0x7000 | ThreadLocalRandom.current().nextInt() & 0xFFF;
-        
+
         // 构建最低有效位(LSB)
         // 0x8000000000000000L - 设置变体位为2（RFC 4122规范）
         // | - 使用按位或操作合并变体位和随机数
         // ThreadLocalRandom.current().nextLong() - 获取一个线程安全的随机长整数
         // & 0x3FFFFFFFFFFFFFFFL - 使用按位与操作确保不会覆盖变体位，只使用低62位
         long lsb = 0x8000000000000000L | ThreadLocalRandom.current().nextLong() & 0x3FFFFFFFFFFFFFFFL;
-        
+
         // 使用构建好的MSB和LSB创建并返回一个新的UUID实例
         return new UUID(msb, lsb);
     }
-
 
     @Override
     public String generate() {

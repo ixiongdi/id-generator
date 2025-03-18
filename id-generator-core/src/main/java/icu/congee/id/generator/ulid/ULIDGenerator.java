@@ -31,6 +31,18 @@ import icu.congee.id.base.IdType;
 import java.security.SecureRandom;
 
 /**
+ * ULID (Universally Unique Lexicographically Sortable Identifier) 生成器
+ * 
+ * ULID是一种基于时间戳的、可排序的唯一标识符，由26个字符组成，包含：
+ * - 10个字符的时间戳（精确到毫秒）
+ * - 16个字符的随机数
+ * 
+ * 特点：
+ * - 按时间戳排序
+ * - 使用Crockford的Base32编码
+ * - 128位兼容UUID
+ * - 无特殊字符
+ * 
  * @author shamil
  */
 public final class ULIDGenerator implements IdGenerator {

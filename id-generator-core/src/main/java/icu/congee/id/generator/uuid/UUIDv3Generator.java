@@ -16,7 +16,7 @@ import java.util.UUID;
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
- * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
+ * @author ixiongdi
  */
 public class UUIDv3Generator {
     // 常量定义，用于位掩码和版本/变体的标识
@@ -50,7 +50,7 @@ public class UUIDv3Generator {
      * </p>
      *
      * @param namespace 名称空间UUID，用于提供上下文
-     * @param name 要转换为UUID的名称字符串
+     * @param name      要转换为UUID的名称字符串
      * @return 基于提供的名称空间和名称生成的UUIDv3实例
      * @throws RuntimeException 如果MD5算法不可用
      */

@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
- * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
+ * @author ixiongdi
  */
 public class UUIDv4Generator implements IdGenerator {
     // 常量定义，用于位掩码和版本/变体的标识
@@ -40,23 +40,22 @@ public class UUIDv4Generator implements IdGenerator {
     public static UUID next() {
         // 获取随机数生成器
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        
+
         // 生成两个随机长整型数
         long msb = random.nextLong();
         long lsb = random.nextLong();
-        
+
         // 设置版本号（版本4）
         // 清除版本位（第49-52位）并设置为版本4
         msb = (msb & 0xFFFFFFFFFFFF0FFFL) | VERSION_IDENTIFIER;
-        
+
         // 设置变体（RFC 4122变体）
         // 清除变体位（第65-66位）并设置为RFC 4122变体
         lsb = (lsb & 0x3FFFFFFFFFFFFFFFL) | VARIANT_IDENTIFIER;
-        
+
         // 使用构建好的MSB和LSB创建并返回一个新的UUID实例
         return new UUID(msb, lsb);
     }
-
 
     @Override
     public Object generate() {

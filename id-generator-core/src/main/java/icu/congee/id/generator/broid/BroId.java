@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 ixiongdi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package icu.congee.id.generator.broid;
 
 import icu.congee.id.base.*;
@@ -10,6 +34,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Data
+/**
+ * BroId类提供了一个自定义的ID生成和管理系统。
+ * 该类实现了Comparable接口以支持ID之间的比较操作，并提供了多种编码格式的转换方法。
+ * 每个BroId实例包含一个布尔值列表，用于存储ID的二进制表示。
+ */
 public class BroId implements Comparable<BroId> {
     private final String name = "BroId";
     private final String desc = "Custom Id";
@@ -20,32 +49,74 @@ public class BroId implements Comparable<BroId> {
         return toBase62String();
     }
 
+    /**
+     * 将BroId转换为Base62编码的字符串表示形式。
+     * Base62编码使用数字(0-9)、小写字母(a-z)和大写字母(A-Z)共62个字符来表示二进制数据。
+     *
+     * @return Base62编码的字符串
+     */
     public String toBase62String() {
         return Base62Codec.encode(BitUtils.listToByteArray(value));
     }
 
+    /**
+     * 将BroId转换为Base36编码的字符串表示形式。
+     * Base36编码使用数字(0-9)和小写字母(a-z)共36个字符来表示二进制数据。
+     *
+     * @return Base36编码的字符串
+     */
     public String toBase36String() {
         return Base36Codec.encode(BitUtils.listToByteArray(value));
     }
 
+    /**
+     * 将BroId转换为Crockford Base32编码的字符串表示形式。
+     * Crockford Base32是一种人类可读的编码方案，设计用于减少视觉混淆。
+     *
+     * @return Crockford Base32编码的字符串
+     */
     public String toCrockfordBase32String() {
         return CrockfordBase32.encode(BitUtils.listToByteArray(value));
     }
 
+    /**
+     * 将BroId转换为十六进制字符串表示形式。
+     *
+     * @return 十六进制编码的字符串
+     */
     public String toHexString() {
         return HexCodec.encode(BitUtils.listToByteArray(value));
     }
 
+    /**
+     * 将BroId转换为长整型数值。
+     * 注意：此方法可能会因为BroId的位数超过64位而导致数据丢失。
+     *
+     * @return BroId的长整型表示
+     */
     public Long toLong() {
         return BitUtils.listToLong(value);
     }
 
+    /**
+     * 将BroId转换为标准的UUID。
+     * 转换过程会将前64位作为UUID的最高有效位（MSB），后64位作为最低有效位（LSB）。
+     *
+     * @return UUID实例
+     */
     public UUID toUUID() {
         long msb = BitUtils.listToLong(value.subList(0, 64));
         long lsb = BitUtils.listToLong(value.subList(64, 128));
         return new UUID(msb, lsb);
     }
 
+    /**
+     * 将BroId转换为指定类型的UUID。
+     * 目前仅支持转换为UUIDv8类型，会根据RFC规范设置相应的版本和变体位。
+     *
+     * @param idType UUID的目标类型
+     * @return 指定类型的UUID实例，如果不支持指定的类型则返回null
+     */
     public UUID toUUID(IdType idType) {
         if (idType == IdType.UUIDv8) {
             // The 4-bit version field as defined by Section 4.2, set to 0b1000 (8).
@@ -147,21 +218,21 @@ public class BroId implements Comparable<BroId> {
         if (o == null || getClass() != o.getClass())
             return false;
         BroId broId = (BroId) o;
-        
+
         // 使用与compareTo相同的比较逻辑
         if (this.value == null) {
             return broId.value == null;
         }
-        
+
         if (broId.value == null) {
             return false;
         }
-        
+
         // 首先比较列表长度
         if (this.value.size() != broId.value.size()) {
             return false;
         }
-        
+
         // 如果长度相同，则逐位比较
         for (int i = 0; i < this.value.size(); i++) {
             if (this.value.get(i) != broId.value.get(i)) {
