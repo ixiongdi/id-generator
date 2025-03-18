@@ -16,7 +16,7 @@ import java.util.UUID;
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
- * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
+ * &#064;copyright (c) 2024 ixiongdi. All rights reserved.
  */
 public class UUIDv5Generator {
     // 常量定义，用于位掩码和版本/变体的标识

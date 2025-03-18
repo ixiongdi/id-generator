@@ -2,7 +2,7 @@ package icu.congee.id.generator.broid;
 
 import java.util.List;
 
-/** BroId组成部分接口 ID组成部分，是一个接口，属性value返回一个List<Boolean>，bit限制字段长度 */
+/** BroId组成部分接口 ID组成部分，是一个接口，属性value返回一个{@code List<Boolean>}，bit限制字段长度 */
 public interface BroIdPart {
 
     /**
@@ -15,7 +15,7 @@ public interface BroIdPart {
     /**
      * 生成下一个值
      *
-     * @return 生成的List<Boolean>对象
+     * @return 生成的{@code List<Boolean>}对象
      */
     List<Boolean> next();
 }

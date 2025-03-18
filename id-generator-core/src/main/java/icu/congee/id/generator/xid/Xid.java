@@ -1,39 +1,11 @@
 /*
- * Copyright 2008-present MongoDB, Inc.
+ * MIT License
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2024 ixiongdi
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- * The MIT License
- *
- * Copyright (C) 2020 Shamil
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -47,20 +19,39 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * <p>A globally unique identifier for objects.</p>
+ * <p>
+ * A globally unique identifier for objects.
+ * </p>
  *
- * <p>Consists of 12 bytes, divided as follows:</p>
+ * <p>
+ * Consists of 12 bytes, divided as follows:
+ * </p>
  * <table border="1">
  * <caption>layout</caption>
  * <tr>
- * <td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td>
+ * <td>0</td>
+ * <td>1</td>
+ * <td>2</td>
+ * <td>3</td>
+ * <td>4</td>
+ * <td>5</td>
+ * <td>6</td>
+ * <td>7</td>
+ * <td>8</td>
+ * <td>9</td>
+ * <td>10</td>
+ * <td>11</td>
  * </tr>
  * <tr>
- * <td colspan="4">time</td><td colspan="5">random value</td><td colspan="3">inc</td>
+ * <td colspan="4">time</td>
+ * <td colspan="5">random value</td>
+ * <td colspan="3">inc</td>
  * </tr>
  * </table>
  *
- * <p>Instances of this class are immutable.</p>
+ * <p>
+ * Instances of this class are immutable.
+ * </p>
  */
 public final class Xid implements Comparable<Xid> {
     private static final int ID_LENGTH = 12;
@@ -72,7 +63,7 @@ public final class Xid implements Comparable<Xid> {
 
     private static final AtomicInteger NEXT_COUNTER = new AtomicInteger(new SecureRandom().nextInt());
 
-    private static final char[] BASE32_HEX_CHARS = new char[]{
+    private static final char[] BASE32_HEX_CHARS = new char[] {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
             'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
@@ -88,7 +79,7 @@ public final class Xid implements Comparable<Xid> {
             0xFF, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, // '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g'
             0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, // 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o'
             0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0xFF, // 'p', 'q', 'r', 's', 't', 'u', 'v', 'w'
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF  // 'x', 'y', 'z', '{', '|', '}', '~', 'DEL'
+            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF // 'x', 'y', 'z', '{', '|', '}', '~', 'DEL'
     };
 
     private final int timestamp;
@@ -127,41 +118,46 @@ public final class Xid implements Comparable<Xid> {
      *
      * @param date    the date
      * @param counter the counter
-     * @throws IllegalArgumentException if the high order byte of counter is not zero
+     * @throws IllegalArgumentException if the high order byte of counter is not
+     *                                  zero
      */
     public Xid(final Date date,
-               final int counter) {
+            final int counter) {
         this(dateToTimestampSeconds(date), counter, true);
     }
 
     /**
-     * Creates an Xid using the given time, machine identifier, process identifier, and counter.
+     * Creates an Xid using the given time, machine identifier, process identifier,
+     * and counter.
      *
      * @param timestamp the time in seconds
      * @param counter   the counter
-     * @throws IllegalArgumentException if the high order byte of counter is not zero
+     * @throws IllegalArgumentException if the high order byte of counter is not
+     *                                  zero
      */
     public Xid(final int timestamp,
-               final int counter) {
+            final int counter) {
         this(timestamp, counter, true);
     }
 
     private Xid(final int timestamp,
-                final int counter,
-                final boolean checkCounter) {
+            final int counter,
+            final boolean checkCounter) {
         this(timestamp, RANDOM_VALUE1, RANDOM_VALUE2, counter, checkCounter);
     }
 
     private Xid(final int timestamp,
-                final int randomValue1,
-                final short randomValue2,
-                final int counter,
-                final boolean checkCounter) {
+            final int randomValue1,
+            final short randomValue2,
+            final int counter,
+            final boolean checkCounter) {
         if ((randomValue1 & 0xff000000) != 0) {
-            throw new IllegalArgumentException("The machine identifier must be between 0 and 16777215 (it must fit in three bytes).");
+            throw new IllegalArgumentException(
+                    "The machine identifier must be between 0 and 16777215 (it must fit in three bytes).");
         }
         if (checkCounter && ((counter & 0xff000000) != 0)) {
-            throw new IllegalArgumentException("The counter must be between 0 and 16777215 (it must fit in three bytes).");
+            throw new IllegalArgumentException(
+                    "The counter must be between 0 and 16777215 (it must fit in three bytes).");
         }
         this.timestamp = timestamp;
         this.counter = counter & LOW_ORDER_THREE_BYTES;
@@ -173,7 +169,8 @@ public final class Xid implements Comparable<Xid> {
      * Constructs a new instance from a 24-byte hexadecimal string representation.
      *
      * @param hexString the string to convert
-     * @throws IllegalArgumentException if the string is not a valid hex string representation of an Xid
+     * @throws IllegalArgumentException if the string is not a valid hex string
+     *                                  representation of an Xid
      */
     public Xid(final String hexString) {
         this(parseHexString(hexString));
@@ -193,13 +190,15 @@ public final class Xid implements Comparable<Xid> {
      * Constructs a new instance from the given ByteBuffer
      *
      * @param buffer the ByteBuffer
-     * @throws IllegalArgumentException if the buffer is null or does not have at least 12 bytes remaining
+     * @throws IllegalArgumentException if the buffer is null or does not have at
+     *                                  least 12 bytes remaining
      */
     public Xid(final ByteBuffer buffer) {
         paramNotNull("buffer", buffer);
         isTrue("buffer.remaining() >=12", buffer.remaining() >= ID_LENGTH);
 
-        // Note: Cannot use ByteBuffer.getInt because it depends on tbe buffer's byte order
+        // Note: Cannot use ByteBuffer.getInt because it depends on tbe buffer's byte
+        // order
         // and Xid's are always in big-endian order.
         timestamp = makeInt(buffer.get(), buffer.get(), buffer.get(), buffer.get());
         randomValue1 = makeInt((byte) 0, buffer.get(), buffer.get(), buffer.get());
@@ -229,7 +228,8 @@ public final class Xid implements Comparable<Xid> {
     /**
      * Gets a new object id with the given date value and all other bits zeroed.
      * <p>
-     * The returned object id will compare as less than or equal to any other object id within the same second as the given date, and
+     * The returned object id will compare as less than or equal to any other object
+     * id within the same second as the given date, and
      * less than any later date.
      * </p>
      *
@@ -241,14 +241,15 @@ public final class Xid implements Comparable<Xid> {
     }
 
     /**
-     * Convert to a byte array.  Note that the numbers are stored in big-endian order.
+     * Convert to a byte array. Note that the numbers are stored in big-endian
+     * order.
      *
      * @return the byte array
      */
     public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(ID_LENGTH);
         putToByteBuffer(buffer);
-        return buffer.array();  // using .allocate ensures there is a backing array that can be returned
+        return buffer.array(); // using .allocate ensures there is a backing array that can be returned
     }
 
     /**
@@ -256,7 +257,8 @@ public final class Xid implements Comparable<Xid> {
      * Note that the numbers are stored in big-endian order.
      *
      * @param buffer the ByteBuffer
-     * @throws IllegalArgumentException if the buffer is null or does not have at least 12 bytes remaining
+     * @throws IllegalArgumentException if the buffer is null or does not have at
+     *                                  least 12 bytes remaining
      */
     public void putToByteBuffer(final ByteBuffer buffer) {
         paramNotNull("buffer", buffer);
@@ -497,7 +499,8 @@ public final class Xid implements Comparable<Xid> {
         return (int) (time.getTime() / 1000);
     }
 
-    // Big-Endian helpers, in this class because all other BSON numbers are little-endian
+    // Big-Endian helpers, in this class because all other BSON numbers are
+    // little-endian
 
     private static int makeInt(final byte b3, final byte b2, final byte b1, final byte b0) {
         return (((b3) << 24) |
@@ -535,15 +538,15 @@ public final class Xid implements Comparable<Xid> {
     }
 
     public static void isTrue(final String name,
-                              final boolean condition) {
+            final boolean condition) {
         if (!condition) {
             throw new IllegalStateException("state should be: " + name);
         }
     }
 
     static <T> T isTrue(final String name,
-                        final T value,
-                        final boolean condition) {
+            final T value,
+            final boolean condition) {
         if (!condition) {
             throw new IllegalArgumentException("state should be: " + name);
         }
@@ -551,7 +554,7 @@ public final class Xid implements Comparable<Xid> {
     }
 
     static <T> T paramNotNull(final String name,
-                              final T value) {
+            final T value) {
         if (value == null) {
             throw new IllegalArgumentException(name + " can not be null");
         }

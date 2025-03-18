@@ -10,12 +10,13 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 基于时间戳和随机数的ID生成器
  *
- * <p>该类用于生成64位长整型ID，其中高32位为时间戳（相对于自定义纪元），低32位为随机数。 这种设计可以保证ID按时间递增，同时在同一时间点生成的ID具有唯一性。
+ * <p>
+ * 该类用于生成64位长整型ID，其中高32位为时间戳（相对于自定义纪元），低32位为随机数。
+ * 这种设计可以保证ID按时间递增，同时在同一时间点生成的ID具有唯一性。
  *
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
- * @copyright Copyright (c) 2024 ixiongdi. All rights reserved.
  */
 public class TimeBasedRandomIdGenerator implements IdGenerator {
 
@@ -27,7 +28,8 @@ public class TimeBasedRandomIdGenerator implements IdGenerator {
     /**
      * 生成一个新的基于时间和随机数的ID
      *
-     * <p>该方法创建并返回一个64位长整型ID，其结构如下： - 高32位：当前时间（秒级）减去自定义纪元时间 - 低32位：随机数
+     * <p>
+     * 该方法创建并返回一个64位长整型ID，其结构如下： - 高32位：当前时间（秒级）减去自定义纪元时间 - 低32位：随机数
      *
      * @return 新生成的64位长整型ID
      */

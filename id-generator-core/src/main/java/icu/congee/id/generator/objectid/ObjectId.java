@@ -1,21 +1,26 @@
 /*
- * Copyright 2008-present MongoDB, Inc.
+ * MIT License
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2024 ixiongdi
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  */
 
 package icu.congee.id.generator.objectid;
-
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -30,22 +35,43 @@ import static icu.congee.id.generator.objectid.Assertions.isTrueArgument;
 import static icu.congee.id.generator.objectid.Assertions.notNull;
 
 /**
- * <p>A globally unique identifier for objects.</p>
+ * <p>
+ * A globally unique identifier for objects.
+ * </p>
  *
- * <p>Consists of 12 bytes, divided as follows:</p>
+ * <p>
+ * Consists of 12 bytes, divided as follows:
+ * </p>
  * <table border="1">
  * <caption>ObjectID layout</caption>
  * <tr>
- * <td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td>
+ * <td>0</td>
+ * <td>1</td>
+ * <td>2</td>
+ * <td>3</td>
+ * <td>4</td>
+ * <td>5</td>
+ * <td>6</td>
+ * <td>7</td>
+ * <td>8</td>
+ * <td>9</td>
+ * <td>10</td>
+ * <td>11</td>
  * </tr>
  * <tr>
- * <td colspan="4">time</td><td colspan="5">random value</td><td colspan="3">inc</td>
+ * <td colspan="4">time</td>
+ * <td colspan="5">random value</td>
+ * <td colspan="3">inc</td>
  * </tr>
  * </table>
  *
- * <p>Instances of this class are immutable.</p>
+ * <p>
+ * Instances of this class are immutable.
+ * </p>
  *
- * @mongodb.driver.manual core/object-id ObjectId
+ * @see <a href=
+ *      "https://www.mongodb.com/docs/manual/reference/method/ObjectId/">MongoDB
+ *      ObjectId</a>
  */
 public final class ObjectId implements Comparable<ObjectId>, Serializable {
 
@@ -62,7 +88,7 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
 
     private static final char[] HEX_CHARS = {
             '0', '1', '2', '3', '4', '5', '6', '7',
-            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
     /**
      * The timestamp
@@ -70,8 +96,10 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
     private final int timestamp;
 
     /**
-     * The final 8 bytes of the ObjectID are 5 bytes probabilistically unique to the machine and
-     * process, followed by a 3 byte incrementing counter initialized to a random value.
+     * The final 8 bytes of the ObjectID are 5 bytes probabilistically unique to the
+     * machine and
+     * process, followed by a 3 byte incrementing counter initialized to a random
+     * value.
      */
     private final long nonce;
 
@@ -87,7 +115,8 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
     /**
      * Gets a new object id with the given date value and all other bits zeroed.
      * <p>
-     * The returned object id will compare as less than or equal to any other object id within the same second as the given date, and
+     * The returned object id will compare as less than or equal to any other object
+     * id within the same second as the given date, and
      * less than any later date.
      * </p>
      *
@@ -155,7 +184,8 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
      *
      * @param date    the date
      * @param counter the counter
-     * @throws IllegalArgumentException if the high order byte of counter is not zero
+     * @throws IllegalArgumentException if the high order byte of counter is not
+     *                                  zero
      */
     public ObjectId(final Date date, final int counter) {
         this(dateToTimestampSeconds(date), getNonceFromUntrustedCounter(counter));
@@ -166,7 +196,8 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
      *
      * @param timestamp the time in seconds
      * @param counter   the counter
-     * @throws IllegalArgumentException if the high order byte of counter is not zero
+     * @throws IllegalArgumentException if the high order byte of counter is not
+     *                                  zero
      */
     public ObjectId(final int timestamp, final int counter) {
         this(timestamp, getNonceFromUntrustedCounter(counter));
@@ -179,7 +210,8 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
 
     private static long getNonceFromUntrustedCounter(final int counter) {
         if ((counter & 0xff000000) != 0) {
-            throw new IllegalArgumentException("The counter must be between 0 and 16777215 (it must fit in three bytes).");
+            throw new IllegalArgumentException(
+                    "The counter must be between 0 and 16777215 (it must fit in three bytes).");
         }
         return RANDOM_VALUE | counter;
     }
@@ -188,7 +220,8 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
      * Constructs a new instance from a 24-byte hexadecimal string representation.
      *
      * @param hexString the string to convert
-     * @throws IllegalArgumentException if the string is not a valid hex string representation of an ObjectId
+     * @throws IllegalArgumentException if the string is not a valid hex string
+     *                                  representation of an ObjectId
      */
     public ObjectId(final String hexString) {
         this(parseHexString(hexString));
@@ -208,14 +241,15 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
      * Constructs a new instance from the given ByteBuffer
      *
      * @param buffer the ByteBuffer
-     * @throws IllegalArgumentException if the buffer is null or does not have at least 12 bytes remaining
+     * @throws IllegalArgumentException if the buffer is null or does not have at
+     *                                  least 12 bytes remaining
      * @since 3.4
      */
     public ObjectId(final ByteBuffer buffer) {
         notNull("buffer", buffer);
         isTrueArgument("buffer.remaining() >=12", buffer.remaining() >= OBJECT_ID_LENGTH);
 
-       ByteOrder originalOrder = buffer.order();
+        ByteOrder originalOrder = buffer.order();
         try {
             buffer.order(ByteOrder.BIG_ENDIAN);
             this.timestamp = buffer.getInt();
@@ -226,7 +260,8 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
     }
 
     /**
-     * Convert to a byte array.  Note that the numbers are stored in big-endian order.
+     * Convert to a byte array. Note that the numbers are stored in big-endian
+     * order.
      *
      * @return the byte array
      */
@@ -243,14 +278,15 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
      * Note that the numbers are stored in big-endian order.
      *
      * @param buffer the ByteBuffer
-     * @throws IllegalArgumentException if the buffer is null or does not have at least 12 bytes remaining
+     * @throws IllegalArgumentException if the buffer is null or does not have at
+     *                                  least 12 bytes remaining
      * @since 3.4
      */
     public void putToByteBuffer(final ByteBuffer buffer) {
         notNull("buffer", buffer);
         isTrueArgument("buffer.remaining() >=12", buffer.remaining() >= OBJECT_ID_LENGTH);
 
-       ByteOrder originalOrder = buffer.order();
+        ByteOrder originalOrder = buffer.order();
         try {
             buffer.order(ByteOrder.BIG_ENDIAN);
             buffer.putInt(this.timestamp);
@@ -333,7 +369,8 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
      * Write the replacement object.
      *
      * <p>
-     * See https://docs.oracle.com/javase/6/docs/platform/serialization/spec/output.html
+     * See
+     * https://docs.oracle.com/javase/6/docs/platform/serialization/spec/output.html
      * </p>
      *
      * @return a proxy for the document
@@ -346,7 +383,8 @@ public final class ObjectId implements Comparable<ObjectId>, Serializable {
      * Prevent normal deserialization.
      *
      * <p>
-     * See https://docs.oracle.com/javase/6/docs/platform/serialization/spec/input.html
+     * See
+     * https://docs.oracle.com/javase/6/docs/platform/serialization/spec/input.html
      * </p>
      *
      * @param stream the stream
