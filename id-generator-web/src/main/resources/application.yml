@@ -1,9 +1,15 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://congee.icu:3306/ids?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: id_generator
-    password: W7K5Pn%J
+    # 请在环境变量中设置以下配置
+    # MYSQL_HOST: 数据库主机地址
+    # MYSQL_PORT: 数据库端口
+    # MYSQL_DATABASE: 数据库名称
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    # MYSQL_USERNAME: 数据库用户名
+    username: ${MYSQL_USERNAME}
+    # MYSQL_PASSWORD: 数据库密码
+    password: ${MYSQL_PASSWORD}
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20

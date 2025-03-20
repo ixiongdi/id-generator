@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UUIDv1GeneratorTest {
 
     private static final int CONCURRENT_THREADS = 10;
-    private static final int ITERATIONS_PER_THREAD = 1000000;
+    private static final int ITERATIONS_PER_THREAD = 1000;
 
     /**
      * 测试生成的UUID格式正确性

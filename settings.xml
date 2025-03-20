@@ -31,7 +31,7 @@
         <server>
             <id>github</id>
             <username>ixiongdi</username>
-            <password>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</password>
+            <password>{{GITHUB_TOKEN}}</password>
         </server>
     </servers>
 </settings>
