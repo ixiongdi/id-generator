@@ -172,9 +172,9 @@
             <url>scm:git:https://github.com/ixiongdi/id-generator.git</url>
         </site>
         <repository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/ixiongdi/id-generator</url>
         </repository>
     </distributionManagement>
 
