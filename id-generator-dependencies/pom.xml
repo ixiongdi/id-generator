@@ -170,4 +170,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <site>
+            <id>github</id>
+            <url>scm:git:https://github.com/ixiongdi/id-generator.git</url>
+        </site>
+    </distributionManagement>
+
 </project>

@@ -47,7 +47,7 @@
 ### Gradle
 
 ```groovy
-implementation 'icu.congee:id-generator-core:0.1.0'
+implementation 'icu.congee:id-generator-core:0.2.0'
 ```
 
 ### 基本使用
