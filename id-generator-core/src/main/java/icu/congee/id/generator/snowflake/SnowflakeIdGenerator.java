@@ -28,6 +28,15 @@ public class SnowflakeIdGenerator implements IdGenerator {
     private final AtomicLong sequence; // 序列号
     private long lastTimestamp; // 上次生成ID的时间戳
 
+    /**
+     * 创建一个新的雪花算法ID生成器实例
+     * <p>
+     * 通过指定工作节点ID来初始化生成器。工作节点ID用于确保在分布式环境中生成的ID的唯一性。
+     * </p>
+     *
+     * @param workerId 工作节点ID，取值范围[0, 1023]
+     * @throws IllegalArgumentException 当workerId超出有效范围时抛出
+     */
     public SnowflakeIdGenerator(long workerId) {
         // 校验workerId的合法性
         if (workerId > MAX_WORKER_ID || workerId < 0) {
@@ -38,12 +47,25 @@ public class SnowflakeIdGenerator implements IdGenerator {
         this.lastTimestamp = -1L;
     }
 
+    /**
+     * 生成下一个唯一的ID
+     * <p>
+     * 该方法是线程安全的，通过同步机制确保在多线程环境下的正确性。
+     * 生成的ID由以下部分组成：
+     * - 41位时间戳
+     * - 10位工作节点ID
+     * - 12位序列号
+     * </p>
+     *
+     * @return 生成的唯一ID
+     * @throws RuntimeException 当检测到系统时钟回退时抛出
+     */
     public synchronized long next() {
         long timestamp = timeGen();
 
         // 如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过
         if (timestamp < lastTimestamp) {
-            throw new RuntimeException("Clock moved backwards. Refusing to generate id for " + 
+            throw new RuntimeException("Clock moved backwards. Refusing to generate id for " +
                     (lastTimestamp - timestamp) + " milliseconds");
         }
 

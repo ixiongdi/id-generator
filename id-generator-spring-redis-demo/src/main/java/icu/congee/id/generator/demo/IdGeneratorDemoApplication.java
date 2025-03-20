@@ -22,6 +22,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class IdGeneratorDemoApplication {
 
     /**
+     * 默认构造器
+     * <p>
+     * 创建一个新的IdGeneratorDemoApplication实例
+     * </p>
+     */
+    public IdGeneratorDemoApplication() {
+        // 默认构造器
+    }
+
+    /**
      * 应用主入口
      * 
      * @param args 命令行参数

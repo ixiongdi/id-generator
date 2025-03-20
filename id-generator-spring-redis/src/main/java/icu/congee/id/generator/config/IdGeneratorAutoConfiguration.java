@@ -45,6 +45,24 @@ import org.springframework.context.annotation.Bean;
  */
 @AutoConfiguration(after = RedisAutoConfiguration.class)
 @EnableConfigurationProperties(IdGeneratorProperties.class)
+/**
+ * 默认构造器创建ID生成器自动配置实例
+ * <p>
+ * 创建一个自动配置实例，用于初始化和配置基于Redis的分布式ID生成器。
+ * 该实例负责注册必要的Spring Bean，并确保ID生成器服务的正确配置。
+ * </p>
+ * 
+ * @since 1.0.0
+ */
+/**
+ * 默认构造器创建ID生成器自动配置实例
+ * <p>
+ * 创建一个自动配置实例，用于初始化和配置基于Redis的分布式ID生成器。
+ * 该实例负责注册必要的Spring Bean，并确保ID生成器服务的正确配置。
+ * </p>
+ * 
+ * @since 1.0.0
+ */
 public class IdGeneratorAutoConfiguration {
 
     /**

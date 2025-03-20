@@ -3,6 +3,23 @@ package icu.congee.id.generator.pushid;
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
 
+/**
+ * Firebase Push ID生成器的Java实现
+ *
+ * <p>
+ * Push ID是一个20字符长的字符串，由以下部分组成：
+ * - 前8个字符：基于时间戳（毫秒级）的编码
+ * - 后12个字符：随机生成的字符
+ *
+ * <p>
+ * 特点：
+ * 1. 按时间排序：由于使用时间戳作为前缀，Push ID天然具有时间顺序
+ * 2. 唯一性：使用随机字符和时间戳组合确保唯一性
+ * 3.
+ * URL安全：使用URL安全的字符集（-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz）
+ *
+ * @author congee
+ */
 public class PushIDGenerator implements IdGenerator {
     // 模拟 base64 安全字符，按 ASCII 排序
     private static final String PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
@@ -11,6 +28,12 @@ public class PushIDGenerator implements IdGenerator {
     // 存储上次生成的随机字符，用于处理时间戳冲突
     private static int[] lastRandChars = new int[12];
 
+    /**
+     * 生成一个新的Push ID
+     *
+     * @return 20字符长的唯一Push ID
+     * @throws RuntimeException 如果时间戳转换失败或生成的ID长度不正确
+     */
     public static String generatePushID() {
         long now = System.currentTimeMillis();
         boolean duplicateTime = (now == lastPushTime);
@@ -51,6 +74,11 @@ public class PushIDGenerator implements IdGenerator {
         return id.toString();
     }
 
+    /**
+     * 测试生成Push ID的主方法
+     *
+     * @param args 命令行参数（未使用）
+     */
     public static void main(String[] args) {
         // 测试生成 Push ID
         System.out.println(generatePushID());

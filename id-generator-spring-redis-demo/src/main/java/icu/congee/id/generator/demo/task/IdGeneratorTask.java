@@ -29,17 +29,24 @@ public class IdGeneratorTask {
      * 默认构造器创建定时任务实例
      */
 
+    /**
+     * 默认构造器创建定时任务实例
+     */
+
     private static final Logger logger = LoggerFactory.getLogger(IdGeneratorTask.class);
 
     @Resource
     IdGeneratorService idGeneratorService;
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.SECONDS)
-
     /**
      * 执行定时ID生成任务
+     * <p>
+     * 该方法按照固定的时间间隔（5秒）自动执行，用于测试ID生成功能。
+     * 每次执行时，会生成单个ID和批量ID（100个），并通过日志记录结果。
+     * 方法使用分布式锁确保在集群环境下的ID唯一性。
+     * </p>
      * 
-     * @throws InterruptedException 当获取分布式锁时被中断抛出
+     * @throws InterruptedException 当尝试获取分布式锁时被中断则抛出此异常
      */
     @Scheduled(fixedRate = 5000)
     public void generate() throws InterruptedException {

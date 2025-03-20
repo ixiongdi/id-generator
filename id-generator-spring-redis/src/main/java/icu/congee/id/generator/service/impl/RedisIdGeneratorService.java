@@ -48,10 +48,25 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0.0
  */
 @Service
+/**
+ * 默认构造器创建RedisID生成器实例
+ * <p>
+ * 创建一个基于Redis的分布式ID生成器服务实例。该实例使用Redisson客户端
+ * 实现分布式锁机制，确保在分布式环境下ID生成的唯一性和线程安全性。
+ * </p>
+ * 
+ * @since 1.0.0
+ */
 public class RedisIdGeneratorService implements IdGeneratorService {
 
     /**
      * 默认构造器创建RedisID生成器实例
+     * <p>
+     * 创建一个基于Redis的分布式ID生成器服务实例。该实例使用Redisson客户端
+     * 实现分布式锁机制，确保在分布式环境下ID生成的唯一性和线程安全性。
+     * </p>
+     * 
+     * @since 1.0.0
      */
 
     private static final Map<IdType, IdGenerator> idGeneratorMap = IdUtil.getIdGeneratorMap();
