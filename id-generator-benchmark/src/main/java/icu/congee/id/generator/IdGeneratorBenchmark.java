@@ -1,6 +1,7 @@
 package icu.congee.id.generator;
 
-import icu.congee.id.util.IdUtil;
+import icu.congee.id.generator.uuid.*;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -14,6 +15,9 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
@@ -22,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, warmups = 0)
 @Threads(16) // 设置并发线程数为4
 public class IdGeneratorBenchmark {
+
+    SecureRandom random = new SecureRandom();
 
     // main 方法，用于运行基准测试
     public static void main(String[] args) throws RunnerException {
@@ -36,47 +42,41 @@ public class IdGeneratorBenchmark {
     }
 
     @Benchmark
-    public void broId() {
-        IdUtil.broId();
+    public void testUUIDv1() {
+        UUIDv1Generator.next();
     }
 
     @Benchmark
-    public void ulid() {
-        IdUtil.ulid();
+    public void testUUIDv2() {
+        UUIDv2Generator.next();
     }
 
     @Benchmark
-    public void lexicalUUID() {
-        IdUtil.lexicalUUID();
+    public void testUUIDv3() {
+        byte[] bytes = new byte[16];
+        random.nextBytes(bytes);
+        UUIDv3Generator.fromNamespaceAndName(UUID.randomUUID(), Arrays.toString(bytes));
     }
 
     @Benchmark
-    public void businessId() {
-        IdUtil.businessId();
+    public void testUUIDv4() {
+        UUIDv4Generator.next();
     }
 
     @Benchmark
-    public void randomId() {
-        IdUtil.randomId();
+    public void testUUIDv5() {
+        byte[] bytes = new byte[16];
+        random.nextBytes(bytes);
+        UUIDv5Generator.fromNamespaceAndName(UUID.randomUUID(), Arrays.toString(bytes));
     }
 
     @Benchmark
-    public void unixTimeBasedUUID() {
-        IdUtil.unixTimeBasedUUID();
+    public void testUUIDv6() {
+        UUIDv6Generator.next();
     }
 
     @Benchmark
-    public void unixTimeBasedUUID1() {
-        IdUtil.unixTimeBasedUUID1();
-    }
-
-    @Benchmark
-    public void unixTimeBasedUUID2() {
-        IdUtil.unixTimeBasedUUID2();
-    }
-
-    @Benchmark
-    public void customUUID() {
-        IdUtil.customUUID();
+    public void testUUIDv7() {
+        UUIDv7Generator.next();
     }
 }

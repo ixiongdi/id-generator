@@ -180,12 +180,12 @@ java -jar id-generator-benchmark/target/id-generator-benchmark.jar
 ### UUID 系列
 
 - [x] UUIDv1 - 基于时间和 MAC 地址的 UUID
-- [ ] UUIDv2 - DCE 安全 UUID
-- [ ] UUIDv3 - 基于名字和 MD5 的 UUID
-- [ ] UUIDv4 - 随机 UUID
-- [ ] UUIDv5 - 基于名字和 SHA-1 的 UUID
-- [ ] UUIDv6 - 基于时间的 UUID（改进版 UUIDv1）
-- [ ] UUIDv7 - 基于 Unix 时间戳的 UUID（最新 RFC 标准） (测试完成日期: 2024-05-20, 覆盖率: 95%)
+- [x] UUIDv2 - DCE 安全 UUID
+- [x] UUIDv3 - 基于名字和 MD5 的 UUID
+- [x] UUIDv4 - 随机 UUID
+- [x] UUIDv5 - 基于名字和 SHA-1 的 UUID
+- [x] UUIDv6 - 基于时间的 UUID（改进版 UUIDv1）
+- [x] UUIDv7 - 基于 Unix 时间戳的 UUID（最新 RFC 标准） (测试完成日期: 2024-05-20, 覆盖率: 95%)
 - [ ] UUIDv8 - 自定义 UUID
 
 ### 其他 ID 生成器

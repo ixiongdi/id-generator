@@ -153,6 +153,16 @@
                     <waitUntil>published</waitUntil>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-publish-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <pubScmUrl>scm:git:https://github.com/ixiongdi/id-generator.git</pubScmUrl>
+                    <scmBranch>gh-pages</scmBranch>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

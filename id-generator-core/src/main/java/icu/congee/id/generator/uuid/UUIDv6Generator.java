@@ -3,6 +3,10 @@ package icu.congee.id.generator.uuid;
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
 
+import java.net.NetworkInterface;
+import java.security.SecureRandom;
+import java.time.Instant;
+import java.util.Enumeration;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,65 +20,120 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
- * &#064;copyright (c) 2024 ixiongdi. All rights reserved.
+ *        &#064;copyright (c) 2024 ixiongdi. All rights reserved.
  */
 public class UUIDv6Generator implements IdGenerator {
-    // 常量定义，用于位掩码和版本/变体的标识
-    /** 格里高利时间戳掩码，占用 60 位 */
-    private static final long GREGORIAN_TIMESTAMP_MASK = 0xFFFFFFFFFFFFFL;
-
-    /** UUID 版本 6 的标识符 */
-    private static final long VERSION_IDENTIFIER = 0x6000L;
-
-    /** UUID 变体 2 的标识符（RFC 4122规范） */
-    private static final long VARIANT_IDENTIFIER = 0x8000000000000000L;
-
-    /** 时钟序列掩码，占用 14 位 */
-    private static final long CLOCK_SEQUENCE_MASK = 0x3FFF;
-
-    /** 节点ID掩码，占用 48 位 */
-    private static final long NODE_ID_MASK = 0xFFFFFFFFFFFFL;
-
-    // 线程本地的序列生成器，用于确保线程间的唯一性
-    private static final ThreadLocal<ThreadLocalSequence> threadLocalSequence = ThreadLocal
-            .withInitial(ThreadLocalSequence::new);
-
-    // 节点ID，默认使用随机生成的值
-    private static final long NODE_ID = ThreadLocalRandom.current().nextLong() & NODE_ID_MASK;
+    // 格里高利历偏移量（从 1582-10-15 到 1970-01-01 的 100 纳秒间隔数）
+    private static final long GREGORIAN_OFFSET = 122192928000000000L;
+    private static final SecureRandom random = new SecureRandom();
+    private static long lastTimestamp = 0L;
+    private static int lastClockSeq = -1;
 
     /**
-     * 生成一个新的UUIDv6
-     * <p>
-     * 该方法创建并返回一个新的UUIDv6实例，其中包含基于当前时间的时间戳、时钟序列和节点ID。
-     * UUIDv6的结构如下：
-     * - 最高有效位(MSB)：60位时间戳 + 4位版本号(6)
-     * - 最低有效位(LSB)：2位变体标识 + 14位时钟序列 + 48位节点ID
-     * </p>
-     *
-     * @return 新生成的UUIDv6实例
+     * 生成 UUIDv6。
+     * 
+     * @return UUIDv6 实例
      */
-    public static UUID next() {
-        // 获取当前线程的序列
-        ThreadLocalSequence seq = threadLocalSequence.get();
+    public synchronized static UUID next() {
+        // 获取当前时间戳（60 位，100 纳秒单位）
+        long timestamp = getCurrentTimestamp();
 
-        // 获取当前时间戳（毫秒）并转换为100纳秒为单位的格里高利时间戳
-        // 从1582-10-15 00:00:00开始计算（格里高利历元）
-        // 0x01B21DD213814000L是从1582-10-15到1970-01-01的100纳秒数
-        long timestamp = (System.currentTimeMillis() * 10000 + 0x01B21DD213814000L) & GREGORIAN_TIMESTAMP_MASK;
+        // 处理时钟回拨
+        if (timestamp < lastTimestamp) {
+            timestamp = lastTimestamp + 1; // 时钟回拨时递增时间戳
+        }
+        lastTimestamp = timestamp;
 
-        // 获取时钟序列，每次调用递增
-        long clockSequence = seq.sequence++ & CLOCK_SEQUENCE_MASK;
+        // 分割时间戳
+        long timeHigh = (timestamp >>> 28) & 0xFFFFFFFFL; // 最显著的 32 位
+        long timeMid = (timestamp >>> 12) & 0xFFFFL; // 接下来的 16 位
+        long timeLow = timestamp & 0xFFFL; // 最不显著的 12 位
 
-        // 构建最高有效位(MSB)
-        // 将时间戳放在高60位，版本号(6)放在低4位
-        long msb = (timestamp << 4) | VERSION_IDENTIFIER;
+        // 版本号: 6 (0b0110)
+        int version = 6;
 
-        // 构建最低有效位(LSB)
-        // 变体位(2位) + 时钟序列(14位) + 节点ID(48位)
-        long lsb = VARIANT_IDENTIFIER | (clockSequence << 48) | NODE_ID;
+        // 变种: 0b10
+        int variant = 0b10;
 
-        // 使用构建好的MSB和LSB创建并返回一个新的UUID实例
+        // 处理时钟序列（14位）
+        int clockSeq;
+        if (timestamp == lastTimestamp) {
+            // 相同时间戳下，时钟序列自增
+            clockSeq = (lastClockSeq + 1) & 0x3FFF;
+            if (clockSeq == 0) {
+                // 时钟序列达到最大值，等待下一个时间戳
+                timestamp = tilNextMillis(lastTimestamp);
+                clockSeq = random.nextInt() & 0x3FFF;
+            }
+        } else {
+            // 不同时间戳，随机生成时钟序列
+            clockSeq = random.nextInt() & 0x3FFF;
+        }
+        lastClockSeq = clockSeq;
+
+        // 生成随机节点ID（48位）
+        long randomNodeId = random.nextLong() & 0xFFFFFFFFFFFFL;
+
+        // 组装高 64 位 (msb): time_high (32) | time_mid (16) | ver (4) | time_low (12)
+        long msb = (timeHigh << 32) | (timeMid << 16) | (version << 12) | timeLow;
+
+        // 组装低 64 位 (lsb): var (2) | clock_seq (14) | node (48)
+        long lsb = ((long) variant << 62) | ((long) clockSeq << 48) | randomNodeId;
+
         return new UUID(msb, lsb);
+    }
+
+    /**
+     * 获取当前时间戳，以 100 纳秒为单位，从 1582-10-15 00:00:00 UTC 开始。
+     * 
+     * @return 60 位时间戳
+     */
+    private static long getCurrentTimestamp() {
+        Instant now = Instant.now();
+        long seconds = now.getEpochSecond(); // 自 1970-01-01 00:00:00 UTC 起的秒数
+        int nanos = now.getNano(); // 当前秒内的纳秒数
+        long total_100ns = seconds * 10_000_000L + (nanos / 100); // 转换为 100 纳秒单位
+        return total_100ns + GREGORIAN_OFFSET; // 加上格里高利历偏移量
+    }
+
+    /**
+     * 获取 48 位节点 ID，优先使用 MAC 地址，否则使用随机值。
+     * 
+     * @return 48 位节点 ID
+     */
+    private static long getNodeId() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface nic = interfaces.nextElement();
+                byte[] mac = nic.getHardwareAddress();
+                if (mac != null && mac.length == 6) {
+                    long node = 0;
+                    for (byte b : mac) {
+                        node = (node << 8) | (b & 0xFF);
+                    }
+                    return node;
+                }
+            }
+        } catch (Exception e) {
+            // 如果获取 MAC 地址失败，则使用随机值
+        }
+        // 生成 48 位随机节点 ID
+        return random.nextLong() & 0xFFFFFFFFFFFFL;
+    }
+
+    /**
+     * 等待下一个毫秒级时间戳
+     * 
+     * @param lastTimestamp 上一次生成ID的时间戳
+     * @return 下一个时间戳
+     */
+    private static long tilNextMillis(long lastTimestamp) {
+        long timestamp = getCurrentTimestamp();
+        while (timestamp <= lastTimestamp) {
+            timestamp = getCurrentTimestamp();
+        }
+        return timestamp;
     }
 
     @Override
@@ -85,11 +144,5 @@ public class UUIDv6Generator implements IdGenerator {
     @Override
     public IdType idType() {
         return IdType.UUIDv6;
-    }
-
-    /** 线程本地序列持有者。每个线程拥有独立的序列号，以避免线程间的竞争。 */
-    private static class ThreadLocalSequence {
-        /** 序列号初始值，使用随机值以减少冲突可能性 */
-        long sequence = ThreadLocalRandom.current().nextLong() & CLOCK_SEQUENCE_MASK;
     }
 }
