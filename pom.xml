@@ -29,13 +29,8 @@
 
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-parent</artifactId>
-    <version>${revision}</version>
+    <version>0.2.9</version>
     <packaging>pom</packaging>
-
-    <properties>
-        <revision>0.2.9</revision>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <modules>
         <module>id-generator-benchmark</module>
