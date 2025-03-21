@@ -18,22 +18,13 @@ jobs:
           server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
-      - name: Import GPG Private Key
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: |
-            mkdir -p ~/.gnupg
-            echo "use-agent" >> ~/.gnupg/gpg.conf
-            echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-            echo "allow-loopback-pinentry" >> ~/.gnupg/gpg.conf
-            
-            # 解码并导入私钥（假设私钥是 Base64 编码的）
-            echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --import
-            echo "$GPG_PASSPHRASE" | gpg --batch --pinentry-mode loopback --passphrase-fd 0 --import
-            
-            # 验证私钥是否存在
-            gpg --list-secret-keys
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      - name: List keys
+        run: gpg -K
       - name: Publish to the Maven Central Repository
         run: mvn --batch-mode deploy
         env:
