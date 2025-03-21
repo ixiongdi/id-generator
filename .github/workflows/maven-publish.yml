@@ -26,16 +26,16 @@ jobs:
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
       - name: List keys
         run: gpg -K
-      - name: Publish to the Maven Central Repository
-        run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-        env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-      - name: Set up Java for publishing to GitHub Packages
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
+#      - name: Publish to the Maven Central Repository
+#        run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+#          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+#      - name: Set up Java for publishing to GitHub Packages
+#        uses: actions/setup-java@v4
+#        with:
+#          java-version: '21'
+#          distribution: 'temurin'
       - name: Publish to GitHub Packages
         run: mvn --batch-mode deploy
         env:
