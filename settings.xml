@@ -17,7 +17,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <gpg.keyname>${GPG_PRIVATE_KEY}</gpg.keyname>
+                <gpg.keyname>andy</gpg.keyname>
                 <gpg.passphrase>${GPG_PASSPHRASE}</gpg.passphrase>
             </properties>
         </profile>
