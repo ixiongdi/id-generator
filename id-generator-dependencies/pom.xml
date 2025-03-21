@@ -6,7 +6,7 @@
 
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-dependencies</artifactId>
-    <version>${revision}</version>
+    <version>0.2.9</version>
     <packaging>pom</packaging>
 
     <name>ID Generator Dependencies</name>
