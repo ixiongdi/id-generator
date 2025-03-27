@@ -40,14 +40,14 @@
 <dependency>
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-core</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'icu.congee:id-generator-core:0.2.0'
+implementation 'icu.congee:id-generator-core:0.3.0'
 ```
 
 ### 基本使用
@@ -190,12 +190,12 @@ java -jar id-generator-benchmark/target/id-generator-benchmark.jar
 
 ### 其他 ID 生成器
 
-- [ ] Snowflake - Twitter 的雪花算法 (测试完成日期: 2024-05-21, 覆盖率: 92%)
-- [ ] ULID - 可排序的 UUID (测试完成日期: 2024-05-22, 覆盖率: 98%)
-- [ ] ObjectId - MongoDB 的 ObjectId
-- [ ] Sonyflake - Sony 的分布式 ID 生成器
-- [ ] CombGuid - 结合 GUID 和时间戳的 ID
-- [ ] Xid - 全局唯一 ID 生成器
+- [x] Snowflake - Twitter 的雪花算法 (测试完成日期: 2024-05-21, 覆盖率: 92%)
+- [x] ULID - 可排序的 UUID (测试完成日期: 2024-05-22, 覆盖率: 98%)
+- [x] ObjectId - MongoDB 的 ObjectId
+- [x] Sonyflake - Sony 的分布式 ID 生成器
+- [x] CombGuid - 结合 GUID 和时间戳的 ID
+- [x] Xid - 全局唯一 ID 生成器
 - [ ] CosId - 腾讯云的分布式 ID 生成器
-- [ ] Cuid2 - 安全、可排序的 ID
-- [ ] FlakeId - 分布式 ID 生成器
+- [x] Cuid2 - 安全、可排序的 ID
+- [x] FlakeId - 分布式 ID 生成器
