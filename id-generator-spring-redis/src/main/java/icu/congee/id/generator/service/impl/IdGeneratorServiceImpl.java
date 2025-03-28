@@ -57,7 +57,7 @@ import java.util.concurrent.TimeUnit;
  * 
  * @since 1.0.0
  */
-public class RedisIdGeneratorService implements IdGeneratorService {
+public class IdGeneratorServiceImpl implements IdGeneratorService {
 
     /**
      * 默认构造器创建RedisID生成器实例

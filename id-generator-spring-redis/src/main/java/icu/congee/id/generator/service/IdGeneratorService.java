@@ -30,7 +30,7 @@ import icu.congee.id.base.IdType;
 public interface IdGeneratorService {
     /**
      * 生成单个分布式ID
-     * 
+     *
      * @param idType ID类型枚举
      * @return 生成的分布式ID对象
      * @throws InterruptedException 当获取分布式锁时被中断抛出
@@ -39,9 +39,9 @@ public interface IdGeneratorService {
 
     /**
      * 批量生成分布式ID
-     * 
+     *
      * @param idType ID类型枚举
-     * @param count  需要生成的ID数量
+     * @param count 需要生成的ID数量
      * @return 包含生成ID的数组
      * @throws InterruptedException 当获取分布式锁时被中断抛出
      */

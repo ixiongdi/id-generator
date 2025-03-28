@@ -25,7 +25,7 @@
 package icu.congee.id.generator.config;
 
 import icu.congee.id.generator.service.IdGeneratorService;
-import icu.congee.id.generator.service.impl.RedisIdGeneratorService;
+import icu.congee.id.generator.service.impl.IdGeneratorServiceImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -72,7 +72,7 @@ public class IdGeneratorAutoConfiguration {
      */
     @Bean
     public IdGeneratorService idGeneratorService() {
-        return new RedisIdGeneratorService();
+        return new IdGeneratorServiceImpl();
     }
 
 }

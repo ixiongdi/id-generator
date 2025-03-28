@@ -1,99 +1,211 @@
+/*
+ * Copyright 2024 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// 定义包路径
 package icu.congee.id.generator.cosid;
 
+// 导入必要的类
 import icu.congee.id.base.Base62Codec;
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
 
+import java.nio.ByteBuffer;
 import java.time.Instant;
-import java.util.Base64;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Arrays;
 
-/** CosId生成器实现 基于时间戳、机器ID和序列号组合生成全局唯一ID */
+/**
+ * CosId分布式ID生成器实现类
+ * 采用80位二进制结构：44位时间戳 + 20位机器ID + 16位序列号
+ */
 public class CosIdGenerator implements IdGenerator {
+    // 位分配常量定义
+    private static final int TIMESTAMP_BITS = 44; // 时间戳占用44位
+    private static final int MACHINE_ID_BITS = 20; // 机器ID占用20位
+    private static final int SEQUENCE_BITS = 16; // 序列号占用16位
 
-    private static final long EPOCH = 1609459200000L; // 2021-01-01 00:00:00
-    private static final int MACHINE_BITS = 20;
-    private static final int SEQUENCE_BITS = 16;
+    // 计算最大值常量
+    private static final long MAX_MACHINE_ID = (1L << MACHINE_ID_BITS) - 1; // 机器ID最大值（1048575）
+    private static final long MAX_SEQUENCE = (1L << SEQUENCE_BITS) - 1; // 序列号最大值（65535）
 
-    private static final long MAX_SEQUENCE = ~(-1L << SEQUENCE_BITS);
-    private static final long MACHINE_LEFT_SHIFT = SEQUENCE_BITS;
-    private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + MACHINE_BITS;
+    // 基础组件参数
+    private final long epoch; // 自定义纪元时间戳
+    private final long machineId; // 机器ID
 
-    private static final long machineId;
-    private static final AtomicLong sequence;
-    private static long lastTimestamp;
+    // 运行时状态变量
+    private long lastTimestamp = -1L; // 上次生成ID的时间戳
+    private long sequence = 0L; // 当前序列号
 
-    static {
-        // 这里简单使用随机数作为机器ID，实际应用中应该使用配置或其他方式获取
-        machineId = (int) (Math.random() * (1L << MACHINE_BITS));
-        sequence = new AtomicLong(0L);
-        lastTimestamp = -1L;
+    // 单例实例，用于默认的ID生成
+    private static final CosIdGenerator cosIdGenerator = new CosIdGenerator(0, 0);
+
+    /**
+     * 构造函数
+     * 
+     * @param machineId 机器ID（0~1048575）
+     * @param epoch     自定义纪元时间戳
+     */
+    public CosIdGenerator(long machineId, long epoch) {
+        // 验证机器ID是否在有效范围内
+        if (machineId < 0 || machineId > MAX_MACHINE_ID) {
+            throw new IllegalArgumentException("Machine ID must be between 0 and " + MAX_MACHINE_ID);
+        }
+        this.machineId = machineId;
+        this.epoch = epoch;
     }
 
-    public static synchronized String next() {
-        long timestamp = timeGen();
+    public static String next() {
+        return Base62Codec.encode(cosIdGenerator.generateId());
+    }
 
-        // 如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过
-        if (timestamp < lastTimestamp) {
-            throw new RuntimeException("Clock moved backwards. Refusing to generate id");
+    /**
+     * 生成分布式ID的字节数组
+     * 该方法使用synchronized确保线程安全
+     * 
+     * @return 10字节的ID字节数组
+     */
+    public synchronized byte[] generateId() {
+        // 获取当前时间戳
+        long currentTimestamp = getCurrentTimestamp();
+
+        // 检查时钟回拨
+        if (currentTimestamp < lastTimestamp) {
+            throw new RuntimeException("Clock moved backwards!");
         }
 
-        // 如果是同一时间生成的，则进行序列号递增
-        if (lastTimestamp == timestamp) {
-            sequence.set((sequence.get() + 1) & MAX_SEQUENCE);
-            // 序列号已经达到最大值
-            if (sequence.get() == 0) {
-                // 阻塞到下一个毫秒，获得新的时间戳
-                timestamp = tilNextMillis(lastTimestamp);
+        // 处理同一毫秒内的序列号
+        if (currentTimestamp == lastTimestamp) {
+            // 序列号递增，并与最大值进行与运算确保不超出范围
+            sequence = (sequence + 1) & MAX_SEQUENCE;
+            // 当序列号用尽时，等待下一毫秒
+            if (sequence == 0) {
+                currentTimestamp = waitNextMillis(currentTimestamp);
             }
         } else {
-            // 时间戳改变，序列重置
-            sequence.set(0L);
+            // 不同毫秒，序列号重置为0
+            sequence = 0;
         }
 
-        lastTimestamp = timestamp;
+        // 更新上次生成ID的时间戳
+        lastTimestamp = currentTimestamp;
 
-        // 使用字节数组来支持80位的数值
-        byte[] result = new byte[10]; // 80位 = 10字节
+        // 构建并返回字节数组格式的ID
+        return buildByteArray(currentTimestamp, machineId, sequence);
+    }
 
-        // 写入时间戳部分 (44位)
-        long timestampPart = timestamp - EPOCH;
-        for (int i = 0; i < 6; i++) {
-            result[i] = (byte) (timestampPart >> ((5 - i) * 8));
+    /**
+     * 将时间戳、机器ID和序列号打包成字节数组
+     * 
+     * @param timestamp 时间戳（44位）
+     * @param machineId 机器ID（20位）
+     * @param sequence  序列号（16位）
+     * @return 10字节的字节数组
+     */
+    private byte[] buildByteArray(long timestamp, long machineId, long sequence) {
+        // 分配10字节的缓冲区（80位）
+        ByteBuffer buffer = ByteBuffer.allocate(10);
+
+        // 写入时间戳（44位，占用5.5字节）
+        buffer.put((byte) (timestamp >>> 36)); // 时间戳的高8位
+        buffer.put((byte) (timestamp >>> 28 & 0xFF)); // 时间戳的次高8位
+        buffer.put((byte) (timestamp >>> 20 & 0xFF)); // 时间戳的中间8位
+        buffer.put((byte) (timestamp >>> 12 & 0xFF)); // 时间戳的次低8位
+        buffer.put((byte) (timestamp >>> 4 & 0xFF)); // 时间戳的低8位
+
+        // 处理第6字节（时间戳最后4位 + 机器ID高4位）
+        byte sixthByte = (byte) ((timestamp & 0x0F) << 4); // 时间戳最后4位左移4位
+        sixthByte |= (byte) (machineId >>> 16 & 0x0F); // 合并机器ID的高4位
+        buffer.put(sixthByte);
+
+        // 写入机器ID的剩余16位（占用2字节）
+        buffer.putShort((short) (machineId & 0xFFFF));
+
+        // 写入序列号（16位，占用2字节）
+        buffer.putShort((short) sequence);
+
+        // 返回完整的字节数组
+        return buffer.array();
+    }
+
+    /**
+     * 等待下一毫秒
+     * 
+     * @param currentTimestamp 当前时间戳
+     * @return 下一毫秒的时间戳
+     */
+    private long waitNextMillis(long currentTimestamp) {
+        long now;
+        do {
+            now = getCurrentTimestamp();
+        } while (now <= currentTimestamp); // 循环等待直到进入下一毫秒
+        return now;
+    }
+
+    /**
+     * 获取当前时间戳（相对于自定义纪元）
+     * 
+     * @return 相对时间戳
+     */
+    private long getCurrentTimestamp() {
+        return System.currentTimeMillis() - epoch;
+    }
+
+    /**
+     * 主方法，用于测试ID生成器
+     */
+    public static void main(String[] args) {
+        // 设置自定义纪元时间为2020年1月1日
+        long customEpoch = Instant.parse("2020-01-01T00:00:00Z").toEpochMilli();
+        // 创建ID生成器实例，使用特定的机器ID
+        CosIdGenerator generator = new CosIdGenerator(0xABCDEL, customEpoch);
+
+        // 生成并打印ID
+        byte[] id = generator.generateId();
+        System.out.println("字节数组: " + Arrays.toString(id));
+        System.out.println("十六进制: " + bytesToHex(id));
+    }
+
+    /**
+     * 将字节数组转换为十六进制字符串
+     * 
+     * @param bytes 要转换的字节数组
+     * @return 十六进制字符串
+     */
+    private static String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b));
         }
-
-        // 写入机器ID部分 (20位)
-        long machinePart = machineId << MACHINE_LEFT_SHIFT;
-        result[5] |= (byte) ((machinePart >> 16) & 0x0F);
-        result[6] = (byte) (machinePart >> 8);
-        result[7] = (byte) machinePart;
-
-        // 写入序列号部分 (16位)
-        long sequencePart = sequence.get();
-        result[8] = (byte) (sequencePart >> 8);
-        result[9] = (byte) sequencePart;
-
-        // 将字节数组转换为URL安全的Base64编码字符串
-        return Base62Codec.encode(result);
+        return sb.toString();
     }
 
-    private static long timeGen() {
-        return Instant.now().toEpochMilli();
-    }
-
-    private static long tilNextMillis(long lastTimestamp) {
-        long timestamp = timeGen();
-        while (timestamp <= lastTimestamp) {
-            timestamp = timeGen();
-        }
-        return timestamp;
-    }
-
+    /**
+     * 实现IdGenerator接口的generate方法
+     * 
+     * @return Base62编码的ID字符串
+     */
     @Override
     public Object generate() {
-        return next();
+        return Base62Codec.encode(cosIdGenerator.generateId());
     }
 
+    /**
+     * 实现IdGenerator接口的idType方法
+     * 
+     * @return ID类型为CosId
+     */
     @Override
     public IdType idType() {
         return IdType.CosId;
