@@ -282,7 +282,9 @@ public enum IdType {
      * 包含4字节前缀用于多系统协调。
      * 适用于多系统集成场景。
      */
-    XID("xid", "全局唯一标识符，具有4字节前缀用于多系统协调");
+    XID("xid", "全局唯一标识符，具有4字节前缀用于多系统协调"),
+    RAtomicLong("xid", "Redisson atomic long id generator"),
+    RID("rid", "Redisson id generator");
 
     private final String name;
     private final String desc;

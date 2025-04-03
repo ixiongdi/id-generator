@@ -103,7 +103,7 @@ public class SnowflakeIdGenerator implements IdGenerator {
     }
 
     @Override
-    public Object generate() {
+    public Long generate() {
         return next();
     }
 

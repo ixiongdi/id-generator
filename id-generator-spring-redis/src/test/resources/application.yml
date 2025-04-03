@@ -1,0 +1,6 @@
+spring:
+  data:
+    redis:
+      host: congee.icu
+      port: 6379
+      password: qw3erT^&*()_+

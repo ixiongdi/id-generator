@@ -49,8 +49,8 @@
     </developers>
 
     <properties>
-        <spring-boot.version>3.4.3</spring-boot.version>
-        <redisson.version>3.27.2</redisson.version>
+        <spring-boot.version>3.4.4</spring-boot.version>
+        <redisson.version>3.45.1</redisson.version>
         <hutool.version>5.8.36</hutool.version>
         <guava.version>33.4.0-jre</guava.version>
         <jmh.version>1.37</jmh.version>

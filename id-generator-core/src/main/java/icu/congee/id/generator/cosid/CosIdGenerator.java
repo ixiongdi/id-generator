@@ -49,7 +49,12 @@ public class CosIdGenerator implements IdGenerator {
     private long sequence = 0L; // 当前序列号
 
     // 单例实例，用于默认的ID生成
-    private static final CosIdGenerator cosIdGenerator = new CosIdGenerator(0, 0);
+    private static final CosIdGenerator cosIdGenerator = new CosIdGenerator();
+
+    public CosIdGenerator() {
+        this.epoch = 0;
+        this.machineId = 0;
+    }
 
     /**
      * 构造函数
