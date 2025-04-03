@@ -1,5 +1,6 @@
 package icu.congee.id.generator.demo.task;
 
+import cn.hutool.log.LogFactory;
 import icu.congee.id.generator.distributed.atomiclong.AtomicLongIdGenerator;
 import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
@@ -8,7 +9,7 @@ import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
 
 import jakarta.annotation.Resource;
 
-import lombok.extern.slf4j.Slf4j;
+import cn.hutool.log.Log;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -25,8 +26,10 @@ import java.util.concurrent.locks.LockSupport;
  * @author congee
  * @version 1.0
  */
-@Slf4j
+
 public class IdGeneratorTask implements CommandLineRunner {
+
+    Log log = LogFactory.get();
 
     /** 默认构造器创建定时任务实例 */
     @Resource RedissonIdGenerator redissonIdGenerator;
@@ -45,9 +48,8 @@ public class IdGeneratorTask implements CommandLineRunner {
             log.info("redisson id: {}", redissonIdGenerator.generate());
         }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             log.info("snowflake id: {}", snowflakeIdGenerator.generate());
-            LockSupport.parkNanos(1000L * 1000L  * 1000L);
         }
 
         for (int i = 0; i < 10; i++) {

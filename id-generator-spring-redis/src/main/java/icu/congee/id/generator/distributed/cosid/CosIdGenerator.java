@@ -2,8 +2,8 @@ package icu.congee.id.generator.distributed.cosid;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
-
 import icu.congee.id.generator.service.MachineIdService;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 
@@ -11,25 +11,44 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public enum CosIdGenerator implements IdGenerator {
     INSTANCE;
 
-    private static final long MAX_SEQUENCE = 1 << 12 - 1; // 12位序列号
-    private final AtomicLong currentSequence = new AtomicLong(0L);
-    private volatile long lastTimestamp = -1L;
+    @Value("${id.generator.cosid.timestamp.bits:44}") // 默认44位时间戳
+    private int timestampBits;
+
+    @Value("${id.generator.cosid.machine.bits:20}") // 默认20位机器ID
+    private int machineBits;
+
+    @Value("${id.generator.cosid.sequence.bits:16}") // 默认16位序列号
+    private int sequenceBits;
+
+    private long maxSequence;
+    private long currentSequence = 0L;
+    private long lastTimestamp = -1L;
 
     @Value("${id.generator.cosid.epoch:1672502400000}") // 默认2023-01-01 00:00:00
     private long epoch;
 
-    @Resource private RedissonClient redisson;
+    @Resource
+    private RedissonClient redisson;
     private MachineIdService machineIdService;
 
     @PostConstruct
     public void init() {
+        // 验证位数分配是否合法
+        if (timestampBits + machineBits + sequenceBits != 80) {
+            throw new IllegalArgumentException(
+                    String.format("位数分配总和必须为80位，当前配置：timestamp=%d, machine=%d, sequence=%d, total=%d",
+                            timestampBits, machineBits, sequenceBits, timestampBits + machineBits + sequenceBits));
+        }
+
+        // 初始化最大序列号
+        maxSequence = (1L << sequenceBits) - 1;
+
         machineIdService = new MachineIdService(redisson, IdType.CosId.getName());
     }
 
@@ -50,15 +69,6 @@ public enum CosIdGenerator implements IdGenerator {
         return System.currentTimeMillis() - epoch;
     }
 
-    /**
-     * 时钟回拨异常
-     */
-    public static class ClockMovedBackwardsException extends RuntimeException {
-        public ClockMovedBackwardsException(String message) {
-            super(message);
-        }
-    }
-
     @Override
     public synchronized CosId generate() {
         long timestamp = getCurrentTimestamp();
@@ -67,28 +77,30 @@ public enum CosIdGenerator implements IdGenerator {
         if (timestamp < lastTimestamp) {
             long backwardMillis = lastTimestamp - timestamp;
             String errorMessage = String.format("时钟回拨，拒绝生成ID，回拨时间：%d毫秒", backwardMillis);
-            throw new ClockMovedBackwardsException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
 
         // 如果是同一毫秒
         if (timestamp == lastTimestamp) {
-            long sequence = currentSequence.get();
             // 同一毫秒内序列号达到最大值
-            if (sequence >= MAX_SEQUENCE) {
+            if (currentSequence >= maxSequence) {
                 waitNextMillis(lastTimestamp);
                 timestamp = getCurrentTimestamp();
-                currentSequence.set(0L);
+                currentSequence = 0L;
             }
         } else {
             // 时间戳变化，重置序列号
-            currentSequence.set(0L);
+            currentSequence = 0L;
         }
 
         lastTimestamp = timestamp;
         return new CosId(
                 timestamp,
                 machineIdService.get(),
-                currentSequence.getAndIncrement());
+                currentSequence++,
+                timestampBits,
+                machineBits,
+                sequenceBits);
     }
 
     @Override
