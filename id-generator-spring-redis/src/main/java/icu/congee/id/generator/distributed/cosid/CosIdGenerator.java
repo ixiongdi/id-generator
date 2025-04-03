@@ -22,8 +22,6 @@ public enum CosIdGenerator implements IdGenerator {
     private final AtomicLong currentSequence = new AtomicLong(0L);
     private volatile long lastTimestamp = -1L;
 
-    private final String uuid = UUID.randomUUID().toString();
-
     @Value("${id.generator.cosid.epoch:1672502400000}") // 默认2023-01-01 00:00:00
     private long epoch;
 
@@ -88,8 +86,8 @@ public enum CosIdGenerator implements IdGenerator {
 
         lastTimestamp = timestamp;
         return new CosId(
-                timestamp + epoch,
-                machineIdService.get(uuid),
+                timestamp,
+                machineIdService.get(),
                 currentSequence.getAndIncrement());
     }
 

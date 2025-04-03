@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.locks.LockSupport;
+
 @Component
 
 /**
@@ -43,8 +45,9 @@ public class IdGeneratorTask implements CommandLineRunner {
             log.info("redisson id: {}", redissonIdGenerator.generate());
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             log.info("snowflake id: {}", snowflakeIdGenerator.generate());
+            LockSupport.parkNanos(1000L * 1000L  * 1000L);
         }
 
         for (int i = 0; i < 10; i++) {

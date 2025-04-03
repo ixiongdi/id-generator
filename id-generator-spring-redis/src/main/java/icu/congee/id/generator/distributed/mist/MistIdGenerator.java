@@ -23,7 +23,7 @@ public enum MistIdGenerator implements IdGenerator {
 
     @Resource private RedissonClient redisson;
 
-    @Value("${id.generator.mist.name:mist}")
+    @Value("${id.generator.mist.name:IdGenerator:AtomicLongIdGenerator:current}")
     private String name;
 
     @Value("${id.generator.mist.value:-1}")

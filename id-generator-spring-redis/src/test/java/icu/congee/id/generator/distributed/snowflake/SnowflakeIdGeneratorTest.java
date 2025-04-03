@@ -4,21 +4,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.annotation.Resource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 @SpringBootTest
+@Slf4j
 class SnowflakeIdGeneratorTest {
 
-    @Resource
-    SnowflakeIdGenerator snowflakeIdGenerator;
+    @Resource SnowflakeIdGenerator snowflakeIdGenerator;
 
     @Test
     void testGenerateId() {
@@ -81,11 +79,15 @@ class SnowflakeIdGeneratorTest {
         // 计算每毫秒生成的ID数量
         double idsPerMillisecond = (double) idSet.size() / actualDuration;
 
-        System.out.printf("Generated %d unique IDs in %d ms, average %.2f IDs per millisecond%n",
+        System.out.printf(
+                "Generated %d unique IDs in %d ms, average %.2f IDs per millisecond%n",
                 idSet.size(), actualDuration, idsPerMillisecond);
 
         // 验证生成速率是否达到要求（每毫秒1000个以上）
-        assertTrue(idsPerMillisecond >= 1000,
-                String.format("Performance requirement not met: %.2f ids/ms < 1000 ids/ms", idsPerMillisecond));
+        assertTrue(
+                idsPerMillisecond >= 1000,
+                String.format(
+                        "Performance requirement not met: %.2f ids/ms < 1000 ids/ms",
+                        idsPerMillisecond));
     }
 }

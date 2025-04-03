@@ -9,7 +9,6 @@ import lombok.Data;
 import java.nio.ByteBuffer;
 
 @Data
-@AllArgsConstructor
 public class CosId implements Id {
 
     // 44bit
@@ -18,6 +17,12 @@ public class CosId implements Id {
     private long machineId;
     // 16bit
     private long sequence;
+
+    public CosId(long timestamp, long machineId, long sequence) {
+        this.timestamp = timestamp;
+        this.machineId = machineId;
+        this.sequence = sequence;
+    }
 
     @Override
     public byte[] toBytes() {

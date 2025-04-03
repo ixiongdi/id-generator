@@ -6,7 +6,7 @@
 
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-bom</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <packaging>pom</packaging>
 
     <name>ID Generator BOM</name>

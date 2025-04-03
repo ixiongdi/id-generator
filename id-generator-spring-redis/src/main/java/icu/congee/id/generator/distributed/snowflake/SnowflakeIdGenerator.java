@@ -76,7 +76,7 @@ public enum SnowflakeIdGenerator implements IdGenerator {
 
         lastTimestamp = timestamp;
         return (timestamp - epoch) << (machineIdBits + sequenceBits)
-                | machineIdService.get(uuid) << sequenceBits
+                | machineIdService.get() << sequenceBits
                 | currentSequence.getAndIncrement();
     }
 

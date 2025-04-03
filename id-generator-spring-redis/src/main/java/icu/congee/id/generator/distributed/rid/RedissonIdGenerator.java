@@ -19,7 +19,7 @@ public enum RedissonIdGenerator implements IdGenerator {
 
     @Resource private RedissonClient redisson;
 
-    @Value("${id.generator.rid.name:rid}")
+    @Value("${id.generator.rid.name:IdGenerator:RedissonIdGenerator:current}")
     private String name;
 
     @Value("${id.generator.rid.value:0}")
