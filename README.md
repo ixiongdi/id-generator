@@ -62,14 +62,14 @@
 <dependency>
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-core</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'icu.congee:id-generator-core:0.4.0'
+implementation 'icu.congee:id-generator-core:0.4.1'
 ```
 
 ### 基本使用
