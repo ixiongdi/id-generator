@@ -28,13 +28,13 @@ public enum BroIdGenerator implements IdGenerator {
         this.threadId = redisson.getAtomicLong("IdGenerator:BroIdGenerator:threadId");
         this.threadLocal =
                 ThreadLocal.withInitial(
-                        () -> new BroIdThreadLocalHolder(0, this.threadId.getAndIncrement()));
+                        () -> new BroIdThreadLocalHolder(this.threadId.getAndIncrement(), 0));
     }
 
     @Override
     public Long generate() {
         BroIdThreadLocalHolder broIdThreadLocalHolder = this.threadLocal.get();
-        return broIdThreadLocalHolder.sequence++ << 16 | broIdThreadLocalHolder.threadId;
+        return broIdThreadLocalHolder.threadId << 48 | broIdThreadLocalHolder.sequence++;
     }
 
     @Override
@@ -45,7 +45,7 @@ public enum BroIdGenerator implements IdGenerator {
     @Data
     @AllArgsConstructor
     public static class BroIdThreadLocalHolder {
-        long sequence;
         long threadId;
+        long sequence;
     }
 }

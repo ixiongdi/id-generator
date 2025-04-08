@@ -7,11 +7,11 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 public class BroId implements Id {
-    // 48bit
-    private long sequence;
     // 16bit
     private long threadId;
-
+    // 48bit
+    private long sequence;
+    
     @Override
     public byte[] toBytes() {
         return long2bytes(toLong());
@@ -19,6 +19,6 @@ public class BroId implements Id {
 
     @Override
     public long toLong() {
-        return sequence << 16 | threadId;
+        return threadId << 48 | sequence;
     }
 }
