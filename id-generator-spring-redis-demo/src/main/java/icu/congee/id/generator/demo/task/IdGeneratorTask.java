@@ -52,8 +52,8 @@ public class IdGeneratorTask implements CommandLineRunner {
             log.info("snowflake id: {}", snowflakeIdGenerator.generate());
         }
 
-        for (int i = 0; i < 10000; i++) {
-            log.info("bro id: {}", broIdGenerator.generate().toCrockfordBase32());
+        for (int i = 0; i < 10; i++) {
+            log.info("bro id: {}", broIdGenerator.generate());
         }
 
 //        long start = System.nanoTime();
