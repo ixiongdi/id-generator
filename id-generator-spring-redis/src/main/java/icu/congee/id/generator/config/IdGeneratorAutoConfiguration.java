@@ -25,6 +25,7 @@
 package icu.congee.id.generator.config;
 
 import icu.congee.id.generator.distributed.atomiclong.AtomicLongIdGenerator;
+import icu.congee.id.generator.distributed.broid.BroIdGenerator;
 import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
@@ -88,5 +89,10 @@ public class IdGeneratorAutoConfiguration {
     @Bean
     public CosIdGenerator cosIdGenerator() {
         return CosIdGenerator.INSTANCE;
+    }
+
+    @Bean
+    public BroIdGenerator broIdGenerator() {
+        return BroIdGenerator.INSTANCE;
     }
 }

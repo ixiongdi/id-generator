@@ -1,22 +1,23 @@
-package icu.congee.id.generator.service;
+package icu.congee.id.generator.distributor;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.redisson.api.RSetCache;
 import org.redisson.api.RedissonClient;
 
+import java.math.BigInteger;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class MachineIdService {
+public class MachineIdDistributor {
 
     // 记录已分配的机器ID
     private final RSetCache<Long> set;
     private final long machineId;
 
-    public MachineIdService(RedissonClient redisson, String namespace) {
+    public MachineIdDistributor(RedissonClient redisson, String namespace) {
         String name = "IdGenerator:MachineIdService:%s:Set".formatted(namespace);
         this.set = redisson.getSetCache(name);
         this.machineId = register();

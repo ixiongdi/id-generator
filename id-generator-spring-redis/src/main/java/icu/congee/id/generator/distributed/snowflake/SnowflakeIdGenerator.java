@@ -2,7 +2,7 @@ package icu.congee.id.generator.distributed.snowflake;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
-import icu.congee.id.generator.service.MachineIdService;
+import icu.congee.id.generator.distributor.MachineIdDistributor;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -50,7 +50,7 @@ public enum SnowflakeIdGenerator implements IdGenerator {
     @Resource
     private RedissonClient redisson;
     /** 机器ID服务，负责获取和维护当前节点的机器ID */
-    private MachineIdService machineIdService;
+    private MachineIdDistributor machineIdDistributor;
     /** 当前毫秒内的序列号 */
     private long sequence;
 
@@ -59,7 +59,7 @@ public enum SnowflakeIdGenerator implements IdGenerator {
      */
     @PostConstruct
     public void init() {
-        machineIdService = new MachineIdService(redisson, IdType.Snowflake.getName());
+        machineIdDistributor = new MachineIdDistributor(redisson, IdType.Snowflake.getName());
     }
 
     /**
@@ -120,7 +120,7 @@ public enum SnowflakeIdGenerator implements IdGenerator {
         // 2. machineIdService.get() << sequenceBits：机器ID左移序列号位数
         // 3. sequence：序列号部分
         return (timestamp - epoch) << (machineIdBits + sequenceBits)
-                | machineIdService.get() << sequenceBits
+                | machineIdDistributor.get() << sequenceBits
                 | sequence;
     }
 

@@ -1,5 +1,6 @@
 package icu.congee.id.generator;
 
+import icu.congee.id.generator.distributed.broid.BroIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -16,20 +17,21 @@ import java.util.concurrent.TimeUnit;
 public class CompleteSpringBenchmark {
 
     public SnowflakeIdGenerator snowflakeIdGenerator;
+    public BroIdGenerator broIdGenerator;
     public ConfigurableApplicationContext context;
 
     public static void main(String[] args) throws Exception {
         Options opt =
                 new OptionsBuilder()
                         .include(CompleteSpringBenchmark.class.getSimpleName())
-                        .timeUnit(TimeUnit.NANOSECONDS)
+                        .timeUnit(TimeUnit.SECONDS)
                         .mode(Mode.All)
-                        .threads(1)
-                        .forks(1)
-                        .warmupIterations(1)
-                        .warmupTime(TimeValue.seconds(1)) // 预热迭代次数
-                        .measurementIterations(1)
-                        .measurementTime(TimeValue.seconds(1))
+                        .threads(16)
+                        .forks(0)
+                        .warmupIterations(0)
+                        .warmupTime(TimeValue.seconds(0)) // 预热迭代次数
+                        .measurementIterations(5)
+                        .measurementTime(TimeValue.seconds(10))
                         .build();
         new Runner(opt).run();
     }
@@ -38,6 +40,7 @@ public class CompleteSpringBenchmark {
     public void init() {
         context = SpringApplication.run(IdGeneratorBenchmarkApplication.class);
         snowflakeIdGenerator = context.getBean(SnowflakeIdGenerator.class);
+        broIdGenerator = context.getBean(BroIdGenerator.class);
     }
 
     @TearDown(Level.Trial)
@@ -48,5 +51,10 @@ public class CompleteSpringBenchmark {
     @Benchmark
     public void generateSnowflake(Blackhole bh) {
         bh.consume(snowflakeIdGenerator.generate());
+    }
+
+    @Benchmark
+    public void generateBroId(Blackhole bh) {
+        bh.consume(broIdGenerator.generate());
     }
 }

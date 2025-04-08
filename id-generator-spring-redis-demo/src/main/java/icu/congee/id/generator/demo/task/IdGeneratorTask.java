@@ -1,20 +1,19 @@
 package icu.congee.id.generator.demo.task;
 
+import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+
 import icu.congee.id.generator.distributed.atomiclong.AtomicLongIdGenerator;
+import icu.congee.id.generator.distributed.broid.BroIdGenerator;
 import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
-import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
+import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 
 import jakarta.annotation.Resource;
 
-import cn.hutool.log.Log;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.locks.LockSupport;
 
 @Component
 
@@ -26,7 +25,6 @@ import java.util.concurrent.locks.LockSupport;
  * @author congee
  * @version 1.0
  */
-
 public class IdGeneratorTask implements CommandLineRunner {
 
     Log log = LogFactory.get();
@@ -42,6 +40,8 @@ public class IdGeneratorTask implements CommandLineRunner {
 
     @Resource CosIdGenerator cosIdGenerator;
 
+    @Resource BroIdGenerator broIdGenerator;
+
     @Override
     public void run(String... args) {
         for (int i = 0; i < 10; i++) {
@@ -52,9 +52,19 @@ public class IdGeneratorTask implements CommandLineRunner {
             log.info("snowflake id: {}", snowflakeIdGenerator.generate());
         }
 
-        for (int i = 0; i < 10; i++) {
-            log.info("mist id: {}", mistIdGenerator.generate());
+        for (int i = 0; i < 10000; i++) {
+            log.info("bro id: {}", broIdGenerator.generate().toCrockfordBase32());
         }
+
+//        long start = System.nanoTime();
+//        long count = 1000_000_000L;
+//        for (int i = 0; i < count; i++) {
+//            mistIdGenerator.generate();
+//            long end = System.nanoTime();
+//            if (i % 1000000 == 0) {
+//                log.info("rate:  {}个/s", count * 1000_000_000L / (end - start));
+//            }
+//        }
 
         for (int i = 0; i < 10; i++) {
             log.info("atomic long id: {}", atomicLongIdGenerator.generate());

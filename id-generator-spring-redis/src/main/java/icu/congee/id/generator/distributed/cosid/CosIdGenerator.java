@@ -2,7 +2,7 @@ package icu.congee.id.generator.distributed.cosid;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
-import icu.congee.id.generator.service.MachineIdService;
+import icu.congee.id.generator.distributor.MachineIdDistributor;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -10,8 +10,6 @@ import jakarta.annotation.Resource;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public enum CosIdGenerator implements IdGenerator {
@@ -35,7 +33,7 @@ public enum CosIdGenerator implements IdGenerator {
 
     @Resource
     private RedissonClient redisson;
-    private MachineIdService machineIdService;
+    private MachineIdDistributor machineIdDistributor;
 
     @PostConstruct
     public void init() {
@@ -49,7 +47,7 @@ public enum CosIdGenerator implements IdGenerator {
         // 初始化最大序列号
         maxSequence = (1L << sequenceBits) - 1;
 
-        machineIdService = new MachineIdService(redisson, IdType.CosId.getName());
+        machineIdDistributor = new MachineIdDistributor(redisson, IdType.CosId.getName());
     }
 
     /**
@@ -96,7 +94,7 @@ public enum CosIdGenerator implements IdGenerator {
         lastTimestamp = timestamp;
         return new CosId(
                 timestamp,
-                machineIdService.get(),
+                machineIdDistributor.get(),
                 currentSequence++,
                 timestampBits,
                 machineBits,
