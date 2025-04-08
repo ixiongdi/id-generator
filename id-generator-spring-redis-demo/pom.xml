@@ -6,7 +6,7 @@
     <parent>
         <groupId>icu.congee</groupId>
         <artifactId>id-generator-parent</artifactId>
-        <version>0.1.0</version>
+        <version>0.4.1</version>
     </parent>
 
     <artifactId>id-generator-spring-redis-demo</artifactId>
@@ -55,6 +55,10 @@
             <groupId>icu.congee</groupId>
             <artifactId>id-generator-spring-redis</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

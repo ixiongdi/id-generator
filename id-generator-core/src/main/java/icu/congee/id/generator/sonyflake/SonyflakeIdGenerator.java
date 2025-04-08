@@ -23,11 +23,7 @@ public class SonyflakeIdGenerator implements IdGenerator {
     static {
         try {
             sonyflake = Sonyflake.newInstance(settings);
-        } catch (Sonyflake.StartTimeAheadException e) {
-            throw new RuntimeException(e);
-        } catch (Sonyflake.NoPrivateAddressException e) {
-            throw new RuntimeException(e);
-        } catch (Sonyflake.InvalidMachineIDException e) {
+        } catch (Sonyflake.StartTimeAheadException | Sonyflake.NoPrivateAddressException | Sonyflake.InvalidMachineIDException e) {
             throw new RuntimeException(e);
         }
     }

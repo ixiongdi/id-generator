@@ -1,122 +1,74 @@
 # Globally Unique ID Generator
 
-[![godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/rs/xid) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/rs/xid/master/LICENSE) [![Build Status](https://travis-ci.org/rs/xid.svg?branch=master)](https://travis-ci.org/rs/xid) [![Coverage](http://gocover.io/_badge/github.com/rs/xid)](http://gocover.io/github.com/rs/xid)
+[![Maven Central](https://img.shields.io/maven-central/v/icu.congee/id-generator.svg)](https://search.maven.org/search?q=g:icu.congee%20AND%20a:id-generator) [![License](https://img.shields.io/badge/license-MIT-red.svg)](LICENSE)
 
-Package xid is a globally unique id generator library, ready to safely be used directly in your server code.
+Xid 是一个全局唯一 ID 生成器库，可以安全地直接在服务器代码中使用。
 
-Xid uses the Mongo Object ID algorithm to generate globally unique ids with a different serialization ([base32hex](https://datatracker.ietf.org/doc/html/rfc4648#page-10)) to make it shorter when transported as a string:
+Xid 使用 MongoDB 的 ObjectID 算法生成全局唯一 ID，但使用不同的序列化方式（[base32hex](https://datatracker.ietf.org/doc/html/rfc4648#page-10)）使其在字符串传输时更短：
 https://docs.mongodb.org/manual/reference/object-id/
 
-- 4-byte value representing the seconds since the Unix epoch,
-- 3-byte machine identifier,
-- 2-byte process id, and
-- 3-byte counter, starting with a random value.
+ID 由以下部分组成：
 
-The binary representation of the id is compatible with Mongo 12 bytes Object IDs.
-The string representation is using [base32hex](https://datatracker.ietf.org/doc/html/rfc4648#page-10) (w/o padding) for better space efficiency
-when stored in that form (20 bytes). The hex variant of base32 is used to retain the
-sortable property of the id.
+- 4 字节值表示 Unix 纪元以来的秒数
+- 3 字节机器标识符
+- 2 字节进程 ID
+- 3 字节计数器（从随机值开始）
 
-Xid doesn't use base64 because case sensitivity and the 2 non alphanum chars may be an
-issue when transported as a string between various systems. Base36 wasn't retained either
-because 1/ it's not standard 2/ the resulting size is not predictable (not bit aligned)
-and 3/ it would not remain sortable. To validate a base32 `xid`, expect a 20 chars long,
-all lowercase sequence of `a` to `v` letters and `0` to `9` numbers (`[0-9a-v]{20}`).
+ID 的二进制表示与 MongoDB 12 字节 ObjectID 兼容。字符串表示使用[base32hex](https://datatracker.ietf.org/doc/html/rfc4648#page-10)（无填充）以获得更好的空间效率（20 字节）。使用 base32 的 hex 变体是为了保持 ID 的可排序性。
 
-UUIDs are 16 bytes (128 bits) and 36 chars as string representation. Twitter Snowflake
-ids are 8 bytes (64 bits) but require machine/data-center configuration and/or central
-generator servers. xid stands in between with 12 bytes (96 bits) and a more compact
-URL-safe string representation (20 chars). No configuration or central generator server
-is required so it can be used directly in server's code.
+Xid 不使用 base64，因为大小写敏感性和 2 个非字母数字字符在各系统间传输时可能会有问题。也没有选择 base36，因为：1）它不是标准的；2）结果大小不可预测（不是位对齐的）；3）不能保持可排序性。要验证 base32 `xid`，需要一个 20 个字符长的、全部小写的`a`到`v`字母和`0`到`9`数字序列（`[0-9a-v]{20}`）。
 
-| Name        | Binary Size | String Size    | Features
-|-------------|-------------|----------------|----------------
-| [UUID]      | 16 bytes    | 36 chars       | configuration free, not sortable
-| [shortuuid] | 16 bytes    | 22 chars       | configuration free, not sortable
-| [Snowflake] | 8 bytes     | up to 20 chars | needs machine/DC configuration, needs central server, sortable
-| [MongoID]   | 12 bytes    | 24 chars       | configuration free, sortable
-| xid         | 12 bytes    | 20 chars       | configuration free, sortable
+UUID 是 16 字节（128 位），字符串表示为 36 个字符。Twitter 的 Snowflake ID 是 8 字节（64 位），但需要机器/数据中心配置和/或中央生成器服务器。xid 介于两者之间，为 12 字节（96 位），具有更紧凑的 URL 安全字符串表示（20 个字符）。不需要配置或中央生成器服务器，因此可以直接在服务器代码中使用。
+
+| 名称        | 二进制大小 | 字符串大小   | 特性                                     |
+| ----------- | ---------- | ------------ | ---------------------------------------- |
+| [UUID]      | 16 字节    | 36 字符      | 无需配置，不可排序                       |
+| [shortuuid] | 16 字节    | 22 字符      | 无需配置，不可排序                       |
+| [Snowflake] | 8 字节     | 最多 20 字符 | 需要机器/DC 配置，需要中央服务器，可排序 |
+| [MongoID]   | 12 字节    | 24 字符      | 无需配置，可排序                         |
+| xid         | 12 字节    | 20 字符      | 无需配置，可排序                         |
 
 [UUID]: https://en.wikipedia.org/wiki/Universally_unique_identifier
 [shortuuid]: https://github.com/stochastic-technologies/shortuuid
 [Snowflake]: https://blog.twitter.com/2010/announcing-snowflake
 [MongoID]: https://docs.mongodb.org/manual/reference/object-id/
 
-Features:
+特性：
 
-- Size: 12 bytes (96 bits), smaller than UUID, larger than snowflake
-- Base32 hex encoded by default (20 chars when transported as printable string, still sortable)
-- Non configured, you don't need set a unique machine and/or data center id
-- K-ordered
-- Embedded time with 1 second precision
-- Unicity guaranteed for 16,777,216 (24 bits) unique ids per second and per host/process
-- Lock-free (i.e.: unlike UUIDv1 and v2)
+- 大小：12 字节（96 位），比 UUID 小，比 snowflake 大
+- 默认使用 base32 hex 编码（作为可打印字符串传输时为 20 个字符，仍可排序）
+- 无需配置，无需设置唯一的机器和/或数据中心 ID
+- K 排序
+- 嵌入时间，精确到 1 秒
+- 每台主机/进程每秒保证 16,777,216（24 位）个唯一 ID
+- 无锁（不像 UUIDv1 和 v2）
 
-Best used with [zerolog](https://github.com/rs/zerolog)'s
-[RequestIDHandler](https://godoc.org/github.com/rs/zerolog/hlog#RequestIDHandler).
+注意：
 
-Notes:
+- Xid 依赖于系统时间和单调计数器，因此不具有密码学安全性。如果 ID 的不可预测性很重要，则不应使用 Xid。值得注意的是，大多数其他类 UUID 实现也不具有密码学安全性。如果需要真正的随机 ID 生成器，应使用依赖于密码学安全源的库。
 
-- Xid is dependent on the system time, a monotonic counter and so is not cryptographically secure. If unpredictability of IDs is important, you should not use Xids. It is worth noting that most other UUID-like implementations are also not cryptographically secure. You should use libraries that rely on cryptographically secure sources (like /dev/urandom on unix, crypto/rand in golang), if you want a truly random ID generator.
+## 使用方法
 
-References:
-
-- http://www.slideshare.net/davegardnerisme/unique-id-generation-in-distributed-systems
-- https://en.wikipedia.org/wiki/Universally_unique_identifier
-- https://blog.twitter.com/2010/announcing-snowflake
-- Python port by [Graham Abbott](https://github.com/graham): https://github.com/graham/python_xid
-- Scala port by [Egor Kolotaev](https://github.com/kolotaev): https://github.com/kolotaev/ride
-- Rust port by [Kaz Yoshihara](https://github.com/kazk): https://github.com/kazk/xid-rs
-- Python wrapper around the Rust port [Aleksandr Shpak](https://github.com/shpaker): https://github.com/shpaker/epyxid
-- Ruby port by [Valar](https://github.com/valarpirai/): https://github.com/valarpirai/ruby_xid
-- Java port by [0xShamil](https://github.com/0xShamil/): https://github.com/0xShamil/java-xid
-- Dart port by [Peter Bwire](https://github.com/pitabwire): https://pub.dev/packages/xid
-- PostgreSQL port by [Rasmus Holm](https://github.com/crholm): https://github.com/modfin/pg-xid
-- Swift port by [Uditha Atukorala](https://github.com/uatuko): https://github.com/uatuko/swift-xid
-- C++ port by [Uditha Atukorala](https://github.com/uatuko): https://github.com/uatuko/libxid
-- Typescript & Javascript port by [Yiwen AI](https://github.com/yiwen-ai): https://github.com/yiwen-ai/xid-ts
-- Gleam port by [Alexandre Del Vecchio](https://github.com/defgenx): https://github.com/defgenx/gxid
-
-## Install
-
-    go get github.com/rs/xid
-
-## Usage
-
-```go
-guid := xid.New()
-
-println(guid.String())
-// Output: 9m4e2mr0ui3e8a215n4g
+```xml
+<dependency>
+    <groupId>icu.congee</groupId>
+    <artifactId>id-generator</artifactId>
+    <version>${latest.version}</version>
+</dependency>
 ```
 
-Get `xid` embedded info:
+```java
+Xid xid = Xid.next();
+System.out.println(xid.toString());
+// 输出: 9m4e2mr0ui3e8a215n4g
 
-```go
-guid.Machine()
-guid.Pid()
-guid.Time()
-guid.Counter()
+// 获取xid的嵌入信息
+xid.machine();
+xid.pid();
+xid.time();
+xid.counter();
 ```
 
-## Benchmark
+## 许可证
 
-Benchmark against Go [Maxim Bublis](https://github.com/satori)'s [UUID](https://github.com/satori/go.uuid).
-
-```
-BenchmarkXID        	20000000	        91.1 ns/op	      32 B/op	       1 allocs/op
-BenchmarkXID-2      	20000000	        55.9 ns/op	      32 B/op	       1 allocs/op
-BenchmarkXID-4      	50000000	        32.3 ns/op	      32 B/op	       1 allocs/op
-BenchmarkUUIDv1     	10000000	       204 ns/op	      48 B/op	       1 allocs/op
-BenchmarkUUIDv1-2   	10000000	       160 ns/op	      48 B/op	       1 allocs/op
-BenchmarkUUIDv1-4   	10000000	       195 ns/op	      48 B/op	       1 allocs/op
-BenchmarkUUIDv4     	 1000000	      1503 ns/op	      64 B/op	       2 allocs/op
-BenchmarkUUIDv4-2   	 1000000	      1427 ns/op	      64 B/op	       2 allocs/op
-BenchmarkUUIDv4-4   	 1000000	      1452 ns/op	      64 B/op	       2 allocs/op
-```
-
-Note: UUIDv1 requires a global lock, hence the performance degradation as we add more CPUs.
-
-## Licenses
-
-All source code is licensed under the [MIT License](https://raw.github.com/rs/xid/master/LICENSE).
+所有源代码均采用[MIT 许可证](LICENSE)授权。

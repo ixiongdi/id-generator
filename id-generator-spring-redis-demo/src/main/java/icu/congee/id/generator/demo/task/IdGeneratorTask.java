@@ -1,56 +1,77 @@
 package icu.congee.id.generator.demo.task;
 
-import icu.congee.id.base.IdType;
-import icu.congee.id.generator.service.IdGeneratorService;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
+
+import icu.congee.id.generator.distributed.atomiclong.AtomicLongIdGenerator;
+import icu.congee.id.generator.distributed.broid.BroIdGenerator;
+import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
+import icu.congee.id.generator.distributed.mist.MistIdGenerator;
+import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
+import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 
 import jakarta.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 @Component
 
 /**
  * 定时ID生成任务执行器
- * <p>
- * 演示通过定时任务自动生成分布式ID的工作模式
- * </p>
- * 
+ *
+ * <p>演示通过定时任务自动生成分布式ID的工作模式
+ *
  * @author congee
  * @version 1.0
  */
-public class IdGeneratorTask {
+public class IdGeneratorTask implements CommandLineRunner {
 
-    /**
-     * 默认构造器创建定时任务实例
-     */
+    Log log = LogFactory.get();
 
-    private static final Logger logger = LoggerFactory.getLogger(IdGeneratorTask.class);
+    /** 默认构造器创建定时任务实例 */
+    @Resource RedissonIdGenerator redissonIdGenerator;
 
-    @Resource
-    IdGeneratorService idGeneratorService;
+    @Resource SnowflakeIdGenerator snowflakeIdGenerator;
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.SECONDS)
+    @Resource MistIdGenerator mistIdGenerator;
 
-    /**
-     * 执行定时ID生成任务
-     * 
-     * @throws InterruptedException 当获取分布式锁时被中断抛出
-     */
-    @Scheduled(fixedRate = 5000)
-    public void generate() throws InterruptedException {
-        // 生成一个ID
-        Object id = idGeneratorService.generate(IdType.CosId);
-        logger.info("Cos Id: {}", id);
-        // 生成多个ID
-        Object[] ids = idGeneratorService.generate(IdType.CosId, 100);
-        logger.info("id count: {}", ids.length);
-        for (Object o : ids) {
-            logger.info("Cos Id: {}", o);
+    @Resource AtomicLongIdGenerator atomicLongIdGenerator;
+
+    @Resource CosIdGenerator cosIdGenerator;
+
+    @Resource BroIdGenerator broIdGenerator;
+
+    @Override
+    public void run(String... args) {
+        for (int i = 0; i < 10; i++) {
+            log.info("redisson id: {}", redissonIdGenerator.generate());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("snowflake id: {}", snowflakeIdGenerator.generate());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("bro id: {}", broIdGenerator.generate());
+        }
+
+//        long start = System.nanoTime();
+//        long count = 1000_000_000L;
+//        for (int i = 0; i < count; i++) {
+//            mistIdGenerator.generate();
+//            long end = System.nanoTime();
+//            if (i % 1000000 == 0) {
+//                log.info("rate:  {}个/s", count * 1000_000_000L / (end - start));
+//            }
+//        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("atomic long id: {}", atomicLongIdGenerator.generate());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("cos id: {}", cosIdGenerator.generate().toBase62());
         }
     }
 }

@@ -24,37 +24,75 @@
 
 package icu.congee.id.generator.config;
 
-import icu.congee.id.generator.service.IdGeneratorService;
-import icu.congee.id.generator.service.impl.RedisIdGeneratorService;
+import icu.congee.id.generator.distributed.atomiclong.AtomicLongIdGenerator;
+import icu.congee.id.generator.distributed.broid.BroIdGenerator;
+import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
+import icu.congee.id.generator.distributed.mist.MistIdGenerator;
+import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
+import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
+
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-/**
- * ID生成器自动配置
- */
+/** ID生成器自动配置 */
 /**
  * 基于Redis的ID生成器自动配置类
- * <p>
- * 自动配置Redisson客户端并注册ID生成器服务Bean
- * </p>
- * 
+ *
+ * <p>自动配置Redisson客户端并注册ID生成器服务Bean
+ *
  * @author congee
  * @since 1.0.0
  */
 @AutoConfiguration(after = RedisAutoConfiguration.class)
 @EnableConfigurationProperties(IdGeneratorProperties.class)
+/**
+ * 默认构造器创建ID生成器自动配置实例
+ *
+ * <p>创建一个自动配置实例，用于初始化和配置基于Redis的分布式ID生成器。 该实例负责注册必要的Spring Bean，并确保ID生成器服务的正确配置。
+ *
+ * @since 1.0.0
+ */
+/**
+ * 默认构造器创建ID生成器自动配置实例
+ *
+ * <p>创建一个自动配置实例，用于初始化和配置基于Redis的分布式ID生成器。 该实例负责注册必要的Spring Bean，并确保ID生成器服务的正确配置。
+ *
+ * @since 1.0.0
+ */
 public class IdGeneratorAutoConfiguration {
 
-    /**
-     * 创建Redis实现的ID生成器服务Bean
-     * 
-     * @return 配置好的ID生成器服务实例
-     */
+
+
     @Bean
-    public IdGeneratorService idGeneratorService() {
-        return new RedisIdGeneratorService();
+    public RedissonIdGenerator redissonIdGenerator() {
+        return RedissonIdGenerator.INSTANCE;
     }
 
+
+    @Bean
+    public SnowflakeIdGenerator snowflakeIdGenerator() {
+        return SnowflakeIdGenerator.INSTANCE;
+    }
+
+    @Bean
+    public MistIdGenerator mistIdGenerator() {
+        return MistIdGenerator.INSTANCE;
+    }
+
+    @Bean
+    public AtomicLongIdGenerator atomicLongIdGenerator() {
+        return AtomicLongIdGenerator.INSTANCE;
+    }
+
+    @Bean
+    public CosIdGenerator cosIdGenerator() {
+        return CosIdGenerator.INSTANCE;
+    }
+
+    @Bean
+    public BroIdGenerator broIdGenerator() {
+        return BroIdGenerator.INSTANCE;
+    }
 }

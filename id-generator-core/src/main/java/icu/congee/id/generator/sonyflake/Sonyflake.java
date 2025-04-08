@@ -12,6 +12,18 @@ import java.util.*;
 // 39位用于时间，单位为10毫秒
 //  8位用于序列号
 // 16位用于机器ID
+/**
+ * Sonyflake ID生成器
+ * <p>
+ * 基于Sony的分布式ID生成算法实现，生成的ID由以下部分组成：
+ * - 39位时间戳
+ * - 8位序列号
+ * - 16位机器ID
+ * </p>
+ * 
+ * @author congee
+ * @since 1.0.0
+ */
 public class Sonyflake {
     // 这些常量是Sonyflake ID各部分的位长度。
     private static final int BIT_LEN_TIME = 39; // 时间的位长度
@@ -36,18 +48,36 @@ public class Sonyflake {
         }
     }
 
+    /**
+     * 无法获取私有IP地址异常
+     * <p>
+     * 当系统无法获取有效的私有IP地址时抛出此异常
+     * </p>
+     */
     public static class NoPrivateAddressException extends Exception {
         public NoPrivateAddressException() {
             super("no private ip address");
         }
     }
 
+    /**
+     * 时间超限异常
+     * <p>
+     * 当Sonyflake的时间位溢出时抛出此异常
+     * </p>
+     */
     public static class OverTimeLimitException extends Exception {
         public OverTimeLimitException() {
             super("over the time limit");
         }
     }
 
+    /**
+     * 无效机器ID异常
+     * <p>
+     * 当提供的机器ID无效或验证失败时抛出此异常
+     * </p>
+     */
     public static class InvalidMachineIDException extends Exception {
         public InvalidMachineIDException() {
             super("invalid machine id");
@@ -81,11 +111,23 @@ public class Sonyflake {
     }
 
     @FunctionalInterface
+    /**
+     * 机器ID提供者接口
+     * <p>
+     * 用于获取Sonyflake实例的唯一机器ID
+     * </p>
+     */
     public interface MachineIDSupplier {
         short get() throws Exception;
     }
 
     @FunctionalInterface
+    /**
+     * 机器ID验证器接口
+     * <p>
+     * 用于验证机器ID的唯一性
+     * </p>
+     */
     public interface MachineIDValidator {
         boolean validate(short machineID);
     }
@@ -95,7 +137,8 @@ public class Sonyflake {
     // - Settings.StartTime超前于当前时间。
     // - Settings.MachineID返回错误。
     // - Settings.CheckMachineID返回false。
-    public static Sonyflake newInstance(Settings st) throws StartTimeAheadException, NoPrivateAddressException, InvalidMachineIDException {
+    public static Sonyflake newInstance(Settings st)
+            throws StartTimeAheadException, NoPrivateAddressException, InvalidMachineIDException {
         if (st.startTime != null && st.startTime.after(new Date())) {
             throw new StartTimeAheadException();
         }

@@ -1,0 +1,45 @@
+package icu.congee.id.base;
+
+import java.util.Base64;
+
+public interface Id {
+
+    byte[] toBytes();
+
+    long toLong();
+
+    String toString();
+
+    default byte[] long2bytes(long value) {
+        byte[] result = new byte[8];
+        for (int i = 7; i >= 0; i--) {
+            result[i] = (byte) (value & 0xFF);
+            value >>= 8;
+        }
+        return result;
+    }
+
+    default String toBase64() {
+        return Base64.getUrlEncoder().encodeToString(toBytes());
+    }
+
+    default String toBase62() {
+        return Base62Codec.encode(toBytes());
+    }
+
+    default String toBase36() {
+        return Base36Codec.encode(toBytes());
+    }
+
+    default String toBase32() {
+        return Base32Codec.encode(toBytes());
+    }
+
+    default String toCrockfordBase32() {
+        return CrockfordBase32.encode(toBytes());
+    }
+
+    default String toHexString() {
+        return HexCodec.encode(toBytes());
+    }
+}
