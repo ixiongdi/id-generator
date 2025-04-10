@@ -13,14 +13,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * 雪花算法ID生成器
- * <p>
- * 64位ID (42位时间戳 + 10位机器ID + 12位序列号)
- * <p>
- * 整体结构：
- * - 符号位：1位，固定为0
- * - 时间戳：41位，精确到毫秒，可用69年
- * - 机器ID：10位，最多支持1024个节点
- * - 序列号：12位，同一毫秒内最多生成4096个ID
+ *
+ * <p>64位ID (42位时间戳 + 10位机器ID + 12位序列号)
+ *
+ * <p>整体结构： - 符号位：1位，固定为0 - 时间戳：41位，精确到毫秒，可用69年 - 机器ID：10位，最多支持1024个节点 - 序列号：12位，同一毫秒内最多生成4096个ID
  */
 @Component
 public enum SnowflakeIdGenerator implements IdGenerator {
@@ -47,16 +43,15 @@ public enum SnowflakeIdGenerator implements IdGenerator {
     private long lastTimestamp = -1L;
 
     /** Redisson客户端，用于分布式机器ID的获取 */
-    @Resource
-    private RedissonClient redisson;
+    @Resource private RedissonClient redisson;
+
     /** 机器ID服务，负责获取和维护当前节点的机器ID */
     private MachineIdDistributor machineIdDistributor;
+
     /** 当前毫秒内的序列号 */
     private long sequence;
 
-    /**
-     * 初始化方法，创建机器ID服务实例
-     */
+    /** 初始化方法，创建机器ID服务实例 */
     @PostConstruct
     public void init() {
         machineIdDistributor = new MachineIdDistributor(redisson, IdType.Snowflake.getName());
@@ -72,8 +67,7 @@ public enum SnowflakeIdGenerator implements IdGenerator {
     }
 
     /**
-     * 等待下一个毫秒
-     * 当前毫秒内序列号用尽时，阻塞到下一个毫秒
+     * 等待下一个毫秒 当前毫秒内序列号用尽时，阻塞到下一个毫秒
      *
      * @param lastTimestamp 上次生成ID的时间戳
      * @return 下一个毫秒的时间戳

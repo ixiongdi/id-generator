@@ -5,6 +5,7 @@ import cn.hutool.log.LogFactory;
 
 import icu.congee.id.generator.distributed.atomiclong.AtomicLongIdGenerator;
 import icu.congee.id.generator.distributed.broid.BroIdGenerator;
+import icu.congee.id.generator.distributed.broid.BroIdGeneratorPro;
 import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
@@ -42,6 +43,9 @@ public class IdGeneratorTask implements CommandLineRunner {
 
     @Resource BroIdGenerator broIdGenerator;
 
+    @Resource
+    BroIdGeneratorPro broIdGeneratorPro;
+
     @Override
     public void run(String... args) {
         for (int i = 0; i < 10; i++) {
@@ -54,6 +58,10 @@ public class IdGeneratorTask implements CommandLineRunner {
 
         for (int i = 0; i < 10; i++) {
             log.info("bro id: {}", broIdGenerator.generate());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("bro id pro: {}", broIdGeneratorPro.generate().toBase64());
         }
 
 //        long start = System.nanoTime();
