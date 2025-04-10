@@ -4,6 +4,8 @@ import icu.congee.id.base.Id;
 
 import lombok.*;
 
+import java.nio.ByteBuffer;
+
 @Data
 @AllArgsConstructor
 public class BroId implements Id {
@@ -11,14 +13,14 @@ public class BroId implements Id {
     private long threadId;
     // 48bit
     private long sequence;
-    
+
     @Override
     public byte[] toBytes() {
-        return long2bytes(toLong());
+        return ByteBuffer.allocate(16).putLong(threadId).putLong(sequence).array();
     }
 
     @Override
     public long toLong() {
-        return threadId << 48 | sequence;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
