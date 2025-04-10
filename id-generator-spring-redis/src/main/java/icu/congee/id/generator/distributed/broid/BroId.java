@@ -9,9 +9,7 @@ import java.nio.ByteBuffer;
 @Data
 @AllArgsConstructor
 public class BroId implements Id {
-    // 16bit
     private long threadId;
-    // 48bit
     private long sequence;
 
     @Override

@@ -25,7 +25,7 @@ public class CompleteSpringBenchmark {
                 new OptionsBuilder()
                         .include(CompleteSpringBenchmark.class.getSimpleName())
                         .timeUnit(TimeUnit.SECONDS)
-                        .mode(Mode.All)
+                        .mode(Mode.Throughput)
                         .threads(16)
                         .forks(0)
                         .warmupIterations(0)
