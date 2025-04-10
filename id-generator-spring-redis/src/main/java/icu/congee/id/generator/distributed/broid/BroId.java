@@ -9,12 +9,17 @@ import java.nio.ByteBuffer;
 @Data
 @AllArgsConstructor
 public class BroId implements Id {
+    private long timestamp;
     private long threadId;
     private long sequence;
 
     @Override
     public byte[] toBytes() {
-        return ByteBuffer.allocate(16).putLong(threadId).putLong(sequence).array();
+        return ByteBuffer.allocate(24)
+                .putLong(timestamp)
+                .putLong(threadId)
+                .putLong(sequence)
+                .array();
     }
 
     @Override

@@ -19,6 +19,8 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+
 // 标记为Spring组件
 @Component
 // 实现IdGenerator接口的枚举单例
@@ -55,10 +57,16 @@ public enum BroIdGeneratorPro implements IdGenerator {
     // 实现IdGenerator接口的generate方法，生成新的唯一ID
     @Override
     public BroId generate() {
+        // 获取当前时间的纳秒（可能不是真正的纳秒精度，取决于系统）
+        Instant now = Instant.now();
+        long nanosSinceEpoch = now.getEpochSecond() * 1_000_000_000L + now.getNano();
         // 获取当前线程的本地持有者对象
         BroIdThreadLocalHolder broIdThreadLocalHolder = this.threadLocalHolder.get();
         // 通过位运算组合ID：将线程ID左移序列号位数，再与递增的序列号进行按位或运算
-        return new BroId(broIdThreadLocalHolder.threadId, broIdThreadLocalHolder.sequence++);
+        return new BroId(
+                nanosSinceEpoch,
+                broIdThreadLocalHolder.threadId,
+                broIdThreadLocalHolder.sequence++);
     }
 
     // 实现IdGenerator接口的idType方法，返回当前生成器的ID类型

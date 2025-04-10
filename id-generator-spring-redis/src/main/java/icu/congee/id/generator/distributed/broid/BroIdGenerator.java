@@ -62,7 +62,7 @@ public enum BroIdGenerator implements IdGenerator {
         threadLocalHolder = ThreadLocal.withInitial(
                 () -> {
                     // 获取并递增全局线程ID计数器
-                    long currentThreadId = this.threadId.getAndIncrement();
+                    long currentThreadId = this.threadId.incrementAndGet();
                     // 创建新的线程本地持有者，初始序列号为0
                     return new BroIdThreadLocalHolder(currentThreadId, 0);
                 });

@@ -1,5 +1,7 @@
 package icu.congee.id.base;
 
+import icu.congee.id.base.util.DictionaryBase64;
+
 import java.util.Base64;
 
 public interface Id {
