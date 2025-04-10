@@ -1,150 +1,97 @@
 package icu.congee.id.generator.distributed.broid;
 
+// 导入基础ID生成器接口和ID类型枚举
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
 
+// 导入Spring注解
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
 
+// 导入Lombok注解
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+// 导入Redisson相关类
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
+// 导入Spring注解
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.ExecutionException;
-
+// 标记为Spring组件
 @Component
+// 实现IdGenerator接口的枚举单例
 public enum BroIdGenerator implements IdGenerator {
+    // 单例实例
     INSTANCE;
 
+    // 注入Redis客户端，用于分布式操作
     @Resource
     private RedissonClient redisson;
 
+    // 原子长整型，用于生成全局唯一的线程ID
     private RAtomicLong threadId;
 
-    private ThreadLocal<BroIdThreadLocalHolder> threadLocal;
-
+    // 配置符号位数，默认为1位
     @Value("${id.generator.broid.sign-bits:1}")
     private int signBits;
+
+    // 配置线程ID位数，默认为15位
     @Value("${id.generator.broid.thread-id-bits:15}")
     private int threadIdBits;
+
+    // 配置序列号位数，默认为48位
     @Value("${id.generator.broid.sequence-bits:48}")
     private int sequenceBits;
 
-    @Value("${id.generator.broid.thread-pool.core-size:1}")
-    private int corePoolSize;
+    // 线程本地变量，存储当前线程的ID和序列号信息
+    private ThreadLocal<BroIdThreadLocalHolder> threadLocalHolder;
 
-    @Value("${id.generator.broid.thread-pool.max-size:16}")
-    private int maxPoolSize;
-
-    private ExecutorService threadPool;
-
+    // 初始化方法，在构造后自动调用
     @PostConstruct
     public void init() {
-        validateBitsConfiguration();
-        validateThreadPoolConfiguration();
-
+        // 验证位数配置总和不超过64位（Java long类型的位数）
+        if (signBits + threadIdBits + sequenceBits > 64) {
+            throw new IllegalArgumentException("Total bits exceeds 64");
+        }
+        // 初始化Redis原子长整型组件，用于生成全局唯一的线程ID
         this.threadId = redisson.getAtomicLong("IdGenerator:BroIdGenerator:threadId");
-        this.threadLocal = ThreadLocal.withInitial(
-                () -> new BroIdThreadLocalHolder(this.threadId.getAndIncrement(), 0));
 
-        // 创建自定义线程池
-        this.threadPool = new ThreadPoolExecutor(
-                corePoolSize,
-                maxPoolSize,
-                1,
-                TimeUnit.DAYS,
-                new LinkedBlockingQueue<>(),
-                new ThreadPoolExecutor.CallerRunsPolicy());
+        // 初始化线程本地变量，为每个线程分配唯一的线程ID和初始序列号
+        threadLocalHolder = ThreadLocal.withInitial(
+                () -> {
+                    // 获取并递增全局线程ID计数器
+                    long currentThreadId = this.threadId.getAndIncrement();
+                    // 创建新的线程本地持有者，初始序列号为0
+                    return new BroIdThreadLocalHolder(currentThreadId, 0);
+                });
     }
 
-    @PreDestroy
-    public void destroy() {
-        if (threadPool != null && !threadPool.isShutdown()) {
-            threadPool.shutdown();
-            try {
-                if (!threadPool.awaitTermination(5, TimeUnit.SECONDS)) {
-                    threadPool.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                threadPool.shutdownNow();
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-
-    private void validateBitsConfiguration() {
-        if ((signBits + threadIdBits + sequenceBits) > 64) {
-            throw new IllegalArgumentException("Total bits exceed 64");
-        }
-        if (signBits < 0 || threadIdBits <= 0 || sequenceBits <= 0) {
-            throw new IllegalArgumentException("Bits configuration invalid");
-        }
-    }
-
-    private void validateThreadPoolConfiguration() {
-        if (corePoolSize < 1) {
-            throw new IllegalArgumentException("Core pool size must be at least 1");
-        }
-        if (maxPoolSize < corePoolSize) {
-            throw new IllegalArgumentException("Max pool size must be greater than or equal to core pool size");
-        }
-        if (maxPoolSize > 64) {
-            throw new IllegalArgumentException("Max pool size cannot exceed 64");
-        }
-    }
-
+    // 实现IdGenerator接口的generate方法，生成新的唯一ID
     @Override
     public Long generate() {
-        try {
-            Future<Long> future = threadPool.submit(new IdGenerationTask());
-            return future.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("ID generation was interrupted", e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException("Error generating ID", e.getCause());
-        }
+        // 获取当前线程的本地持有者对象
+        BroIdThreadLocalHolder broIdThreadLocalHolder = this.threadLocalHolder.get();
+        // 通过位运算组合ID：将线程ID左移序列号位数，再与递增的序列号进行按位或运算
+        return broIdThreadLocalHolder.threadId << sequenceBits | broIdThreadLocalHolder.sequence++;
     }
 
-    private class IdGenerationTask implements Callable<Long> {
-        @Override
-        public Long call() {
-            BroIdThreadLocalHolder broIdThreadLocalHolder = threadLocal.get();
-            final int threadShift = sequenceBits;
-            final long maxThreadId = (1L << threadIdBits) - 1;
-            final long maxSequence = (1L << sequenceBits) - 1;
-
-            if (broIdThreadLocalHolder.threadId > maxThreadId) {
-                throw new IllegalStateException("Thread ID exceeds maximum value");
-            }
-            if (broIdThreadLocalHolder.sequence > maxSequence) {
-                broIdThreadLocalHolder.sequence = 0L;
-            }
-
-            return (broIdThreadLocalHolder.threadId << threadShift) | broIdThreadLocalHolder.sequence++;
-        }
-    }
-
+    // 实现IdGenerator接口的idType方法，返回当前生成器的ID类型
     @Override
     public IdType idType() {
+        // 返回BroId类型
         return IdType.BroId;
     }
 
-    @Data
-    @AllArgsConstructor
+    // 内部静态类，用于在线程本地变量中存储线程ID和序列号
+    @Data // 自动生成getter、setter、equals、hashCode和toString方法
+    @AllArgsConstructor // 自动生成包含所有字段的构造函数
     public static class BroIdThreadLocalHolder {
+        // 线程的唯一标识ID
         long threadId;
+
+        // 该线程内部的序列号计数器
         long sequence;
     }
 }
