@@ -1,6 +1,7 @@
 package icu.congee.id.generator;
 
 import icu.congee.id.generator.distributed.broid.BroIdGenerator;
+import icu.congee.id.generator.distributed.snowflake.LockFreeSnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class CompleteSpringBenchmark {
 
     public SnowflakeIdGenerator snowflakeIdGenerator;
+    public LockFreeSnowflakeIdGenerator lockFreeSnowflakeIdGenerator;
     public BroIdGenerator broIdGenerator;
     public ConfigurableApplicationContext context;
 
@@ -40,6 +42,7 @@ public class CompleteSpringBenchmark {
     public void init() {
         context = SpringApplication.run(IdGeneratorBenchmarkApplication.class);
         snowflakeIdGenerator = context.getBean(SnowflakeIdGenerator.class);
+        lockFreeSnowflakeIdGenerator = context.getBean(LockFreeSnowflakeIdGenerator.class);
         broIdGenerator = context.getBean(BroIdGenerator.class);
     }
 
@@ -51,6 +54,11 @@ public class CompleteSpringBenchmark {
     @Benchmark
     public void generateSnowflake(Blackhole bh) {
         bh.consume(snowflakeIdGenerator.generate());
+    }
+
+    @Benchmark
+    public void generateLockFreeSnowflake(Blackhole bh) {
+        bh.consume(lockFreeSnowflakeIdGenerator.generate());
     }
 
     @Benchmark

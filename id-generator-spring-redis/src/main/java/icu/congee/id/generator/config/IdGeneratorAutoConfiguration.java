@@ -29,6 +29,7 @@ import icu.congee.id.generator.distributed.broid.BroIdGenerator;
 import icu.congee.id.generator.distributed.broid.BroIdGeneratorPro;
 import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
+import icu.congee.id.generator.distributed.snowflake.LockFreeSnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
 
@@ -75,6 +76,11 @@ public class IdGeneratorAutoConfiguration {
     @Bean
     public SnowflakeIdGenerator snowflakeIdGenerator() {
         return SnowflakeIdGenerator.INSTANCE;
+    }
+
+    @Bean
+    public LockFreeSnowflakeIdGenerator lockFreeSnowflakeIdGenerator() {
+        return LockFreeSnowflakeIdGenerator.INSTANCE;
     }
 
     @Bean
