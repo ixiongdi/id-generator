@@ -1,5 +1,6 @@
 package icu.congee.id.base;
 
+import cn.hutool.core.codec.Base62;
 import icu.congee.id.base.util.DictionaryBase64;
 import icu.congee.id.base.util.LexicalBase64;
 
@@ -27,7 +28,7 @@ public interface Id {
     }
 
     default String toBase62() {
-        return Base62Codec.encode(toBytes());
+        return Base62.encode(toBytes());
     }
 
     default String toBase36() {
