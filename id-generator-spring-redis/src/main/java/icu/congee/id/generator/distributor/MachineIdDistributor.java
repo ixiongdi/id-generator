@@ -18,7 +18,7 @@ public class MachineIdDistributor {
     private final long machineId;
 
     public MachineIdDistributor(RedissonClient redisson, String namespace) {
-        String name = "IdGenerator:MachineIdService:%s:Set".formatted(namespace);
+        String name = String.format("IdGenerator:MachineIdService:%s:Set", namespace);
         this.set = redisson.getSetCache(name);
         this.machineId = register();
 

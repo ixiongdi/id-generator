@@ -45,4 +45,9 @@ public class Base64EncodeBenchmark {
     public String lexicalBase64Encode() {
         return icu.congee.id.base.util.LexicalBase64.encode(TEST_BYTES);
     }
+
+    @Benchmark
+    public String urlSafeBase64Encode() {
+        return icu.congee.id.base.util.URLSafeBase64.encode(TEST_BYTES);
+    }
 }

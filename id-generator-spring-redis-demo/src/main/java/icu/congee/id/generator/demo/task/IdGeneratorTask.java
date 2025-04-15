@@ -65,33 +65,28 @@ import org.springframework.stereotype.Component;
         }
 
         for (int i = 0; i < 10; i++) {
-            log.info("bro id: {}", broIdGenerator.generate().toLong());
-        }
-
-        for (int i = 0; i < 10; i++) {
-            log.info("bro id pro: {}", broIdGeneratorPro.generate().toHexString());
-        }
-
-        for (int i = 0; i < 10; i++) {
-            log.info("bro id ultra: {}", broIdGeneratorUltra.generate().toBase62());
-        }
-
-//        long start = System.nanoTime();
-//        long count = 1000_000_000L;
-//        for (int i = 0; i < count; i++) {
-//            mistIdGenerator.generate();
-//            long end = System.nanoTime();
-//            if (i % 1000000 == 0) {
-//                log.info("rate:  {}个/s", count * 1000_000_000L / (end - start));
-//            }
-//        }
-
-        for (int i = 0; i < 10; i++) {
             log.info("atomic long id: {}", atomicLongIdGenerator.generate());
         }
 
         for (int i = 0; i < 10; i++) {
             log.info("cos id: {}", cosIdGenerator.generate().toBase62());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("bro id: {}", broIdGenerator.generate().toLong());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("bro id pro: {}", broIdGeneratorPro.generate().toCrockfordBase32());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("bro id pro max encode base64: {}", broIdGeneratorUltra.generate().toBase64());
+            log.info("bro id pro max encode lexical base64: {}", broIdGeneratorUltra.generate().toLexicalBase64());
+            log.info("bro id pro max encode base32: {}", broIdGeneratorUltra.generate().toBase32());
+            log.info("bro id pro max encode crockford base32: {}", broIdGeneratorUltra.generate().toCrockfordBase32());
+            log.info("bro id pro max encode hex: {}", broIdGeneratorUltra.generate().toHexString());
+            log.info("bro id pro max encode biginteger: {}", broIdGeneratorUltra.generate().toBigInteger());
         }
     }
 }
