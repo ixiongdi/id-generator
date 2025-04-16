@@ -1,12 +1,9 @@
 package icu.congee.id.generator.distributed.cosid;
 
-import icu.congee.id.base.Base62Codec;
+import icu.congee.id.base.Base62;
 import icu.congee.id.base.Id;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.nio.ByteBuffer;
 
 @Data
 public class CosId implements Id {
@@ -37,9 +34,9 @@ public class CosId implements Id {
 
     @Override
     public String toBase62() {
-        return Base62Codec.encode(long2bytes(timestamp))
-                + Base62Codec.encode(long2bytes(machineId))
-                + Base62Codec.encode(long2bytes(sequence));
+        return Base62.encode(long2bytes(timestamp))
+                + Base62.encode(long2bytes(machineId))
+                + Base62.encode(long2bytes(sequence));
     }
 
     @Override

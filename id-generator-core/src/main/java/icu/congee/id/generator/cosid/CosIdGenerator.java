@@ -18,7 +18,7 @@
 package icu.congee.id.generator.cosid;
 
 // 导入必要的类
-import icu.congee.id.base.Base62Codec;
+import icu.congee.id.base.Base62;
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
 
@@ -72,7 +72,7 @@ public class CosIdGenerator implements IdGenerator {
     }
 
     public static String next() {
-        return Base62Codec.encode(cosIdGenerator.generateId());
+        return Base62.encode(cosIdGenerator.generateId());
     }
 
     /**
@@ -203,7 +203,7 @@ public class CosIdGenerator implements IdGenerator {
      */
     @Override
     public Object generate() {
-        return Base62Codec.encode(cosIdGenerator.generateId());
+        return Base62.encode(cosIdGenerator.generateId());
     }
 
     /**

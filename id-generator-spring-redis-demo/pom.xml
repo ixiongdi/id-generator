@@ -52,6 +52,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+        <dependency>
             <groupId>icu.congee</groupId>
             <artifactId>id-generator-spring-redis</artifactId>
             <version>${project.version}</version>

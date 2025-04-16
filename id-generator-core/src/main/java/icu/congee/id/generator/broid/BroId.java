@@ -46,47 +46,10 @@ public class BroId implements Comparable<BroId> {
 
     @Override
     public String toString() {
-        return toBase62String();
+        return Base64.encode(BitUtils.listToByteArray(value));
     }
 
-    /**
-     * 将BroId转换为Base62编码的字符串表示形式。
-     * Base62编码使用数字(0-9)、小写字母(a-z)和大写字母(A-Z)共62个字符来表示二进制数据。
-     *
-     * @return Base62编码的字符串
-     */
-    public String toBase62String() {
-        return Base62Codec.encode(BitUtils.listToByteArray(value));
-    }
 
-    /**
-     * 将BroId转换为Base36编码的字符串表示形式。
-     * Base36编码使用数字(0-9)和小写字母(a-z)共36个字符来表示二进制数据。
-     *
-     * @return Base36编码的字符串
-     */
-    public String toBase36String() {
-        return Base36Codec.encode(BitUtils.listToByteArray(value));
-    }
-
-    /**
-     * 将BroId转换为Crockford Base32编码的字符串表示形式。
-     * Crockford Base32是一种人类可读的编码方案，设计用于减少视觉混淆。
-     *
-     * @return Crockford Base32编码的字符串
-     */
-    public String toCrockfordBase32String() {
-        return CrockfordBase32.encode(BitUtils.listToByteArray(value));
-    }
-
-    /**
-     * 将BroId转换为十六进制字符串表示形式。
-     *
-     * @return 十六进制编码的字符串
-     */
-    public String toHexString() {
-        return HexCodec.encode(BitUtils.listToByteArray(value));
-    }
 
     /**
      * 将BroId转换为长整型数值。

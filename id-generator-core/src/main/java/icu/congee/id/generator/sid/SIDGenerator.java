@@ -2,7 +2,7 @@ package icu.congee.id.generator.sid;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
-import icu.congee.id.base.TimeUtils;
+import icu.congee.id.util.TimeUtils;
 
 import java.util.Base64;
 import java.util.Random;

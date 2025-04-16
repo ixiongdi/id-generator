@@ -22,7 +22,6 @@
 
 package icu.congee.id.generator.objectid;
 
-import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -124,7 +123,7 @@ public final class Assertions {
      * @return {@code value}
      * @throws AssertionError If {@code value} is {@code null}.
      */
-    public static <T> T assertNotNull(@Nullable final T value) throws AssertionError {
+    public static <T> T assertNotNull(final T value) throws AssertionError {
         if (value == null) {
             throw new AssertionError();
         }

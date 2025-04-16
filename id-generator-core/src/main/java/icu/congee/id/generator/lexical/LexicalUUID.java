@@ -1,6 +1,6 @@
 package icu.congee.id.generator.lexical;
 
-import icu.congee.id.base.HexCodec;
+import icu.congee.id.base.Base16;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -38,7 +38,7 @@ public class LexicalUUID implements Comparable<LexicalUUID> {
     }
 
     public static LexicalUUID fromString(String uuid) {
-        byte[] bytes = HexCodec.decode(uuid.replaceAll("-", ""));
+        byte[] bytes = Base16.decode(uuid.replaceAll("-", ""));
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         long timestamp = buffer.getLong();
         long workerID = buffer.getLong();

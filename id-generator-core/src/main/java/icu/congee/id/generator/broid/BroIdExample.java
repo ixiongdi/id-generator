@@ -116,10 +116,6 @@ public class BroIdExample {
         BroIdGenerator<BroId> snowflakeGenerator = createSnowflakeGenerator();
         for (int i = 0; i < 10; i++) {
             System.out.println("BroId encode base62: " + snowflakeGenerator.next());
-            System.out.println("BroId encode base62: " + snowflakeGenerator.next().toBase62String());
-            System.out.println("BroId encode base36: " + snowflakeGenerator.next().toBase36String());
-            System.out.println("BroId encode crock ford base32: " + snowflakeGenerator.next().toCrockfordBase32String());
-            System.out.println("BroId encode hex: " + snowflakeGenerator.next().toHexString());
             System.out.println("BroId encode long: " + snowflakeGenerator.next().toLong());
         }
 
@@ -127,10 +123,6 @@ public class BroIdExample {
         BroIdGenerator<BroId> uuidGenerator = createUUIDv8Generator();
         for (int i = 0; i < 10; i++) {
             System.out.println("BroId encode base62: " + uuidGenerator.next());
-            System.out.println("BroId encode base62: " + uuidGenerator.next().toBase62String());
-            System.out.println("BroId encode base36: " + uuidGenerator.next().toBase36String());
-            System.out.println("BroId encode crock ford base32: " + uuidGenerator.next().toCrockfordBase32String());
-            System.out.println("BroId encode hex: " + uuidGenerator.next().toHexString());
             System.out.println("BroId encode uuid: " + uuidGenerator.next().toUUID());
             System.out.println("BroId encode uuid: " + uuidGenerator.next().toUUID(IdType.UUIDv8));
         }

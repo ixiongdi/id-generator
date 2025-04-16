@@ -3,95 +3,67 @@ package icu.congee.id.base;
 import java.util.Arrays;
 
 public class Base16 {
-    private static final char[] UPPER_HEX = {
-        '0', '1', '2', '3', '4', '5', '6', '7',
-        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-    };
-    
-    private static final char[] LOWER_HEX = {
-        '0', '1', '2', '3', '4', '5', '6', '7',
-        '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
-    };
-    
-    private static final int[] DECODE = new int[128];
-    
+
+    private static final byte[] ENCODE_MAP;
+    private static final byte[] DECODE_MAP;
+
     static {
-        Arrays.fill(DECODE, -1);
+        // 初始化编码映射表（0-9, A-F）
+        ENCODE_MAP = new byte[16];
         for (int i = 0; i < 10; i++) {
-            DECODE['0' + i] = i;
+            ENCODE_MAP[i] = (byte) ('0' + i);
+        }
+        for (int i = 10; i < 16; i++) {
+            ENCODE_MAP[i] = (byte) ('A' + (i - 10));
+        }
+
+        // 初始化解码映射表
+        DECODE_MAP = new byte[128];
+        Arrays.fill(DECODE_MAP, (byte) -1);
+        for (int i = 0; i < 10; i++) {
+            DECODE_MAP['0' + i] = (byte) i;
         }
         for (int i = 0; i < 6; i++) {
-            DECODE['A' + i] = 10 + i;
-            DECODE['a' + i] = 10 + i;
+            DECODE_MAP['A' + i] = (byte) (10 + i);
+            DECODE_MAP['a' + i] = (byte) (10 + i); // 支持小写字母
         }
     }
 
-    /**
-     * 将字节数组编码为Base16(十六进制)字符串(大写)
-     * @param data 要编码的字节数组
-     * @return 编码后的十六进制字符串
-     */
-    public static String encodeUpper(byte[] data) {
-        return encode(data, UPPER_HEX);
+    public static String encode(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder(bytes.length * 2);
+        for (byte b : bytes) {
+            result.append((char) ENCODE_MAP[(b >> 4) & 0x0F]);
+            result.append((char) ENCODE_MAP[b & 0x0F]);
+        }
+        return result.toString();
     }
-    
-    /**
-     * 将字节数组编码为Base16(十六进制)字符串(小写)
-     * @param data 要编码的字节数组
-     * @return 编码后的十六进制字符串
-     */
-    public static String encodeLower(byte[] data) {
-        return encode(data, LOWER_HEX);
-    }
-    
-    private static String encode(byte[] data, char[] hex) {
-        if (data == null) {
-            return null;
+
+    public static byte[] decode(String str) {
+        if (str == null || str.isEmpty()) {
+            return new byte[0];
         }
-        
-        char[] out = new char[data.length << 1];
-        for (int i = 0, j = 0; i < data.length; i++) {
-            out[j++] = hex[(0xF0 & data[i]) >>> 4];
-            out[j++] = hex[0x0F & data[i]];
+
+        if (str.length() % 2 != 0) {
+            throw new IllegalArgumentException("Invalid Base16 string length");
         }
-        return new String(out);
-    }
-    
-    /**
-     * 将Base16(十六进制)字符串解码为字节数组
-     * @param hex 要解码的十六进制字符串
-     * @return 解码后的字节数组
-     * @throws IllegalArgumentException 如果输入不是有效的十六进制字符串
-     */
-    public static byte[] decode(String hex) {
-        if (hex == null) {
-            return null;
+
+        byte[] result = new byte[str.length() / 2];
+        for (int i = 0; i < str.length(); i += 2) {
+            char high = str.charAt(i);
+            char low = str.charAt(i + 1);
+
+            if (high >= 128 || low >= 128 ||
+                    DECODE_MAP[high] == -1 || DECODE_MAP[low] == -1) {
+                throw new IllegalArgumentException("Invalid Base16 character");
+            }
+
+            result[i / 2] = (byte) ((DECODE_MAP[high] << 4) | DECODE_MAP[low]);
         }
-        
-        if ((hex.length() & 1) != 0) {
-            throw new IllegalArgumentException("Invalid hex string length: " + hex.length());
-        }
-        
-        char[] data = hex.toCharArray();
-        byte[] out = new byte[data.length >> 1];
-        
-        for (int i = 0, j = 0; j < data.length; i++) {
-            int high = charToDigit(data[j++]) << 4;
-            int low = charToDigit(data[j++]);
-            out[i] = (byte) (high | low);
-        }
-        
-        return out;
-    }
-    
-    private static int charToDigit(char ch) {
-        if (ch >= 128) {
-            throw new IllegalArgumentException("Invalid hex character: " + ch);
-        }
-        int digit = DECODE[ch];
-        if (digit == -1) {
-            throw new IllegalArgumentException("Invalid hex character: " + ch);
-        }
-        return digit;
+
+        return result;
     }
 }

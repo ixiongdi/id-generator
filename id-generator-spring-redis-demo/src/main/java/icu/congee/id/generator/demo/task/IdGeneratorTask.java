@@ -11,7 +11,10 @@ import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -54,6 +57,9 @@ import org.springframework.stereotype.Component;
     @Resource
     BroIdGeneratorUltra broIdGeneratorUltra;
 
+    @Autowired
+    private ConfigurableApplicationContext context;
+
     @Override
     public void run(String... args) {
         for (int i = 0; i < 10; i++) {
@@ -77,16 +83,24 @@ import org.springframework.stereotype.Component;
         }
 
         for (int i = 0; i < 10; i++) {
-            log.info("bro id pro: {}", broIdGeneratorPro.generate().toCrockfordBase32());
+            log.info("bro id pro encode base64: {}", broIdGeneratorPro.generate().toBase64());
+            log.info("bro id pro encode base62: {}", broIdGeneratorPro.generate().toBase62());
+            log.info("bro id pro encode base36: {}", broIdGeneratorPro.generate().toBase36());
+            log.info("bro id pro encode base32: {}", broIdGeneratorPro.generate().toBase32());
+            log.info("bro id pro encode base16: {}", broIdGeneratorPro.generate().toBase16());
+            log.info("bro id pro encode base10: {}", broIdGeneratorPro.generate().toBase10());
         }
 
         for (int i = 0; i < 10; i++) {
             log.info("bro id pro max encode base64: {}", broIdGeneratorUltra.generate().toBase64());
-            log.info("bro id pro max encode lexical base64: {}", broIdGeneratorUltra.generate().toLexicalBase64());
+            log.info("bro id pro max encode base62: {}", broIdGeneratorUltra.generate().toBase62());
+            log.info("bro id pro max encode base36: {}", broIdGeneratorUltra.generate().toBase36());
             log.info("bro id pro max encode base32: {}", broIdGeneratorUltra.generate().toBase32());
-            log.info("bro id pro max encode crockford base32: {}", broIdGeneratorUltra.generate().toCrockfordBase32());
-            log.info("bro id pro max encode hex: {}", broIdGeneratorUltra.generate().toHexString());
-            log.info("bro id pro max encode biginteger: {}", broIdGeneratorUltra.generate().toBigInteger());
+            log.info("bro id pro max encode base16: {}", broIdGeneratorUltra.generate().toBase16());
+            log.info("bro id pro max encode base10: {}", broIdGeneratorUltra.generate().toBase10());
         }
+
+        SpringApplication.exit(context, () -> 0);
+        System.exit(0);
     }
 }
