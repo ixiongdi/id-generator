@@ -2,33 +2,33 @@ package icu.congee.id.generator.distributed.ttsid;
 
 import icu.congee.id.base.Id;
 import lombok.AllArgsConstructor;
-
-import java.nio.ByteBuffer;
-import java.time.Instant;
+import lombok.ToString;
 
 @AllArgsConstructor
+@ToString
 public class TtsId implements Id {
 
-    // 32bit
-    private int timestamp;
+    // 41bit
+    private long timestamp;
 
-    // 16bit
+    // 10bit
     private short threadId;
 
-    // 16bit
+    // 12bit
     private short sequence;
 
-    public static int currentTimestamp() {
-        return (int) Instant.now().getEpochSecond();
+    public static long currentTimestamp() {
+        return System.currentTimeMillis();
     }
 
     @Override
     public byte[] toBytes() {
-        return ByteBuffer.allocate(8).putInt(timestamp).putShort(threadId).putShort(sequence).array();
+        return long2bytes(toLong());
     }
 
     @Override
     public long toLong() {
-        return (long) timestamp << 32 | threadId << 16 | sequence;
+        // 41位timestamp, 10位threadId, 12位sequence
+        return timestamp << 22 | threadId << 12 | sequence;
     }
 }

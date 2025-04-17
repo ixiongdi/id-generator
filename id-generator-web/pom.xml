@@ -6,7 +6,7 @@
     <parent>
         <groupId>icu.congee</groupId>
         <artifactId>id-generator-parent</artifactId>
-        <version>0.4.1</version>
+        <version>0.5.0</version>
     </parent>
 
     <artifactId>id-generator-web</artifactId>
@@ -82,16 +82,14 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- MyBatis-Flex -->
         <dependency>
             <groupId>com.mybatis-flex</groupId>
-            <artifactId>mybatis-flex-spring-boot-starter</artifactId>
-            <version>1.10.8</version>
+            <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>6.2.1</version>
         </dependency>
     </dependencies>
 

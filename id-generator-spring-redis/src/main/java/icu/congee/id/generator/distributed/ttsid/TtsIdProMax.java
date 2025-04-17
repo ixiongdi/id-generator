@@ -2,11 +2,13 @@ package icu.congee.id.generator.distributed.ttsid;
 
 import icu.congee.id.base.Id;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 import java.nio.ByteBuffer;
 import java.time.Instant;
 
 @AllArgsConstructor
+@ToString
 public class TtsIdProMax implements Id {
     // 64bit
     private long timestamp;

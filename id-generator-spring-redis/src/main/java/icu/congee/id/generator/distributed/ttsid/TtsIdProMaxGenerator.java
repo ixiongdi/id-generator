@@ -15,10 +15,7 @@ public class TtsIdProMaxGenerator implements IdGenerator {
     public TtsIdProMaxGenerator(RedissonClient redisson) {
         RAtomicLong threadId = redisson.getAtomicLong("IdGenerator:TtsIdProMaxGenerator:threadId");
 
-        threadLocalHolder = ThreadLocal.withInitial(() -> {
-            long currentThreadId = threadId.getAndIncrement();
-            return new TtsIdProMaxThreadLocalHolder((int) currentThreadId, 0);
-        });
+        threadLocalHolder = ThreadLocal.withInitial(() -> new TtsIdProMaxThreadLocalHolder((int) threadId.getAndIncrement(), 0));
     }
 
     @Override

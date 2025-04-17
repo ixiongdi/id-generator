@@ -10,8 +10,8 @@ import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
+import icu.congee.id.generator.distributed.ttsid.*;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -57,8 +57,20 @@ import org.springframework.stereotype.Component;
     @Resource
     BroIdGeneratorUltra broIdGeneratorUltra;
 
-    @Autowired
-    private ConfigurableApplicationContext context;
+    @Resource
+    ConfigurableApplicationContext context;
+
+    @Resource
+    TtsIdGenerator ttsIdGenerator;
+
+    @Resource
+    TtsIdPlusGenerator ttsIdPlusGenerator;
+
+    @Resource
+    TtsIdProGenerator ttsIdProGenerator;
+
+    @Resource
+    TtsIdProMaxGenerator ttsIdProMaxGenerator;
 
     @Override
     public void run(String... args) {
@@ -98,6 +110,14 @@ import org.springframework.stereotype.Component;
             log.info("bro id pro max encode base32: {}", broIdGeneratorUltra.generate().toBase32());
             log.info("bro id pro max encode base16: {}", broIdGeneratorUltra.generate().toBase16());
             log.info("bro id pro max encode base10: {}", broIdGeneratorUltra.generate().toBase10());
+        }
+
+
+        for (int i = 0; i < 10; i++) {
+            log.info("tts id: {}", ttsIdGenerator.generate().toBase32());
+            log.info("tts id plus: {}", ttsIdPlusGenerator.generate().toBase32());
+            log.info("tts id pro: {}", ttsIdProGenerator.generate().toBase32());
+            log.info("tts id pro max: {}", ttsIdProMaxGenerator.generate().toBase32());
         }
 
         SpringApplication.exit(context, () -> 0);

@@ -6,7 +6,7 @@
 
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-dependencies</artifactId>
-    <version>0.4.1</version>
+    <version>0.5.0</version>
     <packaging>pom</packaging>
 
     <name>ID Generator Dependencies</name>
@@ -52,11 +52,12 @@
         <spring-boot.version>3.4.4</spring-boot.version>
         <redisson.version>3.45.1</redisson.version>
         <hutool.version>5.8.36</hutool.version>
-        <guava.version>33.4.0-jre</guava.version>
+        <guava.version>33.4.8-jre</guava.version>
         <jmh.version>1.37</jmh.version>
         <commons-codec.version>1.18.0</commons-codec.version>
         <mysql.version>9.2.0</mysql.version>
-        <junit.version>5.12.0</junit.version>
+        <junit.version>5.12.2</junit.version>
+        <mybatis-flex.version>1.10.8</mybatis-flex.version>
     </properties>
 
     <dependencyManagement>
@@ -108,6 +109,12 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mybatis-flex</groupId>
+                <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
+                <version>${mybatis-flex.version}</version>
             </dependency>
 
             <!--mysql数据库驱动 -->

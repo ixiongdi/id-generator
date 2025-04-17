@@ -15,10 +15,7 @@ public class TtsIdGenerator implements IdGenerator {
     public TtsIdGenerator(RedissonClient redisson) {
         RAtomicLong threadId = redisson.getAtomicLong("IdGenerator:TtsIdGenerator:threadId");
 
-        threadLocalHolder = ThreadLocal.withInitial(() -> {
-            long currentThreadId = threadId.getAndIncrement();
-            return new TtsIdThreadLocalHolder((short) currentThreadId, (short) 0);
-        });
+        threadLocalHolder = ThreadLocal.withInitial(() -> new TtsIdThreadLocalHolder((short) threadId.getAndIncrement(), (short) 0));
     }
 
 

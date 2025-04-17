@@ -2,31 +2,37 @@ package icu.congee.id.generator.distributed.ttsid;
 
 import icu.congee.id.base.Id;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 import java.nio.ByteBuffer;
+import java.time.Instant;
 
 @AllArgsConstructor
+@ToString
 public class TtsIdPro implements Id {
 
-    // 48bit
+    // 56bit
     private long timestamp;
 
     // 24bit
     private int threadId;
 
-    // 24bit
-    private int sequence;
+    // 16bit
+    private short sequence;
 
+    // 微秒
     public static long currentTimestamp() {
-        return System.currentTimeMillis();
+        Instant now = Instant.now();
+        return now.getEpochSecond() * 1_000_000 + now.getNano() / 1000;
     }
 
     @Override
     public byte[] toBytes() {
-        // 分配12字节缓冲区：6字节timestamp + 3字节threadId + 3字节sequence
+        // 分配12字节缓冲区：7字节timestamp + 3字节threadId + 2字节sequence
         ByteBuffer buffer = ByteBuffer.allocate(12);
 
-        // 写入48位timestamp（只取低6字节）
+        // 写入56位timestamp（只取低7字节）
+        buffer.put((byte) (timestamp >>> 48));
         buffer.put((byte) (timestamp >>> 40));
         buffer.put((byte) (timestamp >>> 32));
         buffer.put((byte) (timestamp >>> 24));
@@ -34,13 +40,12 @@ public class TtsIdPro implements Id {
         buffer.put((byte) (timestamp >>> 8));
         buffer.put((byte) timestamp);
 
-        // 写入24位threadId（只取低3字节）
+        // 写入24位threadId（3字节）
         buffer.put((byte) (threadId >>> 16));
         buffer.put((byte) (threadId >>> 8));
         buffer.put((byte) threadId);
 
-        // 写入24位sequence（只取低3字节）
-        buffer.put((byte) (sequence >>> 16));
+        // 写入16位sequence（2字节）
         buffer.put((byte) (sequence >>> 8));
         buffer.put((byte) sequence);
 

@@ -15,16 +15,13 @@ public class TtsIdProGenerator implements IdGenerator {
     public TtsIdProGenerator(RedissonClient redisson) {
         RAtomicLong threadId = redisson.getAtomicLong("IdGenerator:TtsIdProGenerator:threadId");
 
-        threadLocalHolder = ThreadLocal.withInitial(() -> {
-            long currentThreadId = threadId.getAndIncrement();
-            return new TtsIdProThreadLocalHolder((int) currentThreadId, 0);
-        });
+        threadLocalHolder = ThreadLocal.withInitial(() -> new TtsIdProThreadLocalHolder((int)  threadId.getAndIncrement(), (short) 0));
     }
 
     @Override
     public TtsIdPro generate() {
         TtsIdProThreadLocalHolder holder = threadLocalHolder.get();
-        return new TtsIdPro(TtsIdPro.currentTimestamp(), holder.threadId, holder.sequence++);
+        return new TtsIdPro(TtsIdPro.currentTimestamp(), holder.threadId, (short) holder.sequence++);
     }
 
     @Override
@@ -35,6 +32,6 @@ public class TtsIdProGenerator implements IdGenerator {
     @AllArgsConstructor
     private static class TtsIdProThreadLocalHolder {
         int threadId;
-        int sequence;
+        short sequence;
     }
 }

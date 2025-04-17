@@ -15,24 +15,13 @@ public class TtsIdPlusGenerator implements IdGenerator {
     public TtsIdPlusGenerator(RedissonClient redisson) {
         RAtomicLong threadId = redisson.getAtomicLong("IdGenerator:TtsIdPlusGenerator:threadId");
 
-        threadLocalHolder = ThreadLocal.withInitial(() -> {
-            int currentThreadId = (int) threadId.getAndIncrement();
-            // 确保threadId不超过20位
-            currentThreadId = currentThreadId & 0xFFFFF; // 限制为20位
-            return new TtsIdPlusThreadLocalHolder(currentThreadId, 0);
-        });
+        threadLocalHolder = ThreadLocal.withInitial(() -> new TtsIdPlusThreadLocalHolder((int) threadId.getAndIncrement(), (short) 0));
     }
 
     @Override
     public TtsIdPlus generate() {
         TtsIdPlusThreadLocalHolder holder = threadLocalHolder.get();
-        int sequence = holder.sequence++;
-        // 确保sequence不超过20位
-        if (sequence > 0xFFFFF) { // 如果超过20位
-            sequence = 0;
-            holder.sequence = 1; // 重置sequence
-        }
-        return new TtsIdPlus(TtsIdPlus.currentTimestamp(), holder.threadId, sequence);
+        return new TtsIdPlus(TtsIdPlus.currentTimestamp(), holder.threadId, holder.sequence++);
     }
 
     @Override
@@ -43,6 +32,6 @@ public class TtsIdPlusGenerator implements IdGenerator {
     @AllArgsConstructor
     private static class TtsIdPlusThreadLocalHolder {
         int threadId;
-        int sequence;
+        short sequence;
     }
 }

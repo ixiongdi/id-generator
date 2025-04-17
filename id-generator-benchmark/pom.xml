@@ -6,7 +6,7 @@
     <parent>
         <groupId>icu.congee</groupId>
         <artifactId>id-generator-parent</artifactId>
-        <version>0.4.1</version>
+        <version>0.5.0</version>
     </parent>
 
     <artifactId>id-generator-benchmark</artifactId>
@@ -80,6 +80,10 @@
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
         </dependency>
     </dependencies>
 
