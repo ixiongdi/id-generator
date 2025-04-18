@@ -4,6 +4,8 @@ import icu.congee.id.base.Id;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 
+import java.util.HexFormat;
+
 @AllArgsConstructor
 @ToString
 public class TtsId implements Id {
@@ -30,5 +32,10 @@ public class TtsId implements Id {
     public long toLong() {
         // 41位timestamp, 10位threadId, 12位sequence
         return timestamp << 22 | threadId << 12 | sequence;
+    }
+
+    @Override
+    public String toBase16() {
+        return HexFormat.of().formatHex(toBytes());
     }
 }

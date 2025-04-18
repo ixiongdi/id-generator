@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import java.nio.ByteBuffer;
 import java.time.Instant;
+import java.util.HexFormat;
 
 @AllArgsConstructor
 @ToString
@@ -32,5 +33,10 @@ public class TtsIdProMax implements Id {
     @Override
     public long toLong() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toBase16() {
+        return HexFormat.of().formatHex(toBytes());
     }
 }

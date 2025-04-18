@@ -1,10 +1,12 @@
 package icu.congee.id.generator.distributed.ttsid;
 
 import icu.congee.id.base.Id;
+import icu.congee.id.generator.util.CrockfordBase32Encoder;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 
 import java.nio.ByteBuffer;
+import java.util.HexFormat;
 
 @AllArgsConstructor
 @ToString
@@ -52,5 +54,19 @@ public class TtsIdPlus implements Id {
     public long toLong() {
         // 由于TtsIdPlus总共80位(44位timestamp + 20位threadId + 16位sequence)，超过了long的64位，无法完全表示
         throw new UnsupportedOperationException("TtsIdPlus (80-bit) cannot be represented as a 64-bit long");
+    }
+
+    /**
+     * 专门为80bit优化的算法
+     * @return
+     */
+    @Override
+    public String toBase32() {
+        return CrockfordBase32Encoder.encode80Bit(toBytes());
+    }
+
+    @Override
+    public String toBase16() {
+        return HexFormat.of().formatHex(toBytes());
     }
 }
