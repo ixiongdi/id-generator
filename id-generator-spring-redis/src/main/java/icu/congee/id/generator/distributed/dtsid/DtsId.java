@@ -4,17 +4,18 @@ import icu.congee.id.base.Id;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 @ToString
 public class DtsId implements Id {
 
+    private final static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     private long timestamp;
     private long sequence;
-
-    private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
     @Override
     public byte[] toBytes() {
@@ -23,7 +24,7 @@ public class DtsId implements Id {
 
     @Override
     public long toLong() {
-        String formatted = simpleDateFormat.format(new Date(timestamp));
+        String formatted = LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault()).format(dateTimeFormatter);
         return Long.parseLong(formatted) * 100000 + sequence % 100000;
     }
 }

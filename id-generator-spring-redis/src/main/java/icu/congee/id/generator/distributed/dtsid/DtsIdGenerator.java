@@ -6,6 +6,8 @@ import org.redisson.api.RIdGenerator;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 
 @Component
 public class DtsIdGenerator implements IdGenerator {
@@ -20,7 +22,7 @@ public class DtsIdGenerator implements IdGenerator {
 
     @Override
     public DtsId generate() {
-        return new DtsId(System.currentTimeMillis(), rIdGenerator.nextId());
+        return new DtsId(System.currentTimeMillis() / 1000, rIdGenerator.nextId());
     }
 
     @Override
