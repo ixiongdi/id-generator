@@ -7,6 +7,7 @@ import icu.congee.id.generator.distributed.broid.BroIdGenerator;
 import icu.congee.id.generator.distributed.broid.BroIdGeneratorPro;
 import icu.congee.id.generator.distributed.broid.BroIdGeneratorUltra;
 import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
+import icu.congee.id.generator.distributed.dtsid.DtsIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
@@ -72,6 +73,9 @@ import org.springframework.stereotype.Component;
     @Resource
     TtsIdProMaxGenerator ttsIdProMaxGenerator;
 
+    @Resource
+    DtsIdGenerator dtsIdGenerator;
+
     @Override
     public void run(String... args) {
         for (int i = 0; i < 10; i++) {
@@ -118,6 +122,10 @@ import org.springframework.stereotype.Component;
             log.info("tts id plus: {}", ttsIdPlusGenerator.generate().toBase32());
             log.info("tts id pro: {}", ttsIdProGenerator.generate().toBase32());
             log.info("tts id pro max: {}", ttsIdProMaxGenerator.generate().toBase32());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            log.info("dts id: {}", dtsIdGenerator.generate().toLong());
         }
 
         SpringApplication.exit(context, () -> 0);

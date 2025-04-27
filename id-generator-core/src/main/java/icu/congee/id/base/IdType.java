@@ -37,6 +37,11 @@ public enum IdType {
      * Brother ID，一种简单且易于理解的标识符格式。
      * 适用于小型系统或测试环境。
      */
+    DtsId("dts_id", "dts id"),
+    /**
+     * Brother ID，一种简单且易于理解的标识符格式。
+     * 适用于小型系统或测试环境。
+     */
     TtsId("tts_id", "tts id"),
     /**
      * Brother ID，一种简单且易于理解的标识符格式。
