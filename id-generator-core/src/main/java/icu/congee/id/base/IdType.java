@@ -82,14 +82,14 @@ public enum IdType {
      * 生成的ID可以安全地在JavaScript环境中使用。
      * 适用于前端应用场景。
      */
-    CustomJavaScriptSafetyId("js_safety_id", ""),
+    JavaScriptSafetyId("js_safety_id", ""),
 
     /**
      * 基于时间的业务标识符。
      * 包含时间戳信息，便于业务追踪和排序。
      * 适用于需要时间追踪的业务系统。
      */
-    CustomTimeBasedBusinessId(
+    TimeBasedBusinessId(
             "business_id", "自定义基于时间的业务标识符，内嵌时间戳"),
 
     /**
@@ -97,7 +97,7 @@ public enum IdType {
      * 结合时间信息和随机性，提供高熵值。
      * 适用于需要高随机性的场景。
      */
-    CustomTimeBasedRandomId("random_id", "自定义基于时间的随机标识符，具有高熵值"),
+    TimeBasedRandomId("random_id", "自定义基于时间的随机标识符，具有高熵值"),
 
     /**
      * Elasticsearch兼容的雪花ID。
@@ -149,20 +149,6 @@ public enum IdType {
     MIST_ID("mist_id", "标准Mist标识符实现，具有均衡的功能特性"),
 
     /**
-     * 高性能Mist ID实现。
-     * 优化生成速度的Mist标识符变体。
-     * 适用于高并发场景。
-     */
-    MIST_FAST_ID("mist_fast_id", "高性能Mist标识符，优化生成速度"),
-
-    /**
-     * 安全增强的Mist ID实现。
-     * 增加熵值的Mist标识符变体。
-     * 适用于需要高安全性的场景。
-     */
-    MIST_SECURE_ID("mist_secure_id", "加密安全的Mist标识符，增强熵值"),
-
-    /**
      * Nano ID实现。
      * 紧凑且URL安全的标识符格式。
      * 适用于URL友好的场景。
@@ -181,14 +167,14 @@ public enum IdType {
      * 优化数据库性能的UUID变体。
      * 适用于需要数据库性能优化的场景。
      */
-    orderedUuid("ordered_uuid", "时间排序的UUID变体，优化数据库性能"),
+    OrderedUuid("ordered_uuid", "时间排序的UUID变体，优化数据库性能"),
 
     /**
      * Firebase风格的推送ID。
      * 具有时间顺序的标识符格式。
      * 适用于实时数据库场景。
      */
-    pushID("push_id", "Firebase风格的推送标识符，具有时间顺序"),
+    PushID("push_id", "Firebase风格的推送标识符，具有时间顺序"),
 
     /**
      * 分片友好的分布式ID。

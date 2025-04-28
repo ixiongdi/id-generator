@@ -49,6 +49,6 @@ public class OrderedUuidGenerator implements IdGenerator {
 
     @Override
     public IdType idType() {
-        return IdType.orderedUuid;
+        return IdType.OrderedUuid;
     }
 }

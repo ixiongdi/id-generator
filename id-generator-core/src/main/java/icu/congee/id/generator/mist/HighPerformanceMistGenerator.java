@@ -50,6 +50,6 @@ public class HighPerformanceMistGenerator implements MistGenerator {
 
     @Override
     public IdType idType() {
-        return IdType.MIST_FAST_ID;
+        return IdType.MIST_ID;
     }
 }

@@ -208,7 +208,7 @@ java -jar id-generator-benchmark/target/id-generator-benchmark.jar
 - [x] UUIDv5 - 基于名字和 SHA-1 的 UUID
 - [x] UUIDv6 - 基于时间的 UUID（改进版 UUIDv1）
 - [x] UUIDv7 - 基于 Unix 时间戳的 UUID（最新 RFC 标准） (测试完成日期: 2024-05-20, 覆盖率: 95%)
-- [ ] UUIDv8 - 自定义 UUID
+- [x] UUIDv8 - 自定义 UUID
 
 ### 其他 ID 生成器
 
@@ -218,6 +218,6 @@ java -jar id-generator-benchmark/target/id-generator-benchmark.jar
 - [x] Sonyflake - Sony 的分布式 ID 生成器
 - [x] CombGuid - 结合 GUID 和时间戳的 ID
 - [x] Xid - 全局唯一 ID 生成器
-- [ ] CosId - 腾讯云的分布式 ID 生成器
+- [x] CosId - 腾讯云的分布式 ID 生成器
 - [x] Cuid2 - 安全、可排序的 ID
 - [x] FlakeId - 分布式 ID 生成器

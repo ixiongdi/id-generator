@@ -73,6 +73,6 @@ public class TimeBasedBusinessIdGenerator implements IdGenerator {
 
     @Override
     public IdType idType() {
-        return IdType.CustomTimeBasedBusinessId;
+        return IdType.TimeBasedBusinessId;
     }
 }

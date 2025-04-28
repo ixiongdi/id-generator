@@ -126,6 +126,6 @@ public class JavaScriptSafetyIdGenerator implements IdGenerator {
      */
     @Override
     public IdType idType() {
-        return IdType.CustomJavaScriptSafetyId;
+        return IdType.JavaScriptSafetyId;
     }
 }

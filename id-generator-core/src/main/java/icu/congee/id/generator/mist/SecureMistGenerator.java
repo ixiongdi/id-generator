@@ -54,6 +54,6 @@ public class SecureMistGenerator implements MistGenerator {
 
     @Override
     public IdType idType() {
-        return IdType.MIST_SECURE_ID;
+        return IdType.MIST_ID;
     }
 }

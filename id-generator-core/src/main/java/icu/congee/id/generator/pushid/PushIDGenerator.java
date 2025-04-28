@@ -91,6 +91,6 @@ public class PushIDGenerator implements IdGenerator {
 
     @Override
     public IdType idType() {
-        return IdType.pushID;
+        return IdType.PushID;
     }
 }
