@@ -2,8 +2,9 @@ package icu.congee.id.generator.distributed.wxseq;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
+import org.redisson.api.LocalCachedMapCacheOptions;
 import org.redisson.api.RIdGenerator;
-import org.redisson.api.RMap;
+import org.redisson.api.RLocalCachedMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
@@ -11,12 +12,12 @@ import org.springframework.stereotype.Component;
 public class WxSeqGenerator implements IdGenerator {
 
     private final RedissonClient redisson;
-    private final RMap<Long, RIdGenerator> generatorCache;
+    private final RLocalCachedMap<Long, RIdGenerator> generatorCache;
 
 
     public WxSeqGenerator(RedissonClient redisson) {
         this.redisson = redisson;
-        this.generatorCache = redisson.getMap("IdGenerator:WxSeqGenerator:generatorCache");
+        this.generatorCache = redisson.getLocalCachedMapCache("IdGenerator:WxSeqGenerator:generatorCache", LocalCachedMapCacheOptions.defaults());
     }
 
 
@@ -25,7 +26,7 @@ public class WxSeqGenerator implements IdGenerator {
         throw new IllegalStateException("User ID required");
     }
 
-    public WxSeq generate(long userId) {
+    public WxSeq generate(Long userId) {
         RIdGenerator idGenerator = generatorCache.computeIfAbsent(userId, k -> {
             RIdGenerator gen = redisson.getIdGenerator("IdGenerator:WxSeqGenerator:userId:" + k);
             gen.tryInit(0, 10000);
