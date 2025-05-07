@@ -108,7 +108,7 @@ System.out.println("Generated Custom ID: " + id);
 
 ## 许可证
 
-本项目采用 MIT 和 Apache 2.0 双重许可。详情请参阅 [LICENSE-MIT](https://opensource.org/licenses/MIT) 和 [LICENSE-APACHE](https://www.apache.org/licenses/LICENSE-2.0)。
+本项目采用 MIT 许可证。详情请参阅 [LICENSE](../LICENSE) 文件。
 
 ## 贡献
 
