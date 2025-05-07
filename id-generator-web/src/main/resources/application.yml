@@ -4,8 +4,3 @@ spring:
     url: jdbc:mysql://congee.icu:3306/ids?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: id_generator
     password: W7K5Pn%J
-  data:
-    redis:
-      host: congee.icu
-      port: 6379
-      password: qw3erT^&*()_+
