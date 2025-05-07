@@ -1,6 +1,11 @@
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://congee.icu:3306/ids?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: id_generator
+    password: W7K5Pn%J
   data:
     redis:
-      host: ${REDIS_HOST:congee.icu}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:qw3erT^&*()_+}
+      host: congee.icu
+      port: 6379
+      password: qw3erT^&*()_+

@@ -6,13 +6,11 @@ import org.redisson.api.RIdGenerator;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 
 @Component
 public class DtsIdGenerator implements IdGenerator {
 
-    RIdGenerator rIdGenerator;
+    private final RIdGenerator rIdGenerator;
 
     public DtsIdGenerator(RedissonClient redisson) {
         rIdGenerator = redisson.getIdGenerator("DtsIdGenerator");

@@ -1,5 +1,6 @@
 package icu.congee.id.generator.distributed.cosid;
 
+import icu.congee.id.base.Base36;
 import icu.congee.id.base.Base62;
 import icu.congee.id.base.Id;
 
@@ -37,6 +38,13 @@ public class CosId implements Id {
         return Base62.encode(long2bytes(timestamp))
                 + Base62.encode(long2bytes(machineId))
                 + Base62.encode(long2bytes(sequence));
+    }
+
+    @Override
+    public String toBase36() {
+        return Base36.encode(long2bytes(timestamp))
+                + Base36.encode(long2bytes(machineId))
+                + Base36.encode(long2bytes(sequence));
     }
 
     @Override

@@ -2,14 +2,11 @@ package icu.congee.id.generator.distributed.mist;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -19,14 +16,13 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
-@DependsOn("redissonClient")
-public enum MistIdGenerator implements IdGenerator {
-    INSTANCE;
+public class MistIdGenerator implements IdGenerator {
 
+    private final Queue<Long> queue = new ConcurrentLinkedQueue<>();
+    private final AtomicBoolean isFilling = new AtomicBoolean(false);
     @Resource
     private RedissonClient redisson;
     private RAtomicLong atomicLong;
-
     @Value("${id.generator.mist.name:IdGenerator:AtomicLongIdGenerator:current}")
     private String name;
     @Value("${id.generator.mist.value:-1}")
@@ -35,11 +31,11 @@ public enum MistIdGenerator implements IdGenerator {
     private Boolean secret;
     @Value("${id.generator.mist.bufferSize:65536}")
     private Integer bufferSize;
-
     private Random random;
 
-    private final Queue<Long> queue = new ConcurrentLinkedQueue<>();
-    private final AtomicBoolean isFilling = new AtomicBoolean(false);
+    public MistIdGenerator(RedissonClient redisson) {
+        this.redisson = redisson;
+    }
 
     private void fillQueue() {
         long e = atomicLong.getAndAdd(bufferSize);

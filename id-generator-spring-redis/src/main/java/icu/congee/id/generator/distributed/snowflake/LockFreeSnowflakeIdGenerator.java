@@ -21,9 +21,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * <p>整体结构： - 符号位：1位，固定为0 - 时间戳：41位，精确到毫秒，可用69年 - 机器ID：10位，最多支持1024个节点 - 序列号：12位，同一毫秒内最多生成4096个ID
  */
 @Component
-public enum LockFreeSnowflakeIdGenerator implements IdGenerator {
-    /** 单例实例 */
-    INSTANCE;
+public class LockFreeSnowflakeIdGenerator implements IdGenerator {
+
 
     /** 起始时间戳 (2022-02-23) */
     @Value("${id.generator.snowflake.epoch:1645557742000}")
@@ -44,20 +43,19 @@ public enum LockFreeSnowflakeIdGenerator implements IdGenerator {
     /** 上次生成ID的时间戳 */
     private final AtomicLong lastTimestamp = new AtomicLong(-1L);
 
-    /** Redisson客户端，用于分布式机器ID的获取 */
-    @Resource private RedissonClient redisson;
+
 
     /** 机器ID服务，负责获取和维护当前节点的机器ID */
-    private MachineIdDistributor machineIdDistributor;
+    private final MachineIdDistributor machineIdDistributor;
+
+    public LockFreeSnowflakeIdGenerator(RedissonClient redisson) {
+        machineIdDistributor = new MachineIdDistributor(redisson, IdType.Snowflake.getName());
+    }
 
     /** 当前毫秒内的序列号 */
     private final AtomicLong sequence = new AtomicLong(0L);
 
-    /** 初始化方法，创建机器ID服务实例 */
-    @PostConstruct
-    public void init() {
-        machineIdDistributor = new MachineIdDistributor(redisson, IdType.Snowflake.getName());
-    }
+
 
     /**
      * 获取当前时间戳

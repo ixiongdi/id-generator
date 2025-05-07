@@ -1,6 +1,5 @@
 package icu.congee.id.generator;
 
-import icu.congee.id.generator.distributed.broid.BroIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.LockFreeSnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.ttsid.TtsIdGenerator;
@@ -27,7 +26,6 @@ public class CompleteSpringBenchmark {
 
     public SnowflakeIdGenerator snowflakeIdGenerator;
     public LockFreeSnowflakeIdGenerator lockFreeSnowflakeIdGenerator;
-    public BroIdGenerator broIdGenerator;
     public ConfigurableApplicationContext context;
 
     public TtsIdGenerator ttsIdGenerator;
@@ -76,11 +74,6 @@ public class CompleteSpringBenchmark {
 //    @Benchmark
     public void generateLockFreeSnowflake(Blackhole bh) {
         bh.consume(lockFreeSnowflakeIdGenerator.generate());
-    }
-
-//    @Benchmark
-    public void generateBroId(Blackhole bh) {
-        bh.consume(broIdGenerator.generate());
     }
 
     @Benchmark

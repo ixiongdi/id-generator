@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
- *        &#064;copyright (c) 2024 ixiongdi. All rights reserved.
+ *        &#064;copyright (c) 2025 ixiongdi. All rights reserved.
  */
 public class UUIDv6Generator implements IdGenerator {
     // 格里高利历偏移量（从 1582-10-15 到 1970-01-01 的 100 纳秒间隔数）

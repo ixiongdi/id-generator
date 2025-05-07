@@ -2,29 +2,20 @@ package icu.congee.id.generator.distributed.atomiclong;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
-
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 @Service
-@DependsOn("redissonClient")
-public enum AtomicLongIdGenerator implements IdGenerator {
-    INSTANCE;
+public class AtomicLongIdGenerator implements IdGenerator {
 
-    @Resource
-    private RedissonClient redisson;
+    private final RAtomicLong atomicLong;
 
-    private RAtomicLong atomicLong;
 
-    @PostConstruct
-    public void init() {
+    public AtomicLongIdGenerator(RedissonClient redisson) {
         this.atomicLong = redisson.getAtomicLong("IdGenerator:AtomicLongIdGenerator:current");
     }
+
 
     @Override
     public Long generate() {

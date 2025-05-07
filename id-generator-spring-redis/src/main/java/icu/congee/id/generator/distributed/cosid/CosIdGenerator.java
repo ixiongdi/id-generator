@@ -3,45 +3,36 @@ package icu.congee.id.generator.distributed.cosid;
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
 import icu.congee.id.generator.distributor.MachineIdDistributor;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
-
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public enum CosIdGenerator implements IdGenerator {
-    INSTANCE;
+public class CosIdGenerator implements IdGenerator {
 
-    @Value("${id.generator.cosid.timestamp.bits:44}") // 默认44位时间戳
-    private int timestampBits;
-
-    @Value("${id.generator.cosid.machine.bits:20}") // 默认20位机器ID
-    private int machineBits;
-
-    @Value("${id.generator.cosid.sequence.bits:16}") // 默认16位序列号
-    private int sequenceBits;
-
-    private long maxSequence;
+    private final long maxSequence;
+    private final MachineIdDistributor machineIdDistributor;
+    private final int timestampBits;
+    private final int machineBits;
+    private final int sequenceBits;
+    private final long epoch;
     private long currentSequence = 0L;
     private long lastTimestamp = -1L;
 
-    @Value("${id.generator.cosid.epoch:1672502400000}") // 默认2023-01-01 00:00:00
-    private long epoch;
-
-    @Resource
-    private RedissonClient redisson;
-    private MachineIdDistributor machineIdDistributor;
-
-    @PostConstruct
-    public void init() {
+    public CosIdGenerator(RedissonClient redisson,
+            @Value("${id.generator.cosid.timestamp.bits:44}") int timestampBits,
+            @Value("${id.generator.cosid.machine.bits:20}") int machineBits,
+            @Value("${id.generator.cosid.sequence.bits:16}") int sequenceBits,
+            @Value("${id.generator.cosid.epoch:1672502400000}") long epoch) {
+        this.timestampBits = timestampBits;
+        this.machineBits = machineBits;
+        this.sequenceBits = sequenceBits;
+        this.epoch = epoch;
         // 验证位数分配是否合法
         if (timestampBits + machineBits + sequenceBits != 80) {
             throw new IllegalArgumentException(
-                    String.format("位数分配总和必须为80位，当前配置：timestamp=%d, machine=%d, sequence=%d, total=%d",
-                            timestampBits, machineBits, sequenceBits, timestampBits + machineBits + sequenceBits));
+                    String.format("位数分配总和必须为80位，当前配置：timestamp=%d, machine=%d, sequence=%d, total=%d", timestampBits,
+                            machineBits, sequenceBits, timestampBits + machineBits + sequenceBits));
         }
 
         // 初始化最大序列号
@@ -92,12 +83,7 @@ public enum CosIdGenerator implements IdGenerator {
         }
 
         lastTimestamp = timestamp;
-        return new CosId(
-                timestamp,
-                machineIdDistributor.get(),
-                currentSequence++,
-                timestampBits,
-                machineBits,
+        return new CosId(timestamp, machineIdDistributor.get(), currentSequence++, timestampBits, machineBits,
                 sequenceBits);
     }
 

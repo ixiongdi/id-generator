@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 ixiongdi
+ * Copyright (c) 2025 ixiongdi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ import java.util.concurrent.atomic.LongAdder;
  * @author ixiongdi
  * @version 1.0
  * @since 2024-05-01
- *        &#064;copyright (c) 2024 ixiongdi. All rights reserved.
+ *        &#064;copyright (c) 2025 ixiongdi. All rights reserved.
  */
 public class UUIDv7Generator implements IdGenerator {
     private static volatile long lastTimestamp = 0L;
