@@ -201,7 +201,7 @@ public enum IdType {
      * 结合时间信息和随机性，提供高熵值。
      * 适用于需要高随机性的场景。
      */
-    TimeBasedRandomId("random_id", "基于时间的随机ID，结合了时间有序性和随机性，提供较高的唯一性保证"),
+    TimeBasedEntropyId("entropy_id", "基于时间和多个熵值的ID，结合了时间有序性和随机性，提供较高的唯一性保证"),
     /**
      * Brother ID，一种简单且易于理解的标识符格式。
      * 适用于小型系统或测试环境。

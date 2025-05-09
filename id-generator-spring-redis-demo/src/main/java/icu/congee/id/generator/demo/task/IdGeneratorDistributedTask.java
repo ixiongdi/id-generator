@@ -14,6 +14,8 @@ import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.ttsid.*;
+import icu.congee.id.generator.distributed.uuid.UUID;
+import icu.congee.id.generator.distributed.uuid.UUIDv8Generator;
 import icu.congee.id.generator.distributed.wxseq.WxSeq;
 import icu.congee.id.generator.distributed.wxseq.WxSeqGenerator;
 import jakarta.annotation.Resource;
@@ -67,6 +69,9 @@ public class IdGeneratorDistributedTask {
 
     @Resource
     private WxSeqGenerator wxSeqGenerator;
+
+    @Resource
+    private UUIDv8Generator uuiDv8Generator;
 
 
     /**
@@ -208,6 +213,14 @@ public class IdGeneratorDistributedTask {
             idGeneratorDistributedEntity.setBase32(id.toBase32());
             idGeneratorDistributedEntity.setBase16(id.toBase16());
             idGeneratorDistributedEntity.setBase10(id.toBase10());
+            idGeneratorDistributedService.save(idGeneratorDistributedEntity);
+        }
+        {
+            UUID id = uuiDv8Generator.generate();
+            log.info("{}", id);
+            IdGeneratorDistributedEntity idGeneratorDistributedEntity = new IdGeneratorDistributedEntity();
+            idGeneratorDistributedEntity.setIdType(IdType.UUIDv8.getName());
+            idGeneratorDistributedEntity.setBytes(id.toBytes());
             idGeneratorDistributedService.save(idGeneratorDistributedEntity);
         }
     }

@@ -3,10 +3,6 @@ package icu.congee.id.generator.distributed.snowflake;
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
 import icu.congee.id.generator.distributor.MachineIdDistributor;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
-
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,42 +17,55 @@ import org.springframework.stereotype.Component;
 @Component
 public class SnowflakeIdGenerator implements IdGenerator {
 
-    /** 起始时间戳 (2022-02-23) */
-    @Value("${id.generator.snowflake.epoch:1645557742000}")
-    private long epoch;
-
-    /** 时间戳占用位数 */
-    @Value("${id.generator.snowflake.timestamp:41}")
-    private long timestampBits;
-
-    /** 机器ID占用位数 */
-    @Value("${id.generator.snowflake.machine:10}")
-    private long machineIdBits;
-
-    /** 序列号占用位数 */
-    @Value("${id.generator.snowflake.sequence:12}")
-    private long sequenceBits;
-
-    /** 上次生成ID的时间戳 */
-    private long lastTimestamp = -1L;
-
-
-
-    /** 机器ID服务，负责获取和维护当前节点的机器ID */
+    /**
+     * 机器ID服务，负责获取和维护当前节点的机器ID
+     */
     private final MachineIdDistributor machineIdDistributor;
-
-    /** 当前毫秒内的序列号 */
+    /**
+     * 起始时间戳 (2022-02-23)
+     */
+    private final long epoch;
+    /**
+     * 时间戳占用位数
+     */
+    private final int timestampBits;
+    /**
+     * 机器ID占用位数
+     */
+    private final int machineIdBits;
+    /**
+     * 序列号占用位数
+     */
+    private final int sequenceBits;
+    /**
+     * 上次生成ID的时间戳
+     */
+    private long lastTimestamp = -1L;
+    /**
+     * 当前毫秒内的序列号
+     */
     private long sequence;
 
-    SnowflakeIdGenerator(RedissonClient redisson) {
-        machineIdDistributor = new MachineIdDistributor(redisson, IdType.Snowflake.getName());
+    public SnowflakeIdGenerator(
+            RedissonClient redissonClient,
+            @Value("${id.generator.snowflake.epoch:1645557742000}") long epoch,
+            @Value("${id.generator.snowflake.timestamp:41}") int timestampBits,
+            @Value("${id.generator.snowflake.machine:10}") int machineIdBits,
+            @Value("${id.generator.snowflake.sequence:12}") int sequenceBits) {
+
+        this.epoch = epoch;
+        this.timestampBits = timestampBits;
+        this.machineIdBits = machineIdBits;
+        this.sequenceBits = sequenceBits;
+
+        // 直接在构造函数中初始化MachineIdDistributor
+        this.machineIdDistributor = new MachineIdDistributor(
+                redissonClient,
+                IdType.Snowflake.getName(),
+                machineIdBits
+        );
     }
 
-    /** 初始化方法，创建机器ID服务实例 */
-    @PostConstruct
-    public void init() {
-
-    }
 
     /**
      * 获取当前时间戳
@@ -114,9 +123,7 @@ public class SnowflakeIdGenerator implements IdGenerator {
         // 1. (timestamp - epoch) << (machineIdBits + sequenceBits)：时间戳部分左移机器ID位数和序列号位数
         // 2. machineIdService.get() << sequenceBits：机器ID左移序列号位数
         // 3. sequence：序列号部分
-        return (timestamp - epoch) << (machineIdBits + sequenceBits)
-                | machineIdDistributor.get() << sequenceBits
-                | sequence;
+        return (timestamp - epoch) << (machineIdBits + sequenceBits) | machineIdDistributor.get() << sequenceBits | sequence;
     }
 
     /**

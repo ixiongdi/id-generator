@@ -38,7 +38,7 @@ public class CosIdGenerator implements IdGenerator {
         // 初始化最大序列号
         maxSequence = (1L << sequenceBits) - 1;
 
-        machineIdDistributor = new MachineIdDistributor(redisson, IdType.CosId.getName());
+        machineIdDistributor = new MachineIdDistributor(redisson, IdType.CosId.getName(), machineBits);
     }
 
     /**

@@ -25,20 +25,16 @@ public class LockFreeSnowflakeIdGenerator implements IdGenerator {
 
 
     /** 起始时间戳 (2022-02-23) */
-    @Value("${id.generator.snowflake.epoch:1645557742000}")
-    private long epoch;
+    private final long epoch;
 
     /** 时间戳占用位数 */
-    @Value("${id.generator.snowflake.timestamp:41}")
-    private long timestampBits;
+    private final int timestampBits;
 
     /** 机器ID占用位数 */
-    @Value("${id.generator.snowflake.machine:10}")
-    private long machineIdBits;
+    private final int machineIdBits;
 
     /** 序列号占用位数 */
-    @Value("${id.generator.snowflake.sequence:12}")
-    private long sequenceBits;
+    private final int sequenceBits;
 
     /** 上次生成ID的时间戳 */
     private final AtomicLong lastTimestamp = new AtomicLong(-1L);
@@ -48,8 +44,25 @@ public class LockFreeSnowflakeIdGenerator implements IdGenerator {
     /** 机器ID服务，负责获取和维护当前节点的机器ID */
     private final MachineIdDistributor machineIdDistributor;
 
-    public LockFreeSnowflakeIdGenerator(RedissonClient redisson) {
-        machineIdDistributor = new MachineIdDistributor(redisson, IdType.Snowflake.getName());
+    public LockFreeSnowflakeIdGenerator(
+            RedissonClient redissonClient,
+            @Value("${id.generator.snowflake.epoch:1645557742000}") long epoch,
+            @Value("${id.generator.snowflake.timestamp:41}") int timestampBits,
+            @Value("${id.generator.snowflake.machine:10}") int machineIdBits,
+            @Value("${id.generator.snowflake.sequence:12}") int sequenceBits) {
+
+        // 初始化配置参数
+        this.epoch = epoch;
+        this.timestampBits = timestampBits;
+        this.machineIdBits = machineIdBits;
+        this.sequenceBits = sequenceBits;
+
+        // 构造器内直接初始化MachineIdDistributor（此时配置已就绪）
+        this.machineIdDistributor = new MachineIdDistributor(
+                redissonClient,
+                IdType.Snowflake.getName(),
+                machineIdBits
+        );
     }
 
     /** 当前毫秒内的序列号 */

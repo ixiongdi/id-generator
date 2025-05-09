@@ -1,223 +1,160 @@
-# Java ID Generator (BroId)
+# Java ID Generator
 
 [![Maven Central](https://img.shields.io/maven-central/v/icu.congee/id-generator-core.svg)](https://search.maven.org/search?q=g:icu.congee%20AND%20a:id-generator-core)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Java Version](https://img.shields.io/badge/Java-8%2B-blue.svg)](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
 
-旨在提供简单、全面、高性能、基于最佳实践的本机和分布式 ID 生成器。
-
-本项目汇集了全网几乎所有的 Id 生成算法，并提供了标准实现、严格实现、快速实现，以及各种算法可自定义部分的实现。
+本项目汇集了互联网上绝大部分的ID生成算法加上一些自己原创的算法。旨在提供简单、易用、全面的ID生成解决方案
 
 ## 特性
 
-- **零依赖**：不依赖任何第三方库，仅需要 Java 8+即可
-- **高性能**：全部 ID 生成器都有高性能版本，满足高并发要求
-- **多版本**：中心化部署为可选项
-- **全面覆盖**：支持 16 种不同的 ID 生成算法
-- **最佳实践**：基于互联网上流行的 ID 生成方案，结合实战经验总结
-- **符合 RFC 标准**：实现了最新的 UUID 标准(RFC 9562)
-
-## ID 生成器特性对比
-
-### UUID 系列
-
-| ID     | 唯一性 | 单调性 | 去中心化 | 长度  | 可靠性 | 性能  | 不可猜测性 | 业务含义 | 易用性 | 可使用年限 | 隐私性 | 随机性 |
-| ------ | ------ | ------ | -------- | ----- | ------ | ----- | ---------- | -------- | ------ | ---------- | ------ | ------ |
-| UUIDv1 | ★★★☆☆  | ★★★☆☆  | ★★★★★    | ★★★☆☆ | ★★★★☆  | ★★★★★ | ★★☆☆☆      | ★☆☆☆☆    | ★★★★☆  | ★★★★★      | ★☆☆☆☆  | ★★☆☆☆  |
-| UUIDv2 | ★★★☆☆  | ★★★☆☆  | ★★★★★    | ★★★☆☆ | ★★★★☆  | ★★★★★ | ★★☆☆☆      | ★★☆☆☆    | ★★★★☆  | ★★★★★      | ★☆☆☆☆  | ★★☆☆☆  |
-| UUIDv3 | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★☆☆      | ★★★☆☆    | ★★★★★  | ★★★★★      | ★★★☆☆  | ★★★☆☆  |
-| UUIDv4 | ★★★★★  | ★☆☆☆☆  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★★      | ★☆☆☆☆    | ★★★★★  | ★★★★★      | ★★★★★  | ★★★★★  |
-| UUIDv5 | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★☆☆      | ★★★☆☆    | ★★★★★  | ★★★★★      | ★★★☆☆  | ★★★☆☆  |
-| UUIDv6 | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★☆☆      | ★★☆☆☆    | ★★★★☆  | ★★★★★      | ★★☆☆☆  | ★★★☆☆  |
-| UUIDv7 | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★☆      | ★★☆☆☆    | ★★★★★  | ★★★★★      | ★★★★☆  | ★★★★☆  |
-| UUIDv8 | ★★★★★  | ★★★★☆  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★☆      | ★★★★★    | ★★★☆☆  | ★★★★★      | ★★★★☆  | ★★★★☆  |
-
-### 分布式 ID
-
-| ID           | 唯一性 | 单调性 | 去中心化 | 长度  | 可靠性 | 性能  | 不可猜测性 | 业务含义 | 易用性 | 可使用年限 | 隐私性 | 随机性 |
-| ------------ | ------ | ------ | -------- | ----- | ------ | ----- | ---------- | -------- | ------ | ---------- | ------ | ------ |
-| Snowflake    | ★★★★★  | ★★★★★  | ★★★☆☆    | ★★★★★ | ★★★★☆  | ★★★★★ | ★★★☆☆      | ★★★★☆    | ★★★☆☆  | ★★★★☆      | ★★★☆☆  | ★★★☆☆  |
-| Sonyflake    | ★★★★★  | ★★★★★  | ★★★☆☆    | ★★★★★ | ★★★★☆  | ★★★★★ | ★★★☆☆      | ★★★★☆    | ★★★☆☆  | ★★★★☆      | ★★★☆☆  | ★★★☆☆  |
-| FlakeID      | ★★★★★  | ★★★★★  | ★★★☆☆    | ★★★★★ | ★★★★☆  | ★★★★★ | ★★★☆☆      | ★★★★☆    | ★★★☆☆  | ★★★★☆      | ★★★☆☆  | ★★★☆☆  |
-| ElasticFlake | ★★★★★  | ★★★★★  | ★★★☆☆    | ★★★★★ | ★★★★★  | ★★★★★ | ★★★☆☆      | ★★★★★    | ★★★★☆  | ★★★★☆      | ★★★☆☆  | ★★★☆☆  |
-| ShardingID   | ★★★★★  | ★★★★★  | ★★★☆☆    | ★★★★★ | ★★★★★  | ★★★★★ | ★★★☆☆      | ★★★★★    | ★★★★☆  | ★★★★☆      | ★★★☆☆  | ★★★☆☆  |
-
-### 特殊用途 ID
-
-| ID       | 唯一性 | 单调性 | 去中心化 | 长度  | 可靠性 | 性能  | 不可猜测性 | 业务含义 | 易用性 | 可使用年限 | 隐私性 | 随机性 |
-| -------- | ------ | ------ | -------- | ----- | ------ | ----- | ---------- | -------- | ------ | ---------- | ------ | ------ |
-| ULID     | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★☆      | ★★☆☆☆    | ★★★★★  | ★★★★★      | ★★★★☆  | ★★★★☆  |
-| ObjectID | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★☆☆      | ★★★☆☆    | ★★★★★  | ★★★★★      | ★★★☆☆  | ★★★☆☆  |
-| CosId    | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★☆      | ★★★★☆    | ★★★★★  | ★★★★★      | ★★★★☆  | ★★★★☆  |
-| CUIDv1   | ★★★★★  | ★★★★☆  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★★      | ★★☆☆☆    | ★★★★★  | ★★★★★      | ★★★★★  | ★★★★★  |
-| CUIDv2   | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★★      | ★★☆☆☆    | ★★★★★  | ★★★★★      | ★★★★★  | ★★★★★  |
-| KSUID    | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★☆      | ★★☆☆☆    | ★★★★★  | ★★★★★      | ★★★★☆  | ★★★★☆  |
-| XID      | ★★★★★  | ★★★★★  | ★★★★★    | ★★★☆☆ | ★★★★★  | ★★★★★ | ★★★★☆      | ★★★★☆    | ★★★★★  | ★★★★★      | ★★★★☆  | ★★★★☆  |
+- 本项目的无协调版本，也就是core包里的ID生成器，仅依赖Java8+，无其他任何依赖
+- 本项目的分布式版本，也就是spring-redis里的ID生成器，依赖Java21+、Spring 3、Redisson
+- 提供多达38种ID生成算法，包含Snowflake和UUID系列
 
 ## 快速开始
 
-### Maven
+不依赖任何第三方组件的ID生成算法
 
+添加Maven依赖
 ```xml
-<dependency>
+ <dependency>
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-core</artifactId>
     <version>0.5.0</version>
 </dependency>
 ```
 
-### Gradle
+```java
+package icu.congee.id;
 
-```groovy
-implementation 'icu.congee:id-generator-core:0.5.0'
+import icu.congee.id.generator.custom.TimeBasedEntropyIdGenerator;
+import icu.congee.id.generator.uuid.UUIDv7Generator;
+
+public class Main {
+
+    public static void main(String[] args) {
+        // 原创算法（基于时间戳的多熵源ID生成）
+        TimeBasedEntropyIdGenerator timeBasedEntropyIdGenerator = new TimeBasedEntropyIdGenerator();
+        for (int i = 0; i < 10; i++) {
+            System.out.println(timeBasedEntropyIdGenerator.generate());
+        }
+        // UUIDv7（基于时间戳和随机数的ID生成）
+        UUIDv7Generator uuiDv7Generator = new UUIDv7Generator();
+        for (int i = 0; i < 10; i++) {
+            System.out.println(uuiDv7Generator.generate());
+        }
+    }
+}
 ```
 
-### 基本使用
+输出：
+```text
+3222468131246802
+3222467286060751
+3222468347649837
+3222467291790908
+3222468029585554
+3222467216329747
+3222466768071402
+3222468509150539
+3222468637611075
+3222467796534475
+0196b425-a94b-7000-aacc-caa1d49a210f
+0196b425-a94c-7000-be40-66f951a9012f
+0196b425-a94c-7001-8282-399074543e76
+0196b425-a94c-7002-90f8-0f55c90d8368
+0196b425-a94c-7003-8406-96214faca186
+0196b425-a94c-7004-ad60-4bebba94e498
+0196b425-a94c-7005-9caf-bbe80f017786
+0196b425-a94c-7006-81e2-319b9cd05903
+0196b425-a94c-7007-b20a-26734d9ae89f
+0196b425-a94c-7008-a976-43bb6d906a6b
+```
+
+想要了解`TimeBasedEntropyIdGenerator`算法的更多，请参考[TimeBasedEntropyIdGenerator](./docs/ID生成算法介绍/26-TimeBasedEntropyId.md)
+
+想要了解`UUIDv7Generator`算法的更多，请参考[UUIDv7Generator](./docs/ID生成算法介绍/35-UUIDv7.md)
+
+分布式的ID生成算法，依赖Java 21+、Spring Boot 3.4.5+ 和Redisson 3.46.0+
+
+添加Maven依赖
+```xml
+ <dependency>
+    <groupId>icu.congee</groupId>
+    <artifactId>id-generator-spring-redis</artifactId>
+    <version>0.5.0</version>
+</dependency>
+```
 
 ```java
-// 使用UUID v7生成器
-UUIDv7Generator generator = new StandardUUIDv7Generator();
-UUID uuid = generator.generate();
-System.out.println(uuid);
+package icu.congee.id.generator.demo;
 
-// 使用雪花算法生成器
-SnowflakeIdGenerator snowflake = new SnowflakeIdGenerator(1, 1);
-long id = snowflake.nextId();
-System.out.println(id);
+import icu.congee.id.generator.distributed.mist.MistIdGenerator;
+import icu.congee.id.generator.distributed.uuid.UUIDv8Generator;
+import jakarta.annotation.Resource;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 
-// 使用ULID生成器
-ULIDGenerator ulid = new ULIDGenerator();
-String id = ulid.generate();
-System.out.println(id);
+/**
+ * ID生成器示例应用
+ */
+@SpringBootApplication
+//@EnableScheduling
+@ComponentScans(value = {@ComponentScan("icu.congee.id.generator"),})
+@MapperScan("icu.congee.id.generator.demo.mapper")
+public class IdGeneratorDemoApplication implements CommandLineRunner {
+    @Resource
+    private MistIdGenerator mistIdGenerator;
+    @Resource
+    private UUIDv8Generator uuiDv8Generator;
+
+    public static void main(String[] args) {
+        SpringApplication.run(IdGeneratorDemoApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        // 薄雾算法（基于原子自增和随机数的ID生成算法）
+        for (int i = 0; i < 10; i++) {
+            System.out.println(mistIdGenerator.generate());
+        }
+        // UUIDv8（基于时间戳、循环计数器、节点ID的生成算法，符合UUID最新标准）
+        for (int i = 0; i < 10; i++) {
+            System.out.println(uuiDv8Generator.generate().toUUID());
+        }
+    }
+}
+
+```
+输出
+```text
+7965496382
+7965506879
+7965493701
+7965491581
+7965493715
+7965502035
+7965504511
+7965506549
+7965506767
+7965492591
+26c94be6-f1da-8dae-8000-bd28f61a66b1
+26c94be6-f1f5-87e4-8001-bd28f61a66b1
+26c94be6-f1f5-87e4-8002-bd28f61a66b1
+26c94be6-f1f5-87e4-8003-bd28f61a66b1
+26c94be6-f1f5-87e4-8004-bd28f61a66b1
+26c94be6-f1f5-87e4-8005-bd28f61a66b1
+26c94be6-f1f5-87e4-8006-bd28f61a66b1
+26c94be6-f1f5-87e4-8007-bd28f61a66b1
+26c94be6-f1f5-87e4-8008-bd28f61a66b1
+26c94be6-f1f5-87e4-8009-bd28f61a66b1
 ```
 
-## 支持的 ID 生成器
+想要了解`MistIdGenerator`算法的更多，请参考[MistIdGenerator](./docs/ID生成算法介绍/14-MIST_ID.md)
 
-本项目支持以下 ID 生成算法：
-
-### UUID 系列
-
-- **UUIDv1** - 基于时间和 MAC 地址的 UUID
-- **UUIDv2** - DCE 安全 UUID
-- **UUIDv3** - 基于名字和 MD5 的 UUID
-- **UUIDv4** - 随机 UUID
-- **UUIDv5** - 基于名字和 SHA-1 的 UUID
-- **UUIDv6** - 基于时间的 UUID（改进版 UUIDv1）
-- **UUIDv7** - 基于 Unix 时间戳的 UUID（最新 RFC 标准）
-- **UUIDv8** - 自定义 UUID
-
-### 其他 ID 生成器
-
-- **Snowflake** - Twitter 的雪花算法
-- **ULID** - 可排序的 UUID
-- **ObjectId** - MongoDB 的 ObjectId
-- **Sonyflake** - Sony 的分布式 ID 生成器
-- **CombGuid** - 结合 GUID 和时间戳的 ID
-- **Xid** - 全局唯一 ID 生成器
-- **CosId** - 腾讯云的分布式 ID 生成器
-- **Cuid2** - 安全、可排序的 ID
-- **FlakeId** - 分布式 ID 生成器
-
-## 高级用法
-
-### 自定义 UUID v7 生成器
-
-```java
-// 使用增强时钟精度的UUID v7生成器
-UUIDv7Generator precisionGenerator = new IncreasedClockPrecisionUUIDv7Generator();
-UUID uuid = precisionGenerator.generate();
-
-// 使用单调随机的UUID v7生成器
-UUIDv7Generator monotonicGenerator = new MonotonicRandomUUIDv7Generator();
-UUID uuid = monotonicGenerator.generate();
-```
-
-### 分布式 ID 生成
-
-```java
-// 使用Redis作为中央节点的分布式ID生成器
-// 需要添加id-generator-spring-redis依赖
-RedisSnowflakeIdGenerator redisSnowflake = new RedisSnowflakeIdGenerator(redisTemplate);
-long id = redisSnowflake.nextId();
-```
-
-## 性能基准测试
-
-本项目包含了各种 ID 生成器的性能基准测试，可以通过以下方式运行：
-
-```bash
-mvn clean package -DskipTests
-java -jar id-generator-benchmark/target/id-generator-benchmark.jar
-```
-
-## 项目结构
-
-- **id-generator-core** - 核心 ID 生成器实现
-- **id-generator-spring-redis** - 基于 Spring Redis 的分布式 ID 生成器
-- **id-generator-spring-redis-demo** - Spring Redis 分布式 ID 生成器示例
-- **id-generator-benchmark** - 性能基准测试
-- **id-generator-web** - Web API 接口
-- **id-generator-bom** - Bill of Materials
-- **id-generator-dependencies** - 依赖管理
-
-## 贡献指南
-
-欢迎贡献代码、报告问题或提出改进建议。请遵循以下步骤：
-
-1. Fork 本仓库
-2. 创建您的特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交您的更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 打开一个 Pull Request
-
-## 许可证
-
-本项目采用双重许可：
-
-- [MIT License](LICENSE)
-- [Apache License 2.0](LICENSE-APACHE)
-
-## 联系方式
-
-- 作者：熊迪
-- 邮箱：ixiongdi@gmail.com
-- GitHub：[https://github.com/ixiongdi](https://github.com/ixiongdi)
-
-## 致谢
-
-感谢所有为各种 ID 生成算法做出贡献的开发者和组织。
-
-## Todo List
-
-### 测试结果汇总
-
-| ID 生成器 | 测试通过率 | 平均性能 (ops/ms) | 备注                   |
-| --------- | ---------- | ----------------- | ---------------------- |
-| UUIDv7    | 100%       | 158,000           | 符合 RFC 9562 标准     |
-| Snowflake | 100%       | 182,000           | 支持 64 节点分布式部署 |
-| ULID      | 100%       | 145,000           | 支持 Crockford 编码    |
-
-以下是各 ID 生成器的测试完成情况：
-
-### UUID 系列
-
-- [x] UUIDv1 - 基于时间和 MAC 地址的 UUID
-- [x] UUIDv2 - DCE 安全 UUID
-- [x] UUIDv3 - 基于名字和 MD5 的 UUID
-- [x] UUIDv4 - 随机 UUID
-- [x] UUIDv5 - 基于名字和 SHA-1 的 UUID
-- [x] UUIDv6 - 基于时间的 UUID（改进版 UUIDv1）
-- [x] UUIDv7 - 基于 Unix 时间戳的 UUID（最新 RFC 标准） (测试完成日期: 2024-05-20, 覆盖率: 95%)
-- [x] UUIDv8 - 自定义 UUID
-
-### 其他 ID 生成器
-
-- [x] Snowflake - Twitter 的雪花算法 (测试完成日期: 2024-05-21, 覆盖率: 92%)
-- [x] ULID - 可排序的 UUID (测试完成日期: 2024-05-22, 覆盖率: 98%)
-- [x] ObjectId - MongoDB 的 ObjectId
-- [x] Sonyflake - Sony 的分布式 ID 生成器
-- [x] CombGuid - 结合 GUID 和时间戳的 ID
-- [x] Xid - 全局唯一 ID 生成器
-- [x] CosId - 腾讯云的分布式 ID 生成器
-- [x] Cuid2 - 安全、可排序的 ID
-- [x] FlakeId - 分布式 ID 生成器
+想要了解`UUIDv8Generator`算法的更多，请参考[UUIDv8Generator](./docs/ID生成算法介绍/36-UUIDv8.md)
