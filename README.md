@@ -21,7 +21,7 @@
  <dependency>
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-core</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 </dependency>
 ```
 
@@ -83,7 +83,7 @@ public class Main {
  <dependency>
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-spring-redis</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 </dependency>
 ```
 

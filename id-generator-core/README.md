@@ -39,14 +39,14 @@ ID Generator Core 是一个高性能、可扩展的分布式 ID 生成器库，�
 <dependency>
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-core</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'icu.congee:id-generator-core:0.5.0'
+implementation 'icu.congee:id-generator-core:0.6.0'
 ```
 
 ## 快速开始
