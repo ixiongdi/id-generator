@@ -44,7 +44,7 @@ MIST_ID 的分布式实现基于 Redis 的 RAtomicLong，结构如下：
 ### 缺点
 
 1. **依赖性**：分布式实现依赖 Redis 服务
-2. **时间特性**：不包含时间信息，不支持按时间排序
+2. **时间特性**：不包含时间信息, 但支持排序
 3. **ID 长度**：生成的 ID 为纯数字，可能较长
 
 ## 适用场景
@@ -56,107 +56,51 @@ MIST_ID 的分布式实现基于 Redis 的 RAtomicLong，结构如下：
 
 ## 代码实现
 
-### 标准实现
-
-```java
-public class StandardMistGenerator implements MistGenerator {
-    private static final int SALT_BIT = 8; // 随机因子二进制位数
-    private static final int SALT_SHIFT = 8; // 随机因子移位数
-    private static final int INCREAS_SHIFT = SALT_BIT + SALT_SHIFT; // 自增数移位数
-    private static final int MAX_SALT_VALUE = 255; // 随机因子最大值
-
-    private final AtomicLong increas = new AtomicLong(1); // 自增数
-    private final ThreadLocalRandom random = ThreadLocalRandom.current(); // 线程安全的随机数生成器
-
-    @Override
-    public Long generate() {
-        // 自增
-        long increasValue = increas.incrementAndGet();
-
-        // 获取随机因子数值
-        long saltA = random.nextInt(MAX_SALT_VALUE + 1);
-        long saltB = random.nextInt(MAX_SALT_VALUE + 1);
-
-        // 通过位运算实现自动占位
-        return (increasValue << INCREAS_SHIFT) | (saltA << SALT_SHIFT) | saltB;
-    }
-}
-```
 
 ### 分布式实现
 
 ```java
+package icu.congee.id.generator.distributed.mist;
+
+import icu.congee.id.base.IdGenerator;
+import icu.congee.id.base.IdType;
+import org.redisson.api.RIdGenerator;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.security.SecureRandom;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 @Component
 public class MistIdGenerator implements IdGenerator {
 
-    private final Queue<Long> queue = new ConcurrentLinkedQueue<>();
-    private final AtomicBoolean isFilling = new AtomicBoolean(false);
-    @Resource
-    private RedissonClient redisson;
-    private RAtomicLong atomicLong;
+   private final Random random;
+   private final RIdGenerator generator;
 
-    // 配置参数
-    @Value("${id.generator.mist.name:IdGenerator:AtomicLongIdGenerator:current}")
-    private String name;
-    @Value("${id.generator.mist.value:-1}")
-    private Long value;
-    @Value("${id.generator.mist.secret:false}")
-    private Boolean secret;
-    @Value("${id.generator.mist.bufferSize:65536}")
-    private Integer bufferSize;
-    private Random random;
+   public MistIdGenerator(RedissonClient redisson, @Value("${id.generator.mist.name:IdGenerator:MistIdGenerator:current}") String name, @Value("${id.generator.mist.value:-1}") long initialValue, @Value("${id.generator.mist.secret:false}") boolean useSecureRandom, @Value("${id.generator.mist.bufferSize:1000}") int bufferSize) {
+      this.random = useSecureRandom ? new SecureRandom() : ThreadLocalRandom.current();
+      this.generator = redisson.getIdGenerator(name);
+      this.generator.tryInit(initialValue, bufferSize);
+   }
 
-    @PostConstruct
-    public void init() {
-        atomicLong = redisson.getAtomicLong(name);
-        if (value >= 0) {
-            atomicLong.set(value);
-        }
-        random = secret ? new SecureRandom() : ThreadLocalRandom.current();
 
-        // 客户端心跳线程，定期填充队列
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::fillQueue, 0, 10, TimeUnit.MILLISECONDS);
-        fillQueue();
-    }
+   @Override
+   public MistId generate() {
+      return new MistId(generator.nextId(), random.nextInt(0, 65535));
+   }
 
-    private void fillQueue() {
-        long e = atomicLong.getAndAdd(bufferSize);
-        for (int i = 0; i < bufferSize; i++) {
-            queue.offer(e + i);
-        }
-    }
+   @Override
+   public IdType idType() {
+      return IdType.MIST_ID;
+   }
 
-    @Override
-    public Long generate() {
-        synchronized (this) {
-            if (queue.size() < bufferSize * 0.1 && isFilling.compareAndSet(false, true)) {
-                new Thread(() -> {
-                    try {
-                        fillQueue();
-                    } finally {
-                        isFilling.set(false);
-                    }
-                }).start();
-            }
-        }
-        return queue.remove() | random.nextInt() & 0xFFFF;
-    }
 }
 ```
 
 ## 使用示例
 
-### 标准实现
-
-```java
-// 获取标准实现的单例实例
-StandardMistGenerator generator = StandardMistGenerator.getInstance();
-
-// 生成ID
-Long id = generator.generate();
-System.out.println("生成的ID: " + id);
-```
 
 ### 分布式实现
 
@@ -166,14 +110,13 @@ System.out.println("生成的ID: " + id);
 private MistIdGenerator mistIdGenerator;
 
 // 生成ID
-Long id = mistIdGenerator.generate();
+Long id = mistIdGenerator.generate().toLong();
 System.out.println("生成的分布式ID: " + id);
 ```
 
 ## 性能考虑
 
-1. **标准实现**：使用 AtomicLong 和 ThreadLocalRandom，性能极高，适合单机环境
-2. **分布式实现**：
+**分布式实现**：
    - 使用预填充队列机制，减少 Redis 访问频率
    - 当队列容量低于阈值时自动填充，保证 ID 生成的高效性
    - 支持配置缓冲区大小，可根据实际需求调整
@@ -181,9 +124,9 @@ System.out.println("生成的分布式ID: " + id);
 
 ## 配置参数（分布式实现）
 
-| 参数名                       | 默认值                                    | 说明                  |
-| ---------------------------- | ----------------------------------------- | --------------------- |
-| id.generator.mist.name       | IdGenerator:AtomicLongIdGenerator:current | Redis 中存储的键名    |
-| id.generator.mist.value      | -1                                        | 初始值，-1 表示不设置 |
-| id.generator.mist.secret     | false                                     | 是否使用安全随机数    |
-| id.generator.mist.bufferSize | 65536                                     | 缓冲区大小            |
+| 参数名                       | 默认值                                       | 说明         |
+| ---------------------------- |-------------------------------------------| ------------ |
+| id.generator.mist.name       | IdGenerator:MistIdGenerator:current | Redis 中存储的键名 |
+| id.generator.mist.value      | 0                                         | 初始值 |
+| id.generator.mist.secret     | false                                     | 是否使用安全随机数 |
+| id.generator.mist.bufferSize | 1000                                      | 缓冲区大小   |

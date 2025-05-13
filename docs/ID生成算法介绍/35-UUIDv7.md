@@ -119,5 +119,5 @@ public class UUIDv7Generator implements IdGenerator {
 
 ## 参考资料
 
-- [UUID 新版本草案 - IETF](https://datatracker.ietf.org/doc/html/draft-peabody-uuid-urn-namespace)
+- [RFC 9562 - UUID 最新规范](https://www.rfc-editor.org/rfc/rfc9562.html)
 - [RFC 4122 - UUID 规范](https://tools.ietf.org/html/rfc4122)

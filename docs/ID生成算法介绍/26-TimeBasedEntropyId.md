@@ -16,7 +16,7 @@
 - **时间戳部分**: 高 32 位，基于秒级时间戳与自定义纪元的差值。
 - **熵值部分**: 低 32 位，由 `EntropyKey` 类生成的多熵源哈希值的绝对值。
 
-ID 构成公式：`ID = ((currentTimeMillis / 1000 - epoch) << 32) | Math.abs(new EntropyKey().hashCode())`
+ID 构成公式：`ID = (System.currentTimeMillis() / 1000 - epoch) << 32 | (new EntropyKey().hashCode() & 0x7FFFFFFFL)`
 
 ### 1. 时间戳部分
 
@@ -26,7 +26,7 @@ ID 构成公式：`ID = ((currentTimeMillis / 1000 - epoch) << 32) | Math.abs(ne
   - 减去自定义纪元时间 `epoch`（1746028800，约为 2025-04-30）
 - **特点**:
   - 使用秒级时间戳，而非毫秒级，减小了时间戳部分的值
-  - 32 位时间戳部分可以使用约 136 年（2^32 秒）
+  - 32 位时间戳部分可以使用约 69 年
 
 ### 2. 熵值部分
 
@@ -39,7 +39,6 @@ ID 构成公式：`ID = ((currentTimeMillis / 1000 - epoch) << 32) | Math.abs(ne
   - **安全随机数**: 使用 `SecureRandom` 生成的随机值
 - **特点**:
   - 多熵源结合，大幅降低冲突概率
-  - 使用 `Math.abs()` 确保熵值为正数
 
 ## 优势
 
@@ -52,8 +51,6 @@ ID 构成公式：`ID = ((currentTimeMillis / 1000 - epoch) << 32) | Math.abs(ne
 ## 局限性
 
 1. **非严格单调递增**: 虽然包含时间戳，但同一秒内生成的多个 ID 之间不保证严格递增。
-2. **熵值部分不可解析**: 低 32 位是哈希值，不包含可解析的业务信息。
-3. **无时钟回拨处理**: 当前实现没有处理时钟回拨的机制。
 
 ## 适用场景
 
@@ -70,7 +67,7 @@ public class TimeBasedEntropyIdGenerator implements IdGenerator {
     private static final int epoch = 1746028800;
 
     public static long next() {
-        return (System.currentTimeMillis() / 1000 - epoch) << 32 | Math.abs(new EntropyKey().hashCode());
+        return (System.currentTimeMillis() / 1000 - epoch) << 32 | (new EntropyKey().hashCode() & 0x7FFFFFFFL);
     }
 
     @Override

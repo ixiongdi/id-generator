@@ -131,7 +131,7 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // 薄雾算法（基于原子自增和随机数的ID生成算法）
         for (int i = 0; i < 10; i++) {
-            System.out.println(mistIdGenerator.generate());
+            System.out.println(mistIdGenerator.generate().toLong());
         }
         // UUIDv8（基于时间戳、循环计数器、节点ID的生成算法，符合UUID最新标准）
         for (int i = 0; i < 10; i++) {
