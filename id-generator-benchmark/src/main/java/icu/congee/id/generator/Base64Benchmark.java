@@ -2,9 +2,6 @@ package icu.congee.id.generator;
 
 import org.openjdk.jmh.annotations.*;
 import java.util.concurrent.TimeUnit;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.buffer.Unpooled;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -42,16 +39,6 @@ public class Base64Benchmark {
     }
 
     @Benchmark
-    public String nettyBase64Encode() {
-        ByteBuf buf = Unpooled.wrappedBuffer(TEST_BYTES);
-        try {
-            return io.netty.handler.codec.base64.Base64.encode(buf).toString(java.nio.charset.StandardCharsets.UTF_8);
-        } finally {
-            buf.release();
-        }
-    }
-
-    @Benchmark
     public byte[] jdkBase64Decode() {
         String encoded = java.util.Base64.getEncoder().encodeToString(TEST_BYTES);
         return java.util.Base64.getDecoder().decode(encoded);
@@ -75,15 +62,4 @@ public class Base64Benchmark {
         return com.google.common.io.BaseEncoding.base64().decode(encoded);
     }
 
-    @Benchmark
-    public byte[] nettyBase64Decode() {
-        ByteBuf buf = Unpooled.wrappedBuffer(TEST_BYTES);
-        try {
-            String encoded = io.netty.handler.codec.base64.Base64.encode(buf)
-                    .toString(java.nio.charset.StandardCharsets.UTF_8);
-            return io.netty.handler.codec.base64.Base64.decode(Unpooled.wrappedBuffer(encoded.getBytes())).array();
-        } finally {
-            buf.release();
-        }
-    }
 }

@@ -51,10 +51,7 @@ public class CompleteSpringBenchmark {
 
     @Setup(Level.Trial)
     public void init() {
-        context = SpringApplication.run(IdGeneratorBenchmarkApplication.class);
-//        snowflakeIdGenerator = context.getBean(SnowflakeIdGenerator.class);
-//        lockFreeSnowflakeIdGenerator = context.getBean(LockFreeSnowflakeIdGenerator.class);
-//        broIdGenerator = context.getBean(BroIdGenerator.class);
+        context = SpringApplication.run(CompleteSpringBenchmark.class);
         ttsIdGenerator = context.getBean(TtsIdGenerator.class);
         ttsIdPlusGenerator = context.getBean(TtsIdPlusGenerator.class);
         ttsIdProGenerator = context.getBean(TtsIdProGenerator.class);

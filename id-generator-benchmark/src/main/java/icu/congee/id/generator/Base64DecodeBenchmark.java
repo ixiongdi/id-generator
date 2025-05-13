@@ -2,9 +2,6 @@ package icu.congee.id.generator;
 
 import org.openjdk.jmh.annotations.*;
 import java.util.concurrent.TimeUnit;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.buffer.Unpooled;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -28,13 +25,6 @@ public class Base64DecodeBenchmark {
         COMMONS_ENCODED = org.apache.commons.codec.binary.Base64.encodeBase64String(TEST_BYTES);
         HUTOOL_ENCODED = cn.hutool.core.codec.Base64.encode(TEST_BYTES);
         GUAVA_ENCODED = com.google.common.io.BaseEncoding.base64().encode(TEST_BYTES);
-        ByteBuf buf = Unpooled.wrappedBuffer(TEST_BYTES);
-        try {
-            NETTY_ENCODED = io.netty.handler.codec.base64.Base64.encode(buf)
-                    .toString(java.nio.charset.StandardCharsets.UTF_8);
-        } finally {
-            buf.release();
-        }
     }
 
     @Benchmark
@@ -55,12 +45,6 @@ public class Base64DecodeBenchmark {
     @Benchmark
     public byte[] guavaBase64Decode() {
         return com.google.common.io.BaseEncoding.base64().decode(GUAVA_ENCODED);
-    }
-
-    @Benchmark
-    public byte[] nettyBase64Decode() {
-        return io.netty.handler.codec.base64.Base64.decode(
-                Unpooled.wrappedBuffer(NETTY_ENCODED.getBytes())).array();
     }
 
     public static void main(String[] args) throws Exception {
