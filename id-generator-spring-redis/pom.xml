@@ -6,7 +6,7 @@
     <parent>
         <groupId>icu.congee</groupId>
         <artifactId>id-generator-parent</artifactId>
-        <version>0.6.0</version>
+        <version>0.6.1</version>
     </parent>
 
     <artifactId>id-generator-spring-redis</artifactId>
@@ -64,6 +64,7 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson-spring-boot-starter</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -75,11 +76,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

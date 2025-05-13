@@ -21,7 +21,7 @@
  <dependency>
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-core</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
 </dependency>
 ```
 
@@ -30,6 +30,7 @@ package icu.congee.id;
 
 import icu.congee.id.generator.custom.TimeBasedEntropyIdGenerator;
 import icu.congee.id.generator.uuid.UUIDv7Generator;
+import icu.congee.id.util.IdUtil;
 
 public class Main {
 
@@ -39,13 +40,22 @@ public class Main {
         for (int i = 0; i < 10; i++) {
             System.out.println(timeBasedEntropyIdGenerator.generate());
         }
-        // UUIDv7（基于时间戳和随机数的ID生成）
+        // UUID v7（基于时间戳和随机数的ID生成）
         UUIDv7Generator uuiDv7Generator = new UUIDv7Generator();
         for (int i = 0; i < 10; i++) {
             System.out.println(uuiDv7Generator.generate());
         }
+
+        // 有一些ID生成直接封装在了IdUtil里，可以这样使用
+        for (int i = 0; i < 10; i++) {
+            System.out.println(IdUtil.entropy());
+        }
+        for (int i = 0; i < 10; i++) {
+            System.out.println(IdUtil.uuid7());
+        }
     }
 }
+
 ```
 
 输出：
@@ -83,7 +93,7 @@ public class Main {
  <dependency>
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-spring-redis</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
 </dependency>
 ```
 

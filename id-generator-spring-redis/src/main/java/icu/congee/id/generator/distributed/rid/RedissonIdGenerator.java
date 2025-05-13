@@ -12,19 +12,13 @@ import org.springframework.stereotype.Component;
 public class RedissonIdGenerator implements IdGenerator {
 
     private final RIdGenerator generator;
-    private final String name;
-    private final long value;
-    private final long allocationSize;
 
     public RedissonIdGenerator(RedissonClient redisson,
             @Value("${id.generator.rid.name:IdGenerator:RedissonIdGenerator:current}") String name,
             @Value("${id.generator.rid.value:0}") long value,
             @Value("${id.generator.rid.allocationSize:5000}") long allocationSize) {
-        this.name = name;
-        this.value = value;
-        this.allocationSize = allocationSize;
-        this.generator = redisson.getIdGenerator(this.name);
-        this.generator.tryInit(this.value, this.allocationSize);
+        this.generator = redisson.getIdGenerator(name);
+        this.generator.tryInit(value, allocationSize);
     }
 
     @PostConstruct

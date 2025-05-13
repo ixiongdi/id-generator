@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class MistId implements Id {
     private long increment;
-    private long random;
+    private int random;
 
-    public MistId(long increment, long random) {
+    public MistId(long increment, int random) {
         this.increment = increment;
         this.random = random;
     }
@@ -21,10 +21,5 @@ public class MistId implements Id {
     @Override
     public long toLong() {
         return this.increment << 16 | this.random;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(toLong());
     }
 }

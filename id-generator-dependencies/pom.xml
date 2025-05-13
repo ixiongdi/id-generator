@@ -6,7 +6,7 @@
 
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-dependencies</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <packaging>pom</packaging>
 
     <name>ID Generator Dependencies</name>
@@ -50,7 +50,7 @@
 
     <properties>
         <spring-boot.version>3.4.5</spring-boot.version>
-        <redisson.version>3.45.1</redisson.version>
+        <redisson.version>3.46.0</redisson.version>
         <hutool.version>5.8.36</hutool.version>
         <guava.version>33.4.8-jre</guava.version>
         <jmh.version>1.37</jmh.version>

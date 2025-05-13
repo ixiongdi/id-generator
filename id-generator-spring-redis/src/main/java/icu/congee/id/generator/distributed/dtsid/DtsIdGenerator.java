@@ -13,7 +13,7 @@ public class DtsIdGenerator implements IdGenerator {
     private final RIdGenerator rIdGenerator;
 
     public DtsIdGenerator(RedissonClient redisson) {
-        rIdGenerator = redisson.getIdGenerator("DtsIdGenerator");
+        rIdGenerator = redisson.getIdGenerator("IdGenerator:DtsIdGenerator:current");
         rIdGenerator.tryInit(0, 1000);
     }
 

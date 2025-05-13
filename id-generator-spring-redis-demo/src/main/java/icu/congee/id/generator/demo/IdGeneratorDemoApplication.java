@@ -9,12 +9,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * ID生成器示例应用
  */
 @SpringBootApplication
-//@EnableScheduling
+@EnableScheduling
 @ComponentScans(value = {@ComponentScan("icu.congee.id.generator"),})
 @MapperScan("icu.congee.id.generator.demo.mapper")
 public class IdGeneratorDemoApplication implements CommandLineRunner {
@@ -22,6 +23,8 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
     private MistIdGenerator mistIdGenerator;
     @Resource
     private UUIDv8Generator uuiDv8Generator;
+
+
 
     public static void main(String[] args) {
         SpringApplication.run(IdGeneratorDemoApplication.class, args);
@@ -31,7 +34,7 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // 薄雾算法（基于原子自增和随机数的ID生成算法）
         for (int i = 0; i < 10; i++) {
-            System.out.println(mistIdGenerator.generate());
+            System.out.println(mistIdGenerator.generate().toLong());
         }
         // UUID v8（基于时间戳、循环计数器、节点ID的生成算法，符合UUID最新标准）
         for (int i = 0; i < 10; i++) {

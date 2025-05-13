@@ -2,6 +2,7 @@ package icu.congee.id;
 
 import icu.congee.id.generator.custom.TimeBasedEntropyIdGenerator;
 import icu.congee.id.generator.uuid.UUIDv7Generator;
+import icu.congee.id.util.IdUtil;
 
 public class Main {
 
@@ -15,6 +16,14 @@ public class Main {
         UUIDv7Generator uuiDv7Generator = new UUIDv7Generator();
         for (int i = 0; i < 10; i++) {
             System.out.println(uuiDv7Generator.generate());
+        }
+
+        // 有一些ID生成直接封装在了IdUtil里，可以这样使用
+        for (int i = 0; i < 10; i++) {
+            System.out.println(IdUtil.entropy());
+        }
+        for (int i = 0; i < 10; i++) {
+            System.out.println(IdUtil.uuid7());
         }
     }
 }

@@ -19,7 +19,7 @@ public class AtomicLongIdGenerator implements IdGenerator {
 
     @Override
     public Long generate() {
-        return atomicLong.incrementAndGet();
+        return atomicLong.getAndIncrement();
     }
 
     @Override

@@ -10,11 +10,12 @@ import icu.congee.id.generator.distributed.cosid.CosId;
 import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.dtsid.DtsId;
 import icu.congee.id.generator.distributed.dtsid.DtsIdGenerator;
+import icu.congee.id.generator.distributed.mist.MistId;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.ttsid.*;
-import icu.congee.id.generator.distributed.uuid.UUID;
+import icu.congee.id.generator.distributed.uuid.UUIDv8;
 import icu.congee.id.generator.distributed.uuid.UUIDv8Generator;
 import icu.congee.id.generator.distributed.wxseq.WxSeq;
 import icu.congee.id.generator.distributed.wxseq.WxSeqGenerator;
@@ -78,7 +79,7 @@ public class IdGeneratorDistributedTask {
      * 定期执行的ID生成任务。
      * 每秒执行一次，遍历所有可用的ID生成器，生成ID并存储。
      */
-    @Scheduled(cron = "* * * * * ?")
+    @Scheduled(cron = "0 * * * * *")
     public void generate() {
         {
             Long id = atomicLongIdGenerator.generate();
@@ -106,15 +107,7 @@ public class IdGeneratorDistributedTask {
             idGeneratorDistributedService.save(idGeneratorDistributedEntity);
         }
         {
-            Long id = mistIdGenerator.generate();
-            log.info("{}", id);
-            IdGeneratorDistributedEntity idGeneratorDistributedEntity = new IdGeneratorDistributedEntity();
-            idGeneratorDistributedEntity.setIdType(IdType.MIST_ID.getName());
-            idGeneratorDistributedEntity.setBase10(String.valueOf(id));
-            idGeneratorDistributedService.save(idGeneratorDistributedEntity);
-        }
-        {
-            Long id = mistIdGenerator.generate();
+            MistId id = mistIdGenerator.generate();
             log.info("{}", id);
             IdGeneratorDistributedEntity idGeneratorDistributedEntity = new IdGeneratorDistributedEntity();
             idGeneratorDistributedEntity.setIdType(IdType.MIST_ID.getName());
@@ -216,7 +209,7 @@ public class IdGeneratorDistributedTask {
             idGeneratorDistributedService.save(idGeneratorDistributedEntity);
         }
         {
-            UUID id = uuiDv8Generator.generate();
+            UUIDv8 id = uuiDv8Generator.generate();
             log.info("{}", id);
             IdGeneratorDistributedEntity idGeneratorDistributedEntity = new IdGeneratorDistributedEntity();
             idGeneratorDistributedEntity.setIdType(IdType.UUIDv8.getName());

@@ -22,7 +22,7 @@ public class MachineIdDistributor {
 
     public MachineIdDistributor(RedissonClient redisson, String namespace, int bits) {
         this.namespace = namespace;
-        this.set = redisson.getSetCache(String.format("IdGenerator:MachineIdService:%s:Set", namespace));
+        this.set = redisson.getSetCache(String.format("IdGenerator:MachineIdDistributor:%s:Set", namespace));
         this.machineId = register(bits);
 
         // 客户端心跳线程

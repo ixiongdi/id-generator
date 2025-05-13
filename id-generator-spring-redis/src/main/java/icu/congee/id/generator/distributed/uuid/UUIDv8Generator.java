@@ -20,7 +20,7 @@ public class UUIDv8Generator implements IdGenerator {
     }
 
     @Override
-    public UUID generate() {
+    public UUIDv8 generate() {
         Instant now = Instant.now();
         long timestamp = (now.getEpochSecond() * 1000_000_000L + now.getNano()) / 10;
         long clockSeq = atomicLong.getAndUpdate(x -> {
@@ -31,7 +31,7 @@ public class UUIDv8Generator implements IdGenerator {
             }
         });
         long node = machineIdDistributor.get();
-        return new UUID(timestamp, clockSeq, node);
+        return new UUIDv8(timestamp, clockSeq, node);
     }
 
     @Override
