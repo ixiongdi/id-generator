@@ -13,4 +13,8 @@ public class XidGenerator implements IdGenerator {
     public IdType idType() {
         return IdType.XID;
     }
+
+    public static String next() {
+        return Xid.string();
+    }
 }

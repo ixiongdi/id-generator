@@ -160,6 +160,8 @@ public enum IdType {
 
     RID("rid", "Redisson提供的通用ID生成器"),
 
+    SegmentChainId("segment_chain_id", ""),
+
     /**
      * 会话标识符。
      * 包含过期时间戳的会话ID格式。

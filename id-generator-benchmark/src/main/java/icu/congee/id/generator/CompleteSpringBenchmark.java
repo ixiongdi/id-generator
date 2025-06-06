@@ -20,10 +20,6 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class CompleteSpringBenchmark {
 
-    @Param({"1", "24"}) // 测试不同的线程数
-    private int threadCount;
-
-
     public SnowflakeIdGenerator snowflakeIdGenerator;
     public LockFreeSnowflakeIdGenerator lockFreeSnowflakeIdGenerator;
     public ConfigurableApplicationContext context;
@@ -74,25 +70,21 @@ public class CompleteSpringBenchmark {
     }
 
     @Benchmark
-    @Threads(1)
     public void generateTtsId() {
         ttsIdGenerator.generate();
     }
 
     @Benchmark
-    @Threads(1)
     public void generateTtsIdPlus() {
         ttsIdPlusGenerator.generate();
     }
 
     @Benchmark
-    @Threads(1)
     public void generateTtsIdPro() {
         ttsIdProGenerator.generate();
     }
 
     @Benchmark
-    @Threads(1)
     public void generateTtsIdProMax() {
         ttsIdProMaxGenerator.generate();
     }

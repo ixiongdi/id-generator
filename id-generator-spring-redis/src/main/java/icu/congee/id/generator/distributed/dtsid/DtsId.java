@@ -13,7 +13,8 @@ import java.time.format.DateTimeFormatter;
 @ToString
 public class DtsId implements Id {
 
-    private final static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private static final DateTimeFormatter dateTimeFormatter =
+            DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     private long timestamp;
     private long sequence;
 
@@ -24,7 +25,9 @@ public class DtsId implements Id {
 
     @Override
     public long toLong() {
-        String formatted = LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault()).format(dateTimeFormatter);
+        String formatted =
+                LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault())
+                        .format(dateTimeFormatter);
         return Long.parseLong(formatted) * 100000 + sequence % 100000;
     }
 }

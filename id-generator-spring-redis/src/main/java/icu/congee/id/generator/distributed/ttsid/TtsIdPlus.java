@@ -58,7 +58,6 @@ public class TtsIdPlus implements Id {
 
     /**
      * 专门为80bit优化的算法
-     * @return
      */
     @Override
     public String toBase32() {

@@ -45,6 +45,10 @@ public class SIDGenerator implements IdGenerator {
      */
     @Override
     public Object generate() {
+        return next();
+    }
+
+    public static String next() {
         byte[] timestamp = longToBytes(TimeUtils.getCurrentUnixNano());
         byte[] randomNum = longToBytes(random.nextLong());
         return Base64.getEncoder().encodeToString(timestamp) + "-" + Base64.getEncoder().encodeToString(randomNum);

@@ -49,15 +49,15 @@
     </developers>
 
     <properties>
-        <spring-boot.version>3.4.5</spring-boot.version>
-        <redisson.version>3.46.0</redisson.version>
-        <hutool.version>5.8.36</hutool.version>
+        <spring-boot.version>3.5.0</spring-boot.version>
+        <redisson.version>3.49.0</redisson.version>
+        <hutool.version>5.8.38</hutool.version>
         <guava.version>33.4.8-jre</guava.version>
         <jmh.version>1.37</jmh.version>
         <commons-codec.version>1.18.0</commons-codec.version>
-        <mysql.version>9.2.0</mysql.version>
-        <junit.version>5.12.2</junit.version>
-        <mybatis-flex.version>1.10.8</mybatis-flex.version>
+        <mysql.version>9.3.0</mysql.version>
+        <junit.version>5.13.0</junit.version>
+        <mybatis-flex.version>1.10.9</mybatis-flex.version>
     </properties>
 
     <dependencyManagement>

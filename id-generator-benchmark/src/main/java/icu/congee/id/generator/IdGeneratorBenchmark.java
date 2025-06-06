@@ -1,44 +1,44 @@
 package icu.congee.id.generator;
 
-import icu.congee.id.generator.uuid.*;
-
+import icu.congee.id.util.IdUtil;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * JMH基准测试类，用于评估不同UUID版本生成器的性能
+ * JMH基准测试类，用于评估IdUtil工具类中所有ID生成方法的性能
  *
  * <p>
- * 该类使用JMH（Java Microbenchmark Harness）框架进行基准测试，
- * 测试了UUID v1到v7各个版本的生成性能。测试在16个并发线程下运行，
- * 以模拟真实的高并发场景。
+ * 遵循JMH最佳实践配置：
+ * - 5轮预热（Warmup）确保JIT编译优化
+ * - 5轮测量（Measurement）保证结果稳定性
+ * - 16线程并发模拟高负载场景
+ * - 输出吞吐量（操作数/秒）
  *
  * @author congee
  */
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
-@Fork(value = 1, warmups = 0)
-@Threads(16) // 设置并发线程数为4
+@Fork(value = 2, warmups = 1)
+@Threads(16)
+@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
 public class IdGeneratorBenchmark {
-
-    /** 用于生成随机字节的安全随机数生成器 */
-    SecureRandom random = new SecureRandom();
 
     /**
      * 主方法，用于运行基准测试
@@ -49,84 +49,138 @@ public class IdGeneratorBenchmark {
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(IdGeneratorBenchmark.class.getSimpleName())
-                .forks(1)
-                .warmupIterations(1) // 预热迭代次数
-                .measurementIterations(1)
                 .build();
         new Runner(opt).run();
     }
 
-    /**
-     * 测试UUID v1生成器的性能
-     * <p>
-     * UUID v1基于时间戳和节点ID生成，适用于分布式系统
-     */
+    // ------------------------- 基础ID生成方法测试 -------------------------
+
     @Benchmark
-    public void testUUIDv1() {
-        UUIDv1Generator.next();
+    public void testCombGuid(Blackhole blackhole) {
+        String id = IdUtil.combguid();
+        blackhole.consume(id);
     }
 
-    /**
-     * 测试UUID v2生成器的性能
-     * <p>
-     * UUID v2基于DCE安全机制，包含域和标识符
-     */
     @Benchmark
-    public void testUUIDv2() {
-        UUIDv2Generator.next();
+    public void testCuid1(Blackhole blackhole) {
+        String id = IdUtil.cuid1();
+        blackhole.consume(id);
     }
 
-    /**
-     * 测试UUID v3生成器的性能
-     * <p>
-     * UUID v3使用MD5哈希算法基于命名空间和名称生成
-     */
     @Benchmark
-    public void testUUIDv3() {
-        byte[] bytes = new byte[16];
-        random.nextBytes(bytes);
-        UUIDv3Generator.fromNamespaceAndName(UUID.randomUUID(), Arrays.toString(bytes));
+    public void testCuid2(Blackhole blackhole) {
+        String id = IdUtil.cuid2();
+        blackhole.consume(id);
     }
 
-    /**
-     * 测试UUID v4生成器的性能
-     * <p>
-     * UUID v4完全基于随机或伪随机数生成
-     */
     @Benchmark
-    public void testUUIDv4() {
-        UUIDv4Generator.next();
+    public void testElasticflake(Blackhole blackhole) {
+        String id = IdUtil.elasticflake();
+        blackhole.consume(id);
     }
 
-    /**
-     * 测试UUID v5生成器的性能
-     * <p>
-     * UUID v5使用SHA-1哈希算法基于命名空间和名称生成
-     */
     @Benchmark
-    public void testUUIDv5() {
-        byte[] bytes = new byte[16];
-        random.nextBytes(bytes);
-        UUIDv5Generator.fromNamespaceAndName(UUID.randomUUID(), Arrays.toString(bytes));
+    public void testEntropyId(Blackhole blackhole) {
+        long id = IdUtil.entropy();
+        blackhole.consume(id);
     }
 
-    /**
-     * 测试UUID v6生成器的性能
-     * <p>
-     * UUID v6是v1的改进版本，提供更好的时序性
-     */
     @Benchmark
-    public void testUUIDv6() {
-        UUIDv6Generator.next();
+    public void testJavaScriptSafetyId(Blackhole blackhole) {
+        long id = IdUtil.javaScriptSafetyId();
+        blackhole.consume(id);
     }
 
-    /**
-     * 测试UUID v7生成器的性能
-     * <p>
-     * UUID v7基于Unix时间戳，提供严格的时序性
-     */
     @Benchmark
-    public void testUUIDv7() {
-        UUIDv7Generator.next();
+    public void testKsuid(Blackhole blackhole) {
+        String id = IdUtil.ksuid();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testLexicalUuid(Blackhole blackhole) {
+        String id = IdUtil.lexicalUuid();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testNanoId(Blackhole blackhole) {
+        String id = IdUtil.nanoId();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testObjectId(Blackhole blackhole) {
+        String id = IdUtil.objectId();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testOrderedUuid(Blackhole blackhole) {
+        String id = IdUtil.orderedUuid();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testPushId(Blackhole blackhole) {
+        String id = IdUtil.pushId();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testSid(Blackhole blackhole) {
+        String id = IdUtil.sid();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testBusinessId(Blackhole blackhole) {
+        long id = IdUtil.businessId();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testUlid(Blackhole blackhole) {
+        String id = IdUtil.ulid();
+        blackhole.consume(id);
+    }
+
+    // ------------------------- UUID系列方法测试 -------------------------
+
+    @Benchmark
+    public void testUuid1(Blackhole blackhole) {
+        String id = IdUtil.uuid1();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testUuid2(Blackhole blackhole) {
+        String id = IdUtil.uuid2();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testUuid4(Blackhole blackhole) {
+        String id = IdUtil.uuid4();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testUuid6(Blackhole blackhole) {
+        String id = IdUtil.uuid6();
+        blackhole.consume(id);
+    }
+
+    @Benchmark
+    public void testUuid7(Blackhole blackhole) {
+        String id = IdUtil.uuid7();
+        blackhole.consume(id);
+    }
+
+
+    @Benchmark
+    public void testXid(Blackhole blackhole) {
+        String id = IdUtil.xid();
+        blackhole.consume(id);
     }
 }

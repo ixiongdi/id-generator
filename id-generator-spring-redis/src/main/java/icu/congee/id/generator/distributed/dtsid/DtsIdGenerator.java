@@ -6,7 +6,6 @@ import org.redisson.api.RIdGenerator;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class DtsIdGenerator implements IdGenerator {
 
@@ -16,7 +15,6 @@ public class DtsIdGenerator implements IdGenerator {
         rIdGenerator = redisson.getIdGenerator("IdGenerator:DtsIdGenerator:current");
         rIdGenerator.tryInit(0, 1000);
     }
-
 
     @Override
     public DtsId generate() {

@@ -1,6 +1,7 @@
 package icu.congee.id.generator.demo;
 
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
+import icu.congee.id.generator.distributed.segmentid.SegmentChainIdGenerator;
 import icu.congee.id.generator.distributed.uuid.UUIDv8Generator;
 import jakarta.annotation.Resource;
 import org.mybatis.spring.annotation.MapperScan;
@@ -24,6 +25,9 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
     @Resource
     private UUIDv8Generator uuiDv8Generator;
 
+    @Resource
+    private SegmentChainIdGenerator segmentChainIdGenerator;
+
 
 
     public static void main(String[] args) {
@@ -39,6 +43,10 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
         // UUID v8（基于时间戳、循环计数器、节点ID的生成算法，符合UUID最新标准）
         for (int i = 0; i < 10; i++) {
             System.out.println(uuiDv8Generator.generate().toUUID());
+        }
+        // SegmentChainIdGenerator
+        for (int i = 0; i < 10; i++) {
+            System.out.println(segmentChainIdGenerator.generate());
         }
     }
 }
