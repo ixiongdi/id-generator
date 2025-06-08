@@ -1,4 +1,7 @@
-package icu.congee.id.generator;import org.openjdk.jmh.annotations.*;
+package icu.congee.id.generator;
+
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
@@ -9,7 +12,7 @@ import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode({Mode.AverageTime})
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -57,23 +60,24 @@ public class LongToBytesBenchmark {
     }
 
     @Benchmark
-    public byte[] testManual() {
-        return longToBytesManual(testValue);
+    public void testManual(Blackhole bh) {
+        bh.consume(longToBytesManual(testValue));
     }
 
     @Benchmark
-    public byte[] testByteBuffer() {
-        return longToBytesByteBuffer(testValue);
+    public void testByteBuffer(Blackhole bh) {
+        bh.consume(longToBytesByteBuffer(testValue));
     }
 
     @Benchmark
-    public byte[] testUnsafe() {
-        return longToBytesUnsafe(testValue);
+    public void testUnsafe(Blackhole bh) {
+        bh.consume(longToBytesUnsafe(testValue));
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(LongToBytesBenchmark.class.getSimpleName())
+                .addProfiler("gc") // 添加GC分析器统计内存分配
                 .build();
         new Runner(opt).run();
     }

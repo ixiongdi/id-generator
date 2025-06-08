@@ -1,4 +1,4 @@
-package icu.congee.id.generator.clock;
+package icu.congee.id.generator.util;
 
 import icu.congee.id.generator.util.time.NtpClient;
 
@@ -9,10 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Clock {
 
-    private static Instant now;
-
     private static final ScheduledExecutorService scheduler =
             Executors.newSingleThreadScheduledExecutor();
+    private static long now = System.currentTimeMillis();
 
     static {
         sync();
@@ -20,15 +19,29 @@ public class Clock {
     }
 
     public static void sync() {
+        Instant instant;
         try {
-            now = NtpClient.getTime("pool.ntp.org");
+            instant = NtpClient.getTime("pool.ntp.org");
         } catch (Exception e) {
-            now = Instant.now();
+            instant = Instant.now();
         }
+        now = instant.getEpochSecond() * 1000_000_000 + instant.getNano() + System.nanoTime();
     }
 
     // 返回unix纳秒时间戳
     public static long currentTimeNanos() {
-        return now.getEpochSecond() * 1000_000_000L + now.getNano();
+        return now - System.nanoTime();
+    }
+
+    public static long currentTimeSeconds() {
+        return currentTimeNanos() / 1_000_000_000L;
+    }
+
+    public static long currentTimeMicros() {
+        return currentTimeNanos() / 1_000L;
+    }
+
+    public static long currentTimeMillis() {
+        return currentTimeNanos() / 1_000_000L;
     }
 }

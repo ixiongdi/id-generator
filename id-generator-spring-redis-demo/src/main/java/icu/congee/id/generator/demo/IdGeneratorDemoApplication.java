@@ -4,6 +4,7 @@ import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.segmentid.SegmentChainIdGenerator;
 import icu.congee.id.generator.distributed.uuid.UUIDv8Generator;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +20,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @ComponentScans(value = {@ComponentScan("icu.congee.id.generator"),})
 @MapperScan("icu.congee.id.generator.demo.mapper")
+@Slf4j
 public class IdGeneratorDemoApplication implements CommandLineRunner {
     @Resource
     private MistIdGenerator mistIdGenerator;
@@ -35,7 +37,8 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
+
         // 薄雾算法（基于原子自增和随机数的ID生成算法）
         for (int i = 0; i < 10; i++) {
             System.out.println(mistIdGenerator.generate().toLong());
@@ -45,8 +48,10 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
             System.out.println(uuiDv8Generator.generate().toUUID());
         }
         // SegmentChainIdGenerator
-        for (int i = 0; i < 10; i++) {
-            System.out.println(segmentChainIdGenerator.generate());
+        while (true) {
+            segmentChainIdGenerator.generate();
+//            log.info("SegmentChainIdGenerator: {}", segmentChainIdGenerator.generate());
         }
+
     }
 }

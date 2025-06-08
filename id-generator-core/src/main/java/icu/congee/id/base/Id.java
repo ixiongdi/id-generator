@@ -3,6 +3,7 @@ package icu.congee.id.base;
 
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 public interface Id {
 
@@ -19,6 +20,10 @@ public interface Id {
             value >>= 8;
         }
         return result;
+    }
+
+    default byte[] longToBytes(long value) {
+        return ByteBuffer.allocate(8).putLong(value).array();
     }
 
     default String toBase64() {
