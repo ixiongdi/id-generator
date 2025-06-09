@@ -53,15 +53,23 @@ public class HexBenchmark {
         bh.consume(HexFormat.of().formatHex(testData));
     }
 
-    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(java.nio.charset.StandardCharsets.US_ASCII);
+    @Benchmark
+    public void bytes2hex(org.openjdk.jmh.infra.Blackhole bh) {
+        bh.consume(bytesToHex(testData));
+    }
+
+
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     public static String bytesToHex(byte[] bytes) {
-        byte[] hexBytes = new byte[bytes.length * 2];
-        for (int i = 0; i < bytes.length; i++) {
-            int v = bytes[i] & 0xFF;
-            hexBytes[i * 2] = HEX_ARRAY[v >>> 4];
-            hexBytes[i * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        final int length = bytes.length;
+        final char[] hexChars = new char[length << 1]; // 位运算代替 *2
+        for (int i = 0; i < length; i++) {
+            final int value = bytes[i] & 0xFF;
+            final int index = i << 1; // 位运算代替 *2
+            hexChars[index]     = HEX_ARRAY[value >>> 4]; // 高4位
+            hexChars[index + 1] = HEX_ARRAY[value & 0x0F]; // 低4位
         }
-        return new String(hexBytes, java.nio.charset.StandardCharsets.US_ASCII);
+        return new String(hexChars);
     }
 }

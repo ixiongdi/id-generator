@@ -5,6 +5,7 @@ import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.dtsid.DtsIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
+import icu.congee.id.generator.distributed.segmentid.SegmentChainIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.ttsid.TtsIdPlusGenerator;
 import icu.congee.id.generator.distributed.wxseq.WxSeqGenerator;
@@ -43,6 +44,7 @@ public class DistributedIdBenchmark {
     private SnowflakeIdGenerator snowflakeIdGenerator;
     private TtsIdPlusGenerator ttsIdPlusGenerator;
     private WxSeqGenerator wxSeqGenerator;
+    private SegmentChainIdGenerator segmentChainIdGenerator;
 
     public static void main(String[] args) throws RunnerException {
         Options opt =
@@ -70,6 +72,7 @@ public class DistributedIdBenchmark {
         snowflakeIdGenerator = new SnowflakeIdGenerator(redisson, 0, 41, 10, 12); // 示例机器ID
         ttsIdPlusGenerator = new TtsIdPlusGenerator(redisson);
         wxSeqGenerator = new WxSeqGenerator(redisson);
+        segmentChainIdGenerator = new SegmentChainIdGenerator(redisson);
     }
 
     @TearDown
@@ -117,5 +120,10 @@ public class DistributedIdBenchmark {
     @Benchmark
     public void testWxSeq(Blackhole bh) {
         bh.consume(wxSeqGenerator.generate());
+    }
+
+    @Benchmark
+    public void testSegmentChain(Blackhole bh) {
+        bh.consume(segmentChainIdGenerator.generate());
     }
 }
