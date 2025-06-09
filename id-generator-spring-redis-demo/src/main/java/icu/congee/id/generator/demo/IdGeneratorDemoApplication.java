@@ -13,24 +13,24 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-/**
- * ID生成器示例应用
- */
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.LockSupport;
+
+/** ID生成器示例应用 */
 @SpringBootApplication
 @EnableScheduling
-@ComponentScans(value = {@ComponentScan("icu.congee.id.generator"),})
+@ComponentScans(
+        value = {
+            @ComponentScan("icu.congee.id.generator"),
+        })
 @MapperScan("icu.congee.id.generator.demo.mapper")
 @Slf4j
 public class IdGeneratorDemoApplication implements CommandLineRunner {
-    @Resource
-    private MistIdGenerator mistIdGenerator;
-    @Resource
-    private UUIDv8Generator uuiDv8Generator;
+    @Resource private MistIdGenerator mistIdGenerator;
+    @Resource private UUIDv8Generator uuiDv8Generator;
 
-    @Resource
-    private SegmentChainIdGenerator segmentChainIdGenerator;
-
-
+    @Resource private SegmentChainIdGenerator segmentChainIdGenerator;
 
     public static void main(String[] args) {
         SpringApplication.run(IdGeneratorDemoApplication.class, args);
@@ -47,11 +47,19 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
         for (int i = 0; i < 10; i++) {
             System.out.println(uuiDv8Generator.generate().toUUID());
         }
-        // SegmentChainIdGenerator
-        while (true) {
-            segmentChainIdGenerator.generate();
-//            log.info("SegmentChainIdGenerator: {}", segmentChainIdGenerator.generate());
-        }
+        // SegmentChainIdGenerator 多线程测试
 
+        ExecutorService executor =
+                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        LockSupport.parkNanos(1000_000_000L);
+        while (true) {
+            executor.submit(
+                    () -> {
+                        segmentChainIdGenerator.generate();
+                        //                    log.info("SegmentChainIdGenerator: {}",
+                        // segmentChainIdGenerator.generate());
+
+                    });
+        }
     }
 }

@@ -1,4 +1,6 @@
-package icu.congee.id.generator.distributed.segmentid;import java.util.concurrent.locks.Lock;
+package icu.congee.id.generator.distributed.segmentid;
+
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class RingBuffer<T> {
