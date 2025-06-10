@@ -82,17 +82,17 @@ public class DistributedIdBenchmark {
         }
     }
 
-    @Benchmark
+//    @Benchmark
     public void testAtomicLongId(Blackhole bh) {
         bh.consume(atomicLongIdGenerator.generate());
     }
 
-    @Benchmark
+//    @Benchmark
     public void testCosId(Blackhole bh) {
         bh.consume(cosIdGenerator.generate());
     }
 
-    @Benchmark
+//    @Benchmark
     public void testDtsId(Blackhole bh) {
         bh.consume(dtsIdGenerator.generate());
     }
@@ -107,22 +107,22 @@ public class DistributedIdBenchmark {
         bh.consume(redissonIdGenerator.generate());
     }
 
-    @Benchmark
+//    @Benchmark
     public void testSnowflakeId(Blackhole bh) {
         bh.consume(snowflakeIdGenerator.generate());
     }
 
-    @Benchmark
+//    @Benchmark
     public void testTtsIdPlus(Blackhole bh) {
         bh.consume(ttsIdPlusGenerator.generate());
     }
 
-    @Benchmark
+//    @Benchmark
     public void testWxSeq(Blackhole bh) {
         bh.consume(wxSeqGenerator.generate());
     }
 
-    @Benchmark
+//    @Benchmark
     public void testSegmentChain(Blackhole bh) {
         bh.consume(segmentChainIdGenerator.generate());
     }
