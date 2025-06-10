@@ -2,6 +2,7 @@ package icu.congee.id.generator.distributed.ttsid;
 
 import icu.congee.id.base.Id;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.ToString;
 
 import java.nio.ByteBuffer;
@@ -9,15 +10,14 @@ import java.time.Instant;
 import java.util.HexFormat;
 
 @AllArgsConstructor
-@ToString
 public class TtsIdProMax implements Id {
-    // 64bit
+    // 63位的无符号整型
     private long timestamp;
 
-    // 32bit
+    // 31位的无符号整型
     private int threadId;
 
-    // 32bit
+    // 31位的无符号整型
     private int sequence;
 
     public static long currentTimestamp() {
