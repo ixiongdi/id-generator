@@ -23,32 +23,32 @@ public class TtsIdProMaxGenerator implements IdGenerator {
         threadLocalHolder =
                 ThreadLocal.withInitial(
                         () -> {
-                            long threadId = atomicLong.getAndIncrement();
-                            if (threadId >= Integer.MAX_VALUE) {
+                            long andIncrement = atomicLong.getAndIncrement();
+                            if (andIncrement >= Integer.MAX_VALUE) {
                                 atomicLong.set(0);
                             }
-                            return new TtsIdProMaxThreadLocalHolder((int) threadId, 0);
+                            return new TtsIdProMaxThreadLocalHolder((int) andIncrement, 0);
                         });
     }
 
     @Override
     public TtsIdProMax generate() {
         TtsIdProMaxThreadLocalHolder holder = threadLocalHolder.get();
-        int sequence = holder.sequence;
+        int sequence = holder.sequence++;
         if (sequence == Integer.MAX_VALUE) {
             holder.sequence = 0;
         }
-        return new TtsIdProMax(TtsIdProMax.currentTimestamp(), holder.threadId, holder.sequence++);
+        return new TtsIdProMax(TtsIdProMax.currentTimestamp(), holder.threadId, sequence);
     }
 
     @Override
     public IdType idType() {
-        return IdType.TtsId; // 使用现有的TtsId类型，如果需要可以在IdType中添加TtsIdProMax类型
+        return IdType.TtsId;
     }
 
     @AllArgsConstructor
     private static class TtsIdProMaxThreadLocalHolder {
-        int threadId;
+        final int threadId;
         int sequence;
     }
 }
