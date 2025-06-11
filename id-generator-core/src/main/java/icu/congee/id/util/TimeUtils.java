@@ -24,10 +24,65 @@
 package icu.congee.id.util;
 
 import java.time.Instant;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
     /**
+     * 时间缓存刷新线程池
+     * <p>
+     * 使用单线程定时任务更新缓存，线程特性：
+     * - 守护线程
+     * - 线程名称为"TimeUtils-Cache-Refresh"
+     */
+    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "TimeUtils-Cache-Refresh");
+        t.setDaemon(true);
+        return t;
+    });
+
+    /**
+     * 带缓存的秒级时间戳
+     * <p>
+     * 使用volatile保证多线程可见性
+     */
+    private static volatile long cachedSeconds = 0L;
+
+    // 静态初始化定时任务
+    static {
+        /*
+          初始化定时刷新任务
+          @param initialDelay 初始延迟时间（单位：秒）
+         * @param period       执行周期（单位：秒）
+         */
+        scheduler.scheduleAtFixedRate(() -> {
+            cachedSeconds = Instant.now().getEpochSecond();
+        }, 0, 1, TimeUnit.SECONDS);
+
+        // 注册JVM关闭钩子
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            /*
+              关闭线程池流程：
+              1. 停止接收新任务
+              2. 等待已提交任务完成
+              3. 强制终止未完成任务
+             */
+            scheduler.shutdown();
+            try {
+                if (!scheduler.awaitTermination(3, TimeUnit.SECONDS)) {
+                    scheduler.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                scheduler.shutdownNow();
+            }
+        }));
+    }
+
+    /**
      * 获取当前时间自 Unix 纪元以来的纳秒数
+     *
      * @return 纳秒数
      */
     public static long getCurrentUnixNano() {
@@ -37,6 +92,11 @@ public class TimeUtils {
         // 再加上当前秒内的纳秒数
         long nanos = now.getNano();
         return secondsInNanos + nanos;
+    }
+
+    /** 获取带定时刷新的秒级时间戳 */
+    public static long getCurrentUnixSeconds() {
+        return cachedSeconds;
     }
 
     public static void main(String[] args) {
