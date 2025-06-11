@@ -9,10 +9,6 @@ import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 @Component
 @Slf4j
 public class SegmentChainIdGenerator implements IdGenerator {
@@ -22,9 +18,7 @@ public class SegmentChainIdGenerator implements IdGenerator {
     public SegmentChainIdGenerator(RedissonClient redissonClient) {
         RAtomicLong atomicLong = redissonClient.getAtomicLong("SegmentChainIdGenerator:NextMaxId");
         this.idSegmentChain = new IdSegmentChain(atomicLong);
-
     }
-
 
     @Override
     public Long generate() {
