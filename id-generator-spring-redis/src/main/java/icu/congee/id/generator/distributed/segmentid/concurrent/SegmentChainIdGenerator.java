@@ -1,4 +1,4 @@
-package icu.congee.id.generator.distributed.segmentid;
+package icu.congee.id.generator.distributed.segmentid.concurrent;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;

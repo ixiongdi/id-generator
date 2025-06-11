@@ -1,4 +1,6 @@
-package icu.congee.id.generator.distributed.segmentid.concurrent;import java.util.concurrent.TimeUnit;
+package icu.congee.id.generator.distributed.segmentid.concurrent;
+
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 

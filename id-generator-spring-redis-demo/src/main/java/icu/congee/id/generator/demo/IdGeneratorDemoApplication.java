@@ -1,7 +1,7 @@
 package icu.congee.id.generator.demo;
 
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
-import icu.congee.id.generator.distributed.segmentid.SegmentChainIdGenerator;
+import icu.congee.id.generator.distributed.segmentid.concurrent.SegmentChainIdGenerator;
 import icu.congee.id.generator.distributed.uuid.UUIDv8Generator;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +18,7 @@ import java.util.concurrent.locks.LockSupport;
 
 /** ID生成器示例应用 */
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 @ComponentScans(
         value = {
             @ComponentScan("icu.congee.id.generator"),
@@ -56,8 +55,8 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
             executor.submit(
                     () -> {
                         segmentChainIdGenerator.generate();
-                        //                    log.info("SegmentChainIdGenerator: {}",
-                        // segmentChainIdGenerator.generate());
+//                                            log.info("SegmentChainIdGenerator: {}",
+//                         segmentChainIdGenerator.generate());
 
                     });
         }

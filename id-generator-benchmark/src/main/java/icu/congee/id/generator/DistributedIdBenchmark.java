@@ -5,7 +5,7 @@ import icu.congee.id.generator.distributed.cosid.CosIdGenerator;
 import icu.congee.id.generator.distributed.dtsid.DtsIdGenerator;
 import icu.congee.id.generator.distributed.mist.MistIdGenerator;
 import icu.congee.id.generator.distributed.rid.RedissonIdGenerator;
-import icu.congee.id.generator.distributed.segmentid.SegmentChainIdGenerator;
+import icu.congee.id.generator.distributed.segmentid.concurrent.SegmentChainIdGenerator;
 import icu.congee.id.generator.distributed.snowflake.SnowflakeIdGenerator;
 import icu.congee.id.generator.distributed.ttsid.TtsIdPlusGenerator;
 import icu.congee.id.generator.distributed.wxseq.WxSeqGenerator;
@@ -97,12 +97,12 @@ public class DistributedIdBenchmark {
         bh.consume(dtsIdGenerator.generate());
     }
 
-    @Benchmark
+//    @Benchmark
     public void testMistId(Blackhole bh) {
         bh.consume(mistIdGenerator.generate());
     }
 
-    @Benchmark
+//    @Benchmark
     public void testRedissonId(Blackhole bh) {
         bh.consume(redissonIdGenerator.generate());
     }
@@ -122,7 +122,7 @@ public class DistributedIdBenchmark {
         bh.consume(wxSeqGenerator.generate());
     }
 
-//    @Benchmark
+    @Benchmark
     public void testSegmentChain(Blackhole bh) {
         bh.consume(segmentChainIdGenerator.generate());
     }

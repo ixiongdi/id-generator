@@ -1,11 +1,13 @@
 package icu.congee.id.generator.distributed.segmentid;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class IdSegment {
-    private final long start;
-    private final long end;
+    private long start;
+    private long end;
 
     private long current;
 
