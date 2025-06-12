@@ -4,6 +4,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 import icu.congee.id.generator.distributed.segmentid.IdSegment;
 
+import icu.congee.id.util.IdGeneratorExecutors;
 import lombok.extern.log4j.Log4j2;
 
 import org.redisson.api.RAtomicLong;
@@ -18,16 +19,15 @@ public class IdSegmentChain {
 
     private final AtomicLong step = new AtomicLong(1000);
     private final LongAdder count = new LongAdder();
-    private final ExecutorService executor = newSingleThreadExecutor();
 
-    private IdSegment current = new IdSegment();
-    private IdSegment next = new IdSegment();
+    private volatile IdSegment current = new IdSegment();
+    private volatile IdSegment next = new IdSegment();
 
     public IdSegmentChain(RAtomicLong globalMaxId) {
         this.globalMaxId = globalMaxId;
 
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(this::calcStep, 1, 1, TimeUnit.SECONDS);
+        IdGeneratorExecutors.getScheduledExecutorService()
+                .scheduleWithFixedDelay(this::calcStep, 1, 1, TimeUnit.SECONDS);
 
         fetch(current);
         fetch(next);
@@ -43,10 +43,18 @@ public class IdSegmentChain {
         while (true) {
             if (current.isOverflow() && next.isOverflow()) {
                 fetch(current);
-                fetch(next);
+                IdGeneratorExecutors.getExecutorService()
+                        .submit(
+                                () -> {
+                                    fetch(next);
+                                });
             } else if (current.isOverflow()) {
                 swap();
-                fetch(next);
+                IdGeneratorExecutors.getExecutorService()
+                        .submit(
+                                () -> {
+                                    fetch(next);
+                                });
                 continue;
             }
             count.increment();
@@ -55,13 +63,11 @@ public class IdSegmentChain {
     }
 
     public void fetch(IdSegment idSegment) {
-        executor.submit(() -> {
-            long s = step.get();
-            long nextMaxId = globalMaxId.getAndAdd(s);
-            idSegment.setStart(nextMaxId);
-            idSegment.setEnd(nextMaxId + s);
-            idSegment.setCurrent(nextMaxId);
-        });
+        long s = step.get();
+        long nextMaxId = globalMaxId.getAndAdd(s);
+        idSegment.setStart(nextMaxId);
+        idSegment.setEnd(nextMaxId + s);
+        idSegment.getCurrent().set(nextMaxId);
     }
 
     private void calcStep() {

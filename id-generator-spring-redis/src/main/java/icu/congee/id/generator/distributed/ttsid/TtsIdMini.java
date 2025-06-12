@@ -1,6 +1,7 @@
 package icu.congee.id.generator.distributed.ttsid;
 
 import icu.congee.id.base.Id;
+import icu.congee.id.util.TimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 
@@ -14,13 +15,13 @@ public class TtsIdMini implements Id {
     private long timestamp;
 
     // 10bit
-    private short threadId;
+    private long threadId;
 
     // 12bit
-    private short sequence;
+    private long sequence;
 
     public static long currentTimestamp() {
-        return System.currentTimeMillis() / 1000;
+        return TimeUtils.getCurrentUnixSeconds();
     }
 
     @Override

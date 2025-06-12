@@ -14,15 +14,15 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Fork(1)
-@Threads(100)
+@Threads(24)
 @Warmup(iterations = 3, time = 10)
 @Measurement(iterations = 5, time = 10)
 public class TtsIdBenchmark {
 
     private RedissonClient redisson;
 
-    private TtsIdGenerator ttsIdGenerator;
     private TtsIdMiniGenerator ttsIdMiniGenerator;
+    private TtsIdGenerator ttsIdGenerator;
     private TtsIdPlusGenerator ttsIdPlusGenerator;
     private TtsIdProGenerator ttsIdProGenerator;
     private TtsIdProMaxGenerator ttsIdProMaxGenerator;
@@ -34,11 +34,11 @@ public class TtsIdBenchmark {
         config.useSingleServer()
                 .setAddress("redis://congee.icu:6379")
                 .setPassword("qw3erT^&*()_+")
-                .setConnectionMinimumIdleSize(100)
-                .setConnectionPoolSize(100);
+                .setConnectionMinimumIdleSize(24)
+                .setConnectionPoolSize(24);
         redisson = Redisson.create(config);
-        ttsIdGenerator = new TtsIdGenerator(redisson);
         ttsIdMiniGenerator = new TtsIdMiniGenerator(redisson);
+        ttsIdGenerator = new TtsIdGenerator(redisson);
         ttsIdPlusGenerator = new TtsIdPlusGenerator(redisson);
         ttsIdProGenerator = new TtsIdProGenerator(redisson);
         ttsIdProMaxGenerator = new TtsIdProMaxGenerator(redisson);
@@ -52,13 +52,13 @@ public class TtsIdBenchmark {
     }
 
     @Benchmark
-    public void testTtsId(Blackhole bh) {
-        bh.consume(ttsIdGenerator.generate());
+    public void testTtsIdMni(Blackhole bh) {
+        bh.consume(ttsIdMiniGenerator.generate());
     }
 
     @Benchmark
-    public void testTtsIdMni(Blackhole bh) {
-        bh.consume(ttsIdMiniGenerator.generate());
+    public void testTtsId(Blackhole bh) {
+        bh.consume(ttsIdGenerator.generate());
     }
 
     @Benchmark

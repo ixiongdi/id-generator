@@ -14,10 +14,10 @@ public class TtsId implements Id {
     private long timestamp;
 
     // 10bit
-    private short threadId;
+    private long threadId;
 
     // 12bit
-    private short sequence;
+    private int sequence;
 
     public static long currentTimestamp() {
         return System.currentTimeMillis();
