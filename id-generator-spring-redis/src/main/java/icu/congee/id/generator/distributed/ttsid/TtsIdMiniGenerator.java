@@ -20,8 +20,11 @@ public class TtsIdMiniGenerator implements IdGenerator {
      *
      * @param redisson Redis客户端，用于获取全局唯一的线程ID
      */
-    public TtsIdMiniGenerator(RedissonClient redisson) {
-        RAtomicLong threadId = redisson.getAtomicLong("IdGenerator:TtsIdGenerator:threadId");
+    public TtsIdMiniGenerator(RedissonClient redisson, TtsIdMiniGeneratorConfig config) {
+        RAtomicLong threadId =
+                redisson.getAtomicLong(
+                        "IdGenerator:TtsIdGenerator:%s:NextThreadId"
+                                .formatted(config.getNamespace()));
 
         threadLocalHolder =
                 ThreadLocal.withInitial(
