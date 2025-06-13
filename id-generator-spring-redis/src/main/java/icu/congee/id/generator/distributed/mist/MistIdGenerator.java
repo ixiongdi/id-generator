@@ -2,42 +2,36 @@ package icu.congee.id.generator.distributed.mist;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
+import icu.congee.id.generator.distributed.segmentid.concurrent.IdSegmentChain;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.redisson.api.RIdGenerator;
-import org.redisson.api.RIdGeneratorAsync;
+
+import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.SecureRandom;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 @Log4j2
 public class MistIdGenerator implements IdGenerator {
 
-    private final Random random;
-    private final RIdGeneratorAsync generator;
+    private final Random random = new Random();
 
-    public MistIdGenerator(
-            RedissonClient redisson,
-            @Value("${id.generator.mist.name:IdGenerator:MistIdGenerator:current}") String name,
-            @Value("${id.generator.mist.value:-1}") long initialValue,
-            @Value("${id.generator.mist.secret:false}") boolean useSecureRandom,
-            @Value("${id.generator.mist.bufferSize:1000}") int bufferSize) {
-        this.random = useSecureRandom ? new SecureRandom() : ThreadLocalRandom.current();
-        this.generator = redisson.getIdGenerator(name);
-        this.generator.tryInitAsync(initialValue, bufferSize);
+    private final IdSegmentChain idSegmentChain;
+
+    public MistIdGenerator(RedissonClient redisson) {
+        RAtomicLong atomicLong = redisson.getAtomicLong("IdGenerator:MistIdGenerator:NextMaxId");
+        if (!atomicLong.isExists()) {
+            atomicLong.set(0);
+        }
+        this.idSegmentChain = new IdSegmentChain(atomicLong);
     }
 
-    @SneakyThrows
     @Override
     public MistId generate() {
-        return new MistId(generator.nextIdAsync().get(), random.nextInt(0, 65535));
+        return new MistId(idSegmentChain.nextId(), random.nextInt(0, 65535));
     }
 
     @Override

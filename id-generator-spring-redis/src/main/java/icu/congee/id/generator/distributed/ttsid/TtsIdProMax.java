@@ -6,11 +6,6 @@ import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.util.HexFormat;
 
-/**
- * @param timestamp 63位的无符号整型
- * @param threadId 31位的无符号整型
- * @param sequence 31位的无符号整型
- */
 public record TtsIdProMax(long timestamp, int threadId, int sequence) implements Id {
     public static long currentTimestamp() {
         Instant instant = Instant.now();

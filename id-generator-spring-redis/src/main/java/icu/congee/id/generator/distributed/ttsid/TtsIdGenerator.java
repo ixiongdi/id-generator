@@ -2,11 +2,10 @@ package icu.congee.id.generator.distributed.ttsid;
 
 import icu.congee.id.base.IdGenerator;
 import icu.congee.id.base.IdType;
-import lombok.AllArgsConstructor;
+
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
-
 
 /**
  * TtsId生成器实现
@@ -20,21 +19,24 @@ public class TtsIdGenerator implements IdGenerator {
      */
     private final ThreadLocal<TtsIdThreadLocalHolder> threadLocalHolder;
 
-    /**
-     * 序列号最大值（12位）
-     */
-    private static final short MAX_SEQUENCE = 4095; // 2^12 - 1
+    // 2^12 - 1
 
     /**
      * 构造函数
      * 
      * @param redisson Redis客户端，用于获取全局唯一的线程ID
      */
-    public TtsIdGenerator(RedissonClient redisson) {
-        RAtomicLong threadId = redisson.getAtomicLong("IdGenerator:TtsIdGenerator:threadId");
+    public TtsIdGenerator(RedissonClient redisson, TtsIdGeneratorConfig  config) {
+        RAtomicLong threadId =
+                redisson.getAtomicLong(
+                        "IdGenerator:TtsIdGenerator:%s:NextThreadId"
+                                .formatted(config.getNamespace()));
 
-        threadLocalHolder = ThreadLocal
-                .withInitial(() -> new TtsIdThreadLocalHolder((short) threadId.getAndIncrement(), (short) 0));
+        threadLocalHolder =
+                ThreadLocal.withInitial(
+                        () ->
+                                new TtsIdThreadLocalHolder(
+                                        Math.abs(threadId.getAndIncrement() % 1024)));
     }
 
 
@@ -42,12 +44,7 @@ public class TtsIdGenerator implements IdGenerator {
     public TtsId generate() {
         TtsIdThreadLocalHolder holder = threadLocalHolder.get();
 
-        // 处理序列号溢出，当达到最大值时重置为0
-        if (holder.sequence > MAX_SEQUENCE) {
-            holder.sequence = 0;
-        }
-
-        return new TtsId(TtsId.currentTimestamp(), holder.threadId, holder.sequence++);
+        return holder.next();
     }
 
     @Override
@@ -58,11 +55,41 @@ public class TtsIdGenerator implements IdGenerator {
     /**
      * ThreadLocal持有的对象，存储线程ID和序列号
      */
-    @AllArgsConstructor
     private static class TtsIdThreadLocalHolder {
         // 10bit 线程ID
-        short threadId;
+        private final long threadId;
         // 12bit 序列号，取值范围 0-4095
-        short sequence;
+        private long sequence = 0;
+
+        private long lastTimestamp = TtsId.currentTimestamp();
+
+        private TtsIdThreadLocalHolder(long threadId) {
+            this.threadId = threadId;
+        }
+
+        private TtsId next() {
+            long timestamp = TtsId.currentTimestamp();
+            if (timestamp < lastTimestamp) {
+                timestamp = waitNextMilli(lastTimestamp);
+            } else if (timestamp == lastTimestamp) {
+                sequence++;
+                if (sequence >= 4096) {
+                    timestamp = waitNextMilli(lastTimestamp);
+                    sequence = 0;
+                }
+            } else {
+                sequence = 0;
+            }
+            lastTimestamp = timestamp;
+            return new TtsId(timestamp, threadId, sequence);
+        }
+
+        private long waitNextMilli(long lastTimestamp) {
+            long timestamp = TtsId.currentTimestamp();
+            while (timestamp <= lastTimestamp) {
+                timestamp = TtsId.currentTimestamp();
+            }
+            return timestamp;
+        }
     }
 }

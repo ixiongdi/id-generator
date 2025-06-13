@@ -11,14 +11,7 @@ public class IdSegment {
     private long start;
     private long end;
 
-    private AtomicLong current;
-
-    public IdSegment(long start, long end) {
-        this.start = start;
-        this.end = end;
-
-        this.current.set(start);
-    }
+    private final AtomicLong current =  new AtomicLong(0);
 
     public boolean isOverflow() {
         return current.get() >= end;

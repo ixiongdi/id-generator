@@ -7,18 +7,7 @@ import lombok.ToString;
 
 import java.util.HexFormat;
 
-@AllArgsConstructor
-@ToString
-public class TtsIdMini implements Id {
-
-    // 31bit
-    private long timestamp;
-
-    // 10bit
-    private long threadId;
-
-    // 12bit
-    private long sequence;
+public record TtsIdMini(long timestamp, long threadId, long sequence) implements Id {
 
     public static long currentTimestamp() {
         return TimeUtils.getCurrentUnixSeconds();

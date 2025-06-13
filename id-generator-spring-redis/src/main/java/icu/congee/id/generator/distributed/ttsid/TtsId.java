@@ -6,18 +6,7 @@ import lombok.ToString;
 
 import java.util.HexFormat;
 
-@AllArgsConstructor
-@ToString
-public class TtsId implements Id {
-
-    // 41bit
-    private long timestamp;
-
-    // 10bit
-    private long threadId;
-
-    // 12bit
-    private int sequence;
+public record TtsId(long timestamp, long threadId, long sequence) implements Id {
 
     public static long currentTimestamp() {
         return System.currentTimeMillis();

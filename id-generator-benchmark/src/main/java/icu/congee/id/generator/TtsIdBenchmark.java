@@ -37,8 +37,8 @@ public class TtsIdBenchmark {
                 .setConnectionMinimumIdleSize(1024)
                 .setConnectionPoolSize(1024);
         redisson = Redisson.create(config);
-        ttsIdMiniGenerator = new TtsIdMiniGenerator(redisson);
-        ttsIdGenerator = new TtsIdGenerator(redisson);
+        ttsIdMiniGenerator = new TtsIdMiniGenerator(redisson, new TtsIdMiniGeneratorConfig());
+        ttsIdGenerator = new TtsIdGenerator(redisson, new TtsIdGeneratorConfig());
         ttsIdPlusGenerator = new TtsIdPlusGenerator(redisson);
         ttsIdProGenerator = new TtsIdProGenerator(redisson);
         ttsIdProMaxGenerator = new TtsIdProMaxGenerator(redisson);
@@ -53,26 +53,26 @@ public class TtsIdBenchmark {
 
     @Benchmark
     public void testTtsIdMni(Blackhole bh) {
-        bh.consume(ttsIdMiniGenerator.generate());
+        bh.consume(ttsIdMiniGenerator.generate().toLong());
     }
 
     @Benchmark
     public void testTtsId(Blackhole bh) {
-        bh.consume(ttsIdGenerator.generate());
+        bh.consume(ttsIdGenerator.generate().toLong());
     }
 
     @Benchmark
     public void testTtsIdPlus(Blackhole bh) {
-        bh.consume(ttsIdPlusGenerator.generate());
+        bh.consume(ttsIdPlusGenerator.generate().toBase32());
     }
 
     @Benchmark
     public void testTtsIdPro(Blackhole bh) {
-        bh.consume(ttsIdProGenerator.generate());
+        bh.consume(ttsIdProGenerator.generate().toBase16());
     }
 
     @Benchmark
     public void testTtsIdProMax(Blackhole bh) {
-        bh.consume(ttsIdProMaxGenerator.generate());
+        bh.consume(ttsIdProMaxGenerator.generate().toBase16());
     }
 }

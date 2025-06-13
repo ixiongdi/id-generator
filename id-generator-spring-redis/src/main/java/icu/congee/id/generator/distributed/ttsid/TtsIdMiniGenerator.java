@@ -23,7 +23,7 @@ public class TtsIdMiniGenerator implements IdGenerator {
     public TtsIdMiniGenerator(RedissonClient redisson, TtsIdMiniGeneratorConfig config) {
         RAtomicLong threadId =
                 redisson.getAtomicLong(
-                        "IdGenerator:TtsIdGenerator:%s:NextThreadId"
+                        "IdGenerator:TtsIdMiniGenerator:%s:NextThreadId"
                                 .formatted(config.getNamespace()));
 
         threadLocalHolder =

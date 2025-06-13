@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Fork(1)
-@Threads(16)
+@Threads(24)
 @Warmup(iterations = 3, time = 10, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 public class DistributedIdBenchmark {
@@ -57,17 +57,17 @@ public class DistributedIdBenchmark {
         // 初始化Redis连接（与现有测试保持一致）
         Config config = new Config();
         config.useSingleServer()
-                .setAddress("redis://congee.icu:6379")
-                .setPassword("qw3erT^&*()_+")
-                .setConnectionMinimumIdleSize(16)
-                .setConnectionPoolSize(16);
+                .setAddress("redis://127.0.0.1:6379")
+//                .setPassword("qw3erT^&*()_+")
+                .setConnectionMinimumIdleSize(24)
+                .setConnectionPoolSize(24);
         redisson = Redisson.create(config);
 
         // 初始化各分布式ID生成器（根据实际构造函数参数调整）
         atomicLongIdGenerator = new AtomicLongIdGenerator(redisson);
         cosIdGenerator = new CosIdGenerator(redisson, 44, 20, 16, 0);
         dtsIdGenerator = new DtsIdGenerator(redisson);
-        mistIdGenerator = new MistIdGenerator(redisson, "mist", 0, true, 1000);
+        mistIdGenerator = new MistIdGenerator(redisson);
         redissonIdGenerator = new RedissonIdGenerator(redisson, "rid", 0, 1000);
         snowflakeIdGenerator = new SnowflakeIdGenerator(redisson, 0, 41, 10, 12); // 示例机器ID
         ttsIdPlusGenerator = new TtsIdPlusGenerator(redisson);
@@ -97,9 +97,9 @@ public class DistributedIdBenchmark {
         bh.consume(dtsIdGenerator.generate());
     }
 
-//    @Benchmark
+    @Benchmark
     public void testMistId(Blackhole bh) {
-        bh.consume(mistIdGenerator.generate());
+        bh.consume(mistIdGenerator.generate().toLong());
     }
 
 //    @Benchmark

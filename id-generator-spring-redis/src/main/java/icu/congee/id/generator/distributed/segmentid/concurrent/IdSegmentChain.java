@@ -1,10 +1,9 @@
 package icu.congee.id.generator.distributed.segmentid.concurrent;
 
-import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 import icu.congee.id.generator.distributed.segmentid.IdSegment;
-
 import icu.congee.id.util.IdGeneratorExecutors;
+
 import lombok.extern.log4j.Log4j2;
 
 import org.redisson.api.RAtomicLong;

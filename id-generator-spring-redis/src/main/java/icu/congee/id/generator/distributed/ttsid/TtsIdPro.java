@@ -1,25 +1,12 @@
 package icu.congee.id.generator.distributed.ttsid;
 
 import icu.congee.id.base.Id;
-import lombok.AllArgsConstructor;
-import lombok.ToString;
 
 import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.util.HexFormat;
 
-@AllArgsConstructor
-@ToString
-public class TtsIdPro implements Id {
-
-    // 56bit
-    private long timestamp;
-
-    // 24bit
-    private int threadId;
-
-    // 16bit
-    private short sequence;
+public record TtsIdPro(long timestamp, int threadId, short sequence) implements Id {
 
     // 微秒
     public static long currentTimestamp() {
@@ -57,6 +44,7 @@ public class TtsIdPro implements Id {
     public long toLong() {
         throw new UnsupportedOperationException();
     }
+
     @Override
     public String toBase16() {
         return HexFormat.of().formatHex(toBytes());

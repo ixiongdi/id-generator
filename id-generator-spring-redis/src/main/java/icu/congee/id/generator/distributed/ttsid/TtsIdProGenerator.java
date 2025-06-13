@@ -15,13 +15,15 @@ public class TtsIdProGenerator implements IdGenerator {
     public TtsIdProGenerator(RedissonClient redisson) {
         RAtomicLong threadId = redisson.getAtomicLong("IdGenerator:TtsIdProGenerator:threadId");
 
-        threadLocalHolder = ThreadLocal.withInitial(() -> new TtsIdProThreadLocalHolder((int)  threadId.getAndIncrement(), (short) 0));
+        threadLocalHolder =
+                ThreadLocal.withInitial(
+                        () -> new TtsIdProThreadLocalHolder((int) threadId.getAndIncrement()));
     }
 
     @Override
     public TtsIdPro generate() {
         TtsIdProThreadLocalHolder holder = threadLocalHolder.get();
-        return new TtsIdPro(TtsIdPro.currentTimestamp(), holder.threadId, (short) holder.sequence++);
+        return new TtsIdPro(TtsIdPro.currentTimestamp(), holder.threadId, holder.sequence++);
     }
 
     @Override
@@ -29,9 +31,12 @@ public class TtsIdProGenerator implements IdGenerator {
         return IdType.TtsId; // 使用现有的TtsId类型，如果需要可以在IdType中添加TtsIdPro类型
     }
 
-    @AllArgsConstructor
     private static class TtsIdProThreadLocalHolder {
-        int threadId;
-        short sequence;
+        private final int threadId;
+        private short sequence;
+
+        private TtsIdProThreadLocalHolder(int threadId) {
+            this.threadId = threadId;
+        }
     }
 }
