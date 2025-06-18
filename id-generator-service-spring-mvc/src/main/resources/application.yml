@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: id-generator-service-mvc
+
+# ID生成器配置
+id-generator:
+  type: snowflake
+  worker-id: 1
+  data-center-id: 1

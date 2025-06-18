@@ -1,0 +1,11 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: id-generator-service-feat
+
+id-generator:
+  type: snowflake
+  worker-id: 1
+  data-center-id: 1
