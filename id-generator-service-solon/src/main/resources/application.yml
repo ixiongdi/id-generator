@@ -3,8 +3,3 @@ server:
 
 app:
   name: id-generator-service-solon
-
-id-generator:
-  type: snowflake
-  worker-id: 1
-  data-center-id: 1

@@ -4,9 +4,3 @@ server:
 spring:
   application:
     name: id-generator-service-spring-webflux
-
-# ID生成器配置
-id-generator:
-  type: snowflake
-  worker-id: 1
-  data-center-id: 2
