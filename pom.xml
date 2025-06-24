@@ -45,7 +45,7 @@
         <module>id-generator-service-spring-webflux</module>
         <module>id-generator-service-solon</module>
         <module>id-generator-service-feat</module>
-</modules>
+    </modules>
 
 
 
