@@ -49,8 +49,8 @@
     </developers>
 
     <properties>
-        <spring-boot.version>3.5.0</spring-boot.version>
-        <redisson.version>3.49.0</redisson.version>
+        <spring-boot.version>3.5.3</spring-boot.version>
+        <redisson.version>3.50.0</redisson.version>
         <hutool.version>5.8.38</hutool.version>
         <guava.version>33.4.8-jre</guava.version>
         <jmh.version>1.37</jmh.version>
@@ -62,7 +62,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Boot Dependencies -->
+            <!-- Spring Boot 核心依赖管理 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -71,61 +71,49 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Redisson -->
+            <!-- Spring Boot Web 模块（显式声明以符合Spring Boot依赖规范） -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <!-- Redisson 分布式锁支持 -->
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
                 <version>${redisson.version}</version>
             </dependency>
 
-            <!-- Spring Boot Test -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.redisson</groupId>
-                <artifactId>redisson-spring-boot-starter</artifactId>
-                <version>${redisson.version}</version>
-            </dependency>
-
-            <!-- Hutool -->
+            <!-- Hutool 工具库 -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
 
-            <!-- Guava -->
+            <!-- Guava 核心库 -->
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
 
-            <!-- Commons Codec -->
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>${commons-codec.version}</version>
-            </dependency>
-
+            <!-- MyBatis Flex ORM框架 -->
             <dependency>
                 <groupId>com.mybatis-flex</groupId>
                 <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
                 <version>${mybatis-flex.version}</version>
             </dependency>
 
-            <!--mysql数据库驱动 -->
+            <!-- MySQL 数据库驱动 -->
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
 
-
-            <!-- JMH -->
+            <!-- JMH 性能测试工具 -->
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-core</artifactId>
@@ -137,7 +125,7 @@
                 <version>${jmh.version}</version>
             </dependency>
 
-
+            <!-- JUnit 测试框架 -->
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>

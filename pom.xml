@@ -26,20 +26,7 @@
         <developerConnection>scm:git:git@github.com:ixiongdi/id-generator.git</developerConnection>
         <url>https://github.com/ixiongdi/id-generator</url>
     </scm>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-    </dependencies>
+
 
     <groupId>icu.congee</groupId>
     <artifactId>id-generator-parent</artifactId>
@@ -55,7 +42,6 @@
         <module>id-generator-spring-redis-demo</module>
         <module>id-generator-web</module>
 
-        <module>id-generator-service-spring-mvc</module>
         <module>id-generator-service-spring-webflux</module>
         <module>id-generator-service-solon</module>
         <module>id-generator-service-feat</module>
