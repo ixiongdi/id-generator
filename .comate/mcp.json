@@ -1,0 +1,10 @@
+{
+    "mcpServers": {
+        "maven": {
+            "command": "npx",
+            "args": [
+                "mcp-maven-deps"
+            ]
+        }
+    }
+}
