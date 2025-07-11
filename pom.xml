@@ -47,6 +47,7 @@
         <module>id-generator-service-feat</module>
         <module>id-generator-service-vertx</module>
         <module>id-generator-service-spring-mvc</module>
+        <module>id-generator-spring-data-jdbc</module>
     </modules>
 
 
