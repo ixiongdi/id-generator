@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 用于加载ID生成相关的配置属性
  * </p>
  *
- * @author congee
+ * @author 稀饭科技
  * @since 1.0.0
  */
 @ConfigurationProperties(prefix = "id.generator")

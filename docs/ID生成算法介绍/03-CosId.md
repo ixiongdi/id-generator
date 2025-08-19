@@ -63,7 +63,7 @@ CosId 对 SnowflakeId 进行了增强，主要解决了以下问题： <mcrefere
 在当前项目中，`uno.xifan.id.generator.distributed.cosid.CosId` 类定义了一个 ID 的结构，包含了时间戳 (`timestamp`)、机器 ID (`machineId`) 和序列号 (`sequence`)，以及它们各自的位数配置。这与 Snowflake 算法的核心思想一致，可以看作是 Snowflake ID 的一种具体表现形式或其组成部分。
 
 ```java
-// c:\Users\76932\ktnb\id-generater\id-generator-spring-redis\src\main\java\icu\congee\id\generator\distributed\cosid\CosId.java
+// id-generator-spring-redis/src/main/java/uno/xifan/id/generator/distributed/cosid/CosId.java
 @Data
 public class CosId implements Id {
 

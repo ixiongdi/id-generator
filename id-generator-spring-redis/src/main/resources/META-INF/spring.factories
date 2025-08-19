@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  icu.congee.id.generator.config.IdGeneratorAutoConfiguration
+  uno.xifan.id.generator.config.IdGeneratorAutoConfiguration

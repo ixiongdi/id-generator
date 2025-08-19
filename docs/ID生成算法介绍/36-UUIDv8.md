@@ -118,5 +118,5 @@ public class OrderService {
 ## 参考资料
 
 - [IETF UUIDv8草案](https://datatracker.ietf.org/doc/draft-ietf-uuidrev-rfc4122bis/)
-- [本项目GitHub仓库](https://github.com/congee-icu/id-generater)（包含完整实现和测试用例）
+- [本项目GitHub仓库](https://github.com/ixiongdi/id-generator)（包含完整实现和测试用例）
 - [分布式系统ID生成最佳实践](https://martinfowler.com/articles/uuid.html)（Martin Fowler技术博客）

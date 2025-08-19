@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * 生成的ID格式为：Base64(timestamp)-Base64(randomNum)
  * </p>
  *
- * @author congee
+ * @author 稀饭科技
  * @since 1.0.0
  */
 public class SIDGenerator implements IdGenerator {

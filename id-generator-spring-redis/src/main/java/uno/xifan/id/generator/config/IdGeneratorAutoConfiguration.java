@@ -37,7 +37,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  *
  * <p>自动配置Redisson客户端并注册ID生成器服务Bean
  *
- * @author congee
+ * @author 稀饭科技
  * @since 1.0.0
  */
 @AutoConfiguration(after = RedisAutoConfiguration.class)

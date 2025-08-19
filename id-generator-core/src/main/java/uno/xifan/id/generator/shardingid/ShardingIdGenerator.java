@@ -16,7 +16,7 @@ import uno.xifan.id.base.IdType;
  * 2. 高性能：通过分片机制提高ID生成效率
  * 3. 有序性：生成的ID保持时间顺序
  *
- * @author congee
+ * @author 稀饭科技
  */
 public class ShardingIdGenerator implements IdGenerator {
 

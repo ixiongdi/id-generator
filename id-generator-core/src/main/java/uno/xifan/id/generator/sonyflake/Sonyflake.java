@@ -21,7 +21,7 @@ import java.util.*;
  * - 16位机器ID
  * </p>
  * 
- * @author congee
+ * @author 稀饭科技
  * @since 1.0.0
  */
 public class Sonyflake {

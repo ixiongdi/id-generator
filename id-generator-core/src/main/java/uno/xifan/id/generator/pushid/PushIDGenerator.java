@@ -18,7 +18,7 @@ import uno.xifan.id.base.IdType;
  * 3.
  * URL安全：使用URL安全的字符集（-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz）
  *
- * @author congee
+ * @author 稀饭科技
  */
 public class PushIDGenerator implements IdGenerator {
     // 模拟 base64 安全字符，按 ASCII 排序

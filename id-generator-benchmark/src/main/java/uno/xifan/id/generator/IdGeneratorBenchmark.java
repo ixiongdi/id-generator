@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * - 16线程并发模拟高负载场景
  * - 输出吞吐量（操作数/秒）
  *
- * @author congee
+ * @author 稀饭科技
  */
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)

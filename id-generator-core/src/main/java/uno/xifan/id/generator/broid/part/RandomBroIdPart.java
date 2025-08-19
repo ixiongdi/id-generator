@@ -16,7 +16,7 @@ import java.util.Random;
  * 该类负责生成BroId中的随机位序列。通过指定的随机数生成器和位数，
  * 生成指定长度的随机布尔序列。
  *
- * @author congee
+ * @author 稀饭科技
  */
 @Data
 @AllArgsConstructor

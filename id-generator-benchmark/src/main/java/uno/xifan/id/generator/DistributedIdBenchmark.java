@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 分布式ID生成器基准测试类
- * 测试路径：/c:/Users/76932/ktnb/id-generater/id-generator-spring-redis/src/main/java/icu/congee/id/generator/distributed/
+ * 测试路径：/c:/Users/76932/ktnb/id-generater/id-generator-spring-redis/src/main/java/uno/xifan/id/generator/distributed/
  */
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
