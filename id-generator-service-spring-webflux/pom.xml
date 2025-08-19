@@ -10,8 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>id-generator-service-spring-webflux</artifactId>
-    <name>id-generator-service-spring-webflux</name>
-    <description>Spring WebFlux service module for ID generator</description>
+    <name>ID Generator Service Spring WebFlux</name>
+    <description>ID Generator Service Spring WebFlux Module</description>
 
     <dependencies>
         <dependency>

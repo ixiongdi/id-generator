@@ -11,6 +11,9 @@
 
     <artifactId>id-generator-service-spring-mvc</artifactId>
 
+    <name>ID Generator Service Spring MVC</name>
+    <description>ID Generator Service Spring MVC Module</description>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>

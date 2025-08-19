@@ -12,8 +12,8 @@
     </parent>
 
     <artifactId>id-generator-service-vertx</artifactId>
-    <name>ID Generator :: Service :: Vert.x</name>
-    <description>基于Vert.x的服务实现</description>
+    <name>ID Generator Service Vert.x</name>
+    <description>ID Generator Service Vert.x Module</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
