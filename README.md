@@ -1,6 +1,6 @@
 # Java ID Generator
 
-[![Maven Central](https://img.shields.io/maven-central/v/icu.congee/id-generator-core.svg)](https://search.maven.org/search?q=g:icu.congee%20AND%20a:id-generator-core)
+[![Maven Central](https://img.shields.io/maven-central/v/uno.xifan/id-generator-core.svg)](https://search.maven.org/search?q=g:uno.xifan%20AND%20a:id-generator-core)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Java Version](https://img.shields.io/badge/Java-8%2B-blue.svg)](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
 
@@ -19,18 +19,18 @@
 添加Maven依赖
 ```xml
  <dependency>
-    <groupId>icu.congee</groupId>
+    <groupId>uno.xifan</groupId>
     <artifactId>id-generator-core</artifactId>
     <version>0.6.1</version>
 </dependency>
 ```
 
 ```java
-package icu.congee.id;
+package uno.xifan.id;
 
-import icu.congee.id.generator.custom.TimeBasedEntropyIdGenerator;
-import icu.congee.id.generator.uuid.UUIDv7Generator;
-import icu.congee.id.util.IdUtil;
+import uno.xifan.id.generator.custom.TimeBasedEntropyIdGenerator;
+import uno.xifan.id.generator.uuid.UUIDv7Generator;
+import uno.xifan.id.util.IdUtil;
 
 public class Main {
 
@@ -91,17 +91,17 @@ public class Main {
 添加Maven依赖
 ```xml
  <dependency>
-    <groupId>icu.congee</groupId>
+    <groupId>uno.xifan</groupId>
     <artifactId>id-generator-spring-redis</artifactId>
     <version>0.6.1</version>
 </dependency>
 ```
 
 ```java
-package icu.congee.id.generator.demo;
+package uno.xifan.id.generator.demo;
 
-import icu.congee.id.generator.distributed.mist.MistIdGenerator;
-import icu.congee.id.generator.distributed.uuid.UUIDv8Generator;
+import uno.xifan.id.generator.distributed.mist.MistIdGenerator;
+import uno.xifan.id.generator.distributed.uuid.UUIDv8Generator;
 import jakarta.annotation.Resource;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
@@ -115,8 +115,8 @@ import org.springframework.context.annotation.ComponentScans;
  */
 @SpringBootApplication
 //@EnableScheduling
-@ComponentScans(value = {@ComponentScan("icu.congee.id.generator"),})
-@MapperScan("icu.congee.id.generator.demo.mapper")
+@ComponentScans(value = {@ComponentScan("uno.xifan.id.generator"),})
+@MapperScan("uno.xifan.id.generator.demo.mapper")
 public class IdGeneratorDemoApplication implements CommandLineRunner {
     @Resource
     private MistIdGenerator mistIdGenerator;

@@ -1,4 +1,4 @@
-# FlakeID (`icu.congee.id.generator.flakeid.FlakeId`)
+# FlakeID (`uno.xifan.id.generator.flakeid.FlakeId`)
 
 `FlakeId` 是一个用于在分布式环境中生成 K-有序、无冲突 ID 的生成器。它生成的 ID 是一个 64 位的字节数组 (`byte[8]`)。
 

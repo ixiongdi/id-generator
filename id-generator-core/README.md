@@ -37,7 +37,7 @@ ID Generator Core 是一个高性能、可扩展的分布式 ID 生成器库，�
 
 ```xml
 <dependency>
-    <groupId>icu.congee</groupId>
+    <groupId>uno.xifan</groupId>
     <artifactId>id-generator-core</artifactId>
     <version>0.6.1</version>
 </dependency>
@@ -46,7 +46,7 @@ ID Generator Core 是一个高性能、可扩展的分布式 ID 生成器库，�
 ### Gradle
 
 ```groovy
-implementation 'icu.congee:id-generator-core:0.6.1'
+implementation 'uno.xifan:id-generator-core:0.6.1'
 ```
 
 ## 快速开始

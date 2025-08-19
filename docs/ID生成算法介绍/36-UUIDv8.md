@@ -76,7 +76,7 @@ public class BasicUsage {
 ```java
 // 依赖配置（pom.xml）
 <dependency>
-    <groupId>icu.congee</groupId>
+    <groupId>uno.xifan</groupId>
     <artifactId>id-generator-spring-redis</artifactId>
     <version>1.2.0</version>
 </dependency>

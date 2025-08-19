@@ -16,7 +16,7 @@
 
 ```xml
 <dependency>
-    <groupId>icu.congee</groupId>
+    <groupId>uno.xifan</groupId>
     <artifactId>id-generator-spring-redis</artifactId>
     <version>${latest.version}</version>
 </dependency>

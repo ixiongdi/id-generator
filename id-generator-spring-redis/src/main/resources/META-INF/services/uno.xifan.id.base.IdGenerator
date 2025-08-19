@@ -1,0 +1,12 @@
+uno.xifan.id.generator.distributed.atomiclong.AtomicLongIdGenerator
+uno.xifan.id.generator.distributed.cosid.CosIdGenerator
+uno.xifan.id.generator.distributed.dtsid.DtsIdGenerator
+uno.xifan.id.generator.distributed.mist.MistIdGenerator
+uno.xifan.id.generator.distributed.rid.RedissonIdGenerator
+uno.xifan.id.generator.distributed.snowflake.LockFreeSnowflakeIdGenerator
+uno.xifan.id.generator.distributed.snowflake.SnowflakeIdGenerator
+uno.xifan.id.generator.distributed.ttsid.TtsIdGenerator
+uno.xifan.id.generator.distributed.ttsid.TtsIdPlusGenerator
+uno.xifan.id.generator.distributed.ttsid.TtsIdProGenerator
+uno.xifan.id.generator.distributed.ttsid.TtsIdProMaxGenerator
+uno.xifan.id.generator.distributed.wxseq.WxSeqGenerator

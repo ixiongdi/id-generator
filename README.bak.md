@@ -178,9 +178,9 @@ custom_c：随机数，牺牲一点碰撞性换来更高的易用性
 ### 食用方法
 
 ```java
-package icu.congee.id.generator;
+package uno.xifan.id.generator;
 
-import icu.congee.id.util.IdUtil;
+import uno.xifan.id.util.IdUtil;
 
 public class Main {
 

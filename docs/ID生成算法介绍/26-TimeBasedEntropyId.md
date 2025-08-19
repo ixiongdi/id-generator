@@ -1,4 +1,4 @@
-# TimeBasedEntropyId 生成器 (`icu.congee.id.generator.custom.TimeBasedEntropyIdGenerator`)
+# TimeBasedEntropyId 生成器 (`uno.xifan.id.generator.custom.TimeBasedEntropyIdGenerator`)
 
 `TimeBasedEntropyIdGenerator` 是一个简单高效的分布式唯一 ID 生成器实现。它结合了时间戳和多熵源生成的哈希值，提供了一种轻量级但功能强大的 ID 生成方案。
 

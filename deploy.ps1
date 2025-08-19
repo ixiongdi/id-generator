@@ -1,6 +1,6 @@
 # 部署配置
 $APP_NAME = "id-generator"
-$REMOTE_HOST = "congee.icu"
+$REMOTE_HOST = "xifan.uno"
 $REMOTE_USER = "root"
 $REMOTE_DIR = "/opt/apps/$APP_NAME"
 $JAVA_OPTS = "-Xms512m -Xmx512m -XX:+HeapDumpOnOutOfMemoryError"

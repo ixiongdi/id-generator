@@ -45,14 +45,14 @@ CUIDv2 有多种语言的实现，例如 JavaScript 和 .NET。 <mcreference lin
 例如，在 Java 中使用本项目的 `id-generator-core` 模块：
 
 ```java
-import icu.congee.id.generator.cuid.CUID;
+import uno.xifan.id.generator.cuid.CUID;
 
 // ...
 
 String id = CUID.randomCUID2().toString(); // 例如：'tz4a98xxat96iws9zmbrgj3a'
 ```
 
-可以查阅 `icu.congee.id.generator.cuid.CUID` 类了解更多关于 CUIDv2 的配置和使用方法。
+可以查阅 `uno.xifan.id.generator.cuid.CUID` 类了解更多关于 CUIDv2 的配置和使用方法。
 
 ## 总结
 

@@ -13,7 +13,7 @@
 
 ## 实现原理
 
-`DtsId` 的核心逻辑位于 `icu.congee.id.generator.distributed.dtsid.DtsId` 类中。
+`DtsId` 的核心逻辑位于 `uno.xifan.id.generator.distributed.dtsid.DtsId` 类中。
 
 1.  **初始化**: `DtsId` 对象在创建时接收两个参数：
 

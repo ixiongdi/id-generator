@@ -4,7 +4,7 @@
 
 ElasticFlake 是一种分布式 ID 生成机制，其设计灵感来源于 Elasticsearch 中 UUID 的生成方式。它旨在提供一种高性能、全局唯一的 ID 生成方案，尤其适用于需要大规模唯一标识符的分布式系统。
 
-`icu.congee.id.generator.elasticflake.ElasticflakeIdGenerator` 是 ElasticFlake 机制的一种实现。
+`uno.xifan.id.generator.elasticflake.ElasticflakeIdGenerator` 是 ElasticFlake 机制的一种实现。
 
 ## 原理
 
@@ -33,7 +33,7 @@ ID 的生成过程如下：
 ## 使用示例
 
 ```java
-import icu.congee.id.generator.elasticflake.ElasticflakeIdGenerator;
+import uno.xifan.id.generator.elasticflake.ElasticflakeIdGenerator;
 
 public class ElasticFlakeExample {
     public static void main(String[] args) {

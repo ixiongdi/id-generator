@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>icu.congee</groupId>
+        <groupId>uno.xifan</groupId>
         <artifactId>id-generator-parent</artifactId>
         <version>0.6.1</version>
     </parent>
@@ -41,7 +41,7 @@
             <email>ixiongdi@gmail.com</email>
             <url>https://github.com/ixiongdi</url>
             <organization>Congee</organization>
-            <organizationUrl>https://congee.icu</organizationUrl>
+            <organizationUrl>https://xifan.uno</organizationUrl>
             <roles>
                 <role>Project Lead</role>
                 <role>Developer</role>
@@ -52,7 +52,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>icu.congee</groupId>
+            <groupId>uno.xifan</groupId>
             <artifactId>id-generator-core</artifactId>
         </dependency>
 
@@ -121,7 +121,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.2.3</version>
                 <configuration>
-                    <mainClass>icu.congee.id.generator.web.IdGeneratorWebApplication</mainClass>
+                    <mainClass>uno.xifan.id.generator.web.IdGeneratorWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

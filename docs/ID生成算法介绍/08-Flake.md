@@ -1,4 +1,4 @@
-# Flake ID 生成器 (`icu.congee.id.generator.flake.FlakeIdGenerator`)
+# Flake ID 生成器 (`uno.xifan.id.generator.flake.FlakeIdGenerator`)
 
 `FlakeIdGenerator` 是一个用于生成分布式唯一 ID 的 Java 实现。其设计灵感来源于 Twitter 的 Snowflake 算法，但在具体实现上有所不同，尤其是在 ID 的构成上。
 
@@ -75,9 +75,9 @@ ID 构成公式可以简化理解为：`ID = (workerId << 16) | sequence`
   - 全局来看，由于 ID 的高位是 `workerId`，ID 首先按 `workerId` 排序，然后在同一 `workerId` 内按时间排序。它不是全局严格按时间排序的（不同 workerId 的 ID，即使后者时间戳更晚，也可能因为 workerId 较小而整体 ID 值更小）。
 - **时钟依赖**: 严重依赖系统时钟的准确性。尽管有回拨检测，但频繁的时钟调整可能影响服务。
 
-## 与 `icu.congee.id.generator.flakeid.FlakeIdGenerator` 的区别
+## 与 `uno.xifan.id.generator.flakeid.FlakeIdGenerator` 的区别
 
-本项目中还存在一个 `icu.congee.id.generator.flakeid.FlakeIdGenerator` (注意包名和类名后缀 `id`)。两者都受 Snowflake 启发，但 ID 结构不同：
+本项目中还存在一个 `uno.xifan.id.generator.flakeid.FlakeIdGenerator` (注意包名和类名后缀 `id`)。两者都受 Snowflake 启发，但 ID 结构不同：
 
 - `flake.FlakeIdGenerator` (本文档描述的): ID = 48 位 WorkerID + 16 位序列号。时间戳不直接在 ID 中。
 - `flakeid.FlakeIdGenerator`: 通常 ID 结构为 时间戳 + 生成器标识 + 序列号 (例如，其 README 中提到的是 42 位时间戳 + 10 位生成器 ID + 12 位序列号)。

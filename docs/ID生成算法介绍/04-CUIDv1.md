@@ -25,11 +25,11 @@ CUIDv1 可能不适用于：
 
 ## 如何使用
 
-在本项目的 `id-generator-core` 模块中，CUIDv1 的生成可以通过 `icu.congee.id.generator.cuid.CUIDv1Generator` 类实现。以下是一个如何在 Java 中使用它的示例：
+在本项目的 `id-generator-core` 模块中，CUIDv1 的生成可以通过 `uno.xifan.id.generator.cuid.CUIDv1Generator` 类实现。以下是一个如何在 Java 中使用它的示例：
 
 ```java
-import icu.congee.id.generator.cuid.CUID;
-import icu.congee.id.generator.cuid.CUIDv1Generator;
+import uno.xifan.id.generator.cuid.CUID;
+import uno.xifan.id.generator.cuid.CUIDv1Generator;
 
 public class CuidV1Example {
     public static void main(String[] args) {

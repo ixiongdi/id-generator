@@ -30,10 +30,10 @@ COMBGUID 通过将 GUID 的一部分替换为时间相关的值来解决这个�
 
 ## 使用示例 (Java)
 
-以下是使用本项目中 `icu.congee.id.generator.combguid.CombGuidGenerator` 生成 COMBGUID 的 Java 示例：
+以下是使用本项目中 `uno.xifan.id.generator.combguid.CombGuidGenerator` 生成 COMBGUID 的 Java 示例：
 
 ```java
-import icu.congee.id.generator.combguid.CombGuidGenerator;
+import uno.xifan.id.generator.combguid.CombGuidGenerator;
 import java.util.UUID;
 
 public class CombGuidExample {
@@ -55,7 +55,7 @@ public class CombGuidExample {
 
 在这个例子中：
 
-1.  导入 `icu.congee.id.generator.combguid.CombGuidGenerator` 类。
+1.  导入 `uno.xifan.id.generator.combguid.CombGuidGenerator` 类。
 2.  可以直接调用 `CombGuidGenerator.next()` 静态方法来获取一个 `java.util.UUID` 类型的 COMBGUID。
 3.  也可以创建 `CombGuidGenerator` 的实例，并调用其 `generate()` 方法（实现了 `IdGenerator` 接口）来获取字符串形式的 COMBGUID。
 4.  `CombGuidGenerator` 将当前时间戳编码到 UUID 的前 6 个字节，以确保生成的 ID 具有时间顺序性，同时保留了 UUID 的唯一性。

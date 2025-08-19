@@ -1,6 +1,6 @@
 spring:
   data:
     redis:
-      host: congee.icu
+      host: xifan.uno
       port: 6379
       password: qw3erT^&*()_+

@@ -13,7 +13,7 @@
 ### 依赖引入
 ```xml
 <dependency>
-    <groupId>icu.congee</groupId>
+    <groupId>uno.xifan</groupId>
     <artifactId>id-generator-spring-data-jdbc</artifactId>
     <version>${id-generator.version}</version>
 </dependency>

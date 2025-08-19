@@ -1,6 +1,6 @@
 # JavaScript 安全 ID 生成器：SecureMistGenerator 分析
 
-本文档旨在分析 `icu.congee.id.generator.mist.SecureMistGenerator`，并阐述其生成的 ID 如何保证在 JavaScript 环境中的安全使用。
+本文档旨在分析 `uno.xifan.id.generator.mist.SecureMistGenerator`，并阐述其生成的 ID 如何保证在 JavaScript 环境中的安全使用。
 
 ## 1. 概述
 
@@ -33,7 +33,7 @@ ID 的生成过程在 `generate()` 方法中实现：
 代码片段：
 
 ```java
-// icu.congee.id.generator.mist.SecureMistGenerator.java
+// uno.xifan.id.generator.mist.SecureMistGenerator.java
 
 private static final int SALT_BIT = 8; // 随机因子二进制位数
 private static final int SALT_SHIFT = 8; // 随机因子移位数
