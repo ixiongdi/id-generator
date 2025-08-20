@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>id-generator-spring-redis-demo</artifactId>
-    
+
     <name>ID Generator Spring Redis Demo</name>
     <description>ID Generator Spring Redis Demo Module</description>
     <url>https://github.com/ixiongdi/id-generator</url>
@@ -36,7 +36,7 @@
             <email>ixiongdi@gmail.com</email>
             <url>https://github.com/ixiongdi</url>
             <organization>稀饭科技</organization>
-            <organizationUrl>https://xifan.uno</organizationUrl>
+            <organizationUrl>https://congee.icu</organizationUrl>
             <roles>
                 <role>Project Lead</role>
                 <role>Developer</role>

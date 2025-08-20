@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <name>ID Generator Spring Redis</name>
     <description>ID Generator Spring Redis Module</description>
     <url>https://github.com/ixiongdi/id-generator</url>
@@ -40,7 +40,7 @@
             <email>ixiongdi@gmail.com</email>
             <url>https://github.com/ixiongdi</url>
             <organization>稀饭科技</organization>
-            <organizationUrl>https://xifan.uno</organizationUrl>
+            <organizationUrl>https://congee.icu</organizationUrl>
             <roles>
                 <role>Project Lead</role>
                 <role>Developer</role>

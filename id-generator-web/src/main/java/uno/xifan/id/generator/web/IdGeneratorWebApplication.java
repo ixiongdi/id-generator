@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * 该类负责启动Spring Boot应用程序并启用定时任务功能。
  */
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 @MapperScan("uno.xifan.id.generator.web.mapper")
 public class IdGeneratorWebApplication {
     public static void main(String[] args) {

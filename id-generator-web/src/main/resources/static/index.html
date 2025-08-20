@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ID 生成器演示</title>
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- 配置 Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4361ee',
+            primaryDark: '#3a0ca3',
+            secondary: '#4cc9f0',
+            success: '#4cc9f0',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.3s ease-in-out',
+            'bounce-slow': 'bounce 2s infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        },
+      }
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .bg-gradient-primary {
+        background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .transition-custom {
+        transition: all 0.3s ease;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen p-4 sm:p-6 md:p-8 font-inter text-gray-900">
+  <div class="container mx-auto max-w-4xl bg-white rounded-xl shadow-md overflow-hidden transition-custom hover:shadow-lg">
+    <div class="bg-gradient-primary text-white p-6 sm:p-8 text-center">
+      <h1 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-2 text-shadow">ID 生成器演示</h1>
+      <p class="text-blue-100 opacity-90">简单、高效的在线ID生成工具</p>
+    </div>
+
+    <div class="p-6 sm:p-8">
+      <div class="bg-gray-50 rounded-lg p-5 shadow-inner mb-6">
+        <div class="flex flex-wrap gap-4 items-center mb-4">
+          <label for="algo" class="text-gray-700 font-medium min-w-[80px]">算法</label>
+          <select id="algo" class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-custom"></select>
+          <label for="count" class="text-gray-700 font-medium min-w-[80px]">数量</label>
+          <input id="count" type="number" min="1" max="1000" value="10" class="flex-1 min-w-[120px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-custom" />          <button id="gen" class="px-5 py-2.5 bg-primary hover:bg-primaryDark text-white font-medium rounded-lg flex items-center gap-2 transition-custom transform hover:-translate-y-1 hover:shadow-lg active:translate-y-0">
+            <i class="fa fa-magic"></i>
+            生成
+          </button>
+        </div>
+
+        <div id="desc" class="bg-gray-100 p-4 rounded-lg border-l-4 border-primary text-gray-600 my-4"></div>
+
+        <div id="params"></div>
+      </div>
+
+      <div class="results mt-8">
+        <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-4">
+          <i class="fa fa-check-circle text-success"></i>
+          生成结果
+        </h3>
+        <div id="output" class="grid grid-cols-2 gap-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 复制成功提示 -->
+  <div id="copyToast" class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 flex items-center gap-2">
+    <i class="fa fa-check-circle"></i>
+    <span>复制成功!</span>
+  </div>
+
+  <script>
+    const algoSel = document.getElementById('algo');
+    const paramsDiv = document.getElementById('params');
+    const output = document.getElementById('output');
+    const desc = document.getElementById('desc');
+    const countInput = document.getElementById('count');
+    const copyToast = document.getElementById('copyToast');
+
+    let algorithms = [];
+
+    async function loadAlgorithms() {
+      const resp = await fetch('/api/algorithms');
+      algorithms = await resp.json();
+      algorithms.forEach(a => {
+        const opt = document.createElement('option');
+        opt.value = a.key;
+        opt.textContent = a.label;
+        algoSel.appendChild(opt);
+      });
+      onAlgoChange();
+    }
+
+    function onAlgoChange() {
+      const key = algoSel.value;
+      const a = algorithms.find(x => x.key === key);
+      desc.textContent = a ? a.desc : '';
+
+      paramsDiv.innerHTML = '';
+      if (!a || !a.params) return;
+      a.params.forEach(p => {
+        const wrap = document.createElement('div');
+        wrap.className = 'param flex flex-wrap gap-4 items-center my-3 animate-fade-in';
+        const label = document.createElement('label');
+        label.textContent = p.label;
+        label.className = 'text-gray-700 font-medium min-w-[80px]';
+        const input = document.createElement('input');
+        input.type = p.type || 'text';
+        input.id = 'param_' + p.name;
+        if (p.min !== undefined) input.min = p.min;
+        if (p.max !== undefined) input.max = p.max;
+        if (p.default !== undefined) input.value = p.default;
+        input.className = 'flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-custom';
+        wrap.appendChild(label);
+        wrap.appendChild(input);
+        paramsDiv.appendChild(wrap);
+      });
+    }
+
+    algoSel.addEventListener('change', onAlgoChange);
+
+    function showToast() {
+      copyToast.classList.remove('opacity-0');
+      copyToast.classList.add('opacity-100');
+      setTimeout(() => {
+        copyToast.classList.remove('opacity-100');
+        copyToast.classList.add('opacity-0');
+      }, 2000);
+    }
+
+    document.getElementById('gen').addEventListener('click', async () => {
+      const key = algoSel.value;
+      const a = algorithms.find(x => x.key === key);
+      const params = {};
+      if (a && a.params) {
+        a.params.forEach(p => {
+          const v = document.getElementById('param_' + p.name)?.value;
+          if (v !== undefined && v !== '') {
+            params[p.name] = p.type === 'number' ? Number(v) : v;
+          }
+        });
+      }
+
+      const count = Math.max(1, Math.min(1000, Number(countInput.value || 10)));
+
+      const resp = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ algorithm: key, params, count })
+      });
+      const data = await resp.json();
+      output.innerHTML = '';
+      if (data.error) {
+        const div = document.createElement('div');
+        div.className = 'result-item bg-red-50 p-4 rounded-lg border-l-4 border-red-500 text-red-700 font-mono word-break-break-all transition-custom hover:bg-red-100 hover:translate-x-1';
+        div.textContent = '错误: ' + data.error;
+        output.appendChild(div);
+        return;
+      }
+      (data.results || []).forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'result-item bg-gray-50 p-4 rounded-lg border-l-4 border-success font-mono word-break-break-all transition-custom hover:bg-blue-50 hover:translate-x-1 relative group';
+        div.innerHTML = `
+          <span>${r}</span>
+          <button class="copy-btn absolute top-2 right-2 p-1 text-gray-400 hover:text-primary transition-custom opacity-0 group-hover:opacity-100"
+                  data-id="${r}">
+            <i class="fa fa-copy"></i>
+          </button>
+        `;
+        output.appendChild(div);
+      });
+
+      // 添加复制按钮事件监听
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute('data-id');
+          navigator.clipboard.writeText(id).then(() => {
+            showToast();
+          }).catch(err => {
+            console.error('无法复制: ', err);
+          });
+        });
+      });
+    });
+
+    loadAlgorithms();
+  </script>
+</body>
+</html>
+
+

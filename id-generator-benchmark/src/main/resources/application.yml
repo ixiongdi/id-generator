@@ -1,6 +1,6 @@
 spring:
   data:
     redis:
-      host: ${REDIS_HOST:xifan.uno}
+      host: ${REDIS_HOST:congee.icu}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:qw3erT^&*()_+}

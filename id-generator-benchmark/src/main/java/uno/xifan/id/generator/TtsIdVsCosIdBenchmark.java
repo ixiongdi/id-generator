@@ -41,7 +41,7 @@ public class TtsIdVsCosIdBenchmark {
     public void setup() {
         // Initialize Redisson
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://xifan.uno:6379").setPassword("qw3erT^&*()_+");
+        config.useSingleServer().setAddress("redis://congee.icu:6379").setPassword("qw3erT^&*()_+");
         redisson = Redisson.create(config);
         ttsIdGenerator = new TtsIdPlusGenerator(redisson);
         cosIdGenerator = new CosIdGenerator(redisson, 44, 20, 16, 0);
