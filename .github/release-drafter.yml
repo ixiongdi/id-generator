@@ -1,0 +1,31 @@
+name-template: 'v$NEXT_PATCH_VERSION'
+tag-template: 'v$NEXT_PATCH_VERSION'
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+categories:
+  - title: '🚀 Features'
+    labels: ['feat', 'feature', 'enhancement']
+  - title: '🐛 Fixes'
+    labels: ['fix', 'bug', 'bugfix']
+  - title: '🧰 Maintenance'
+    labels: ['chore', 'deps', 'refactor', 'build', 'ci']
+  - title: '📝 Documentation'
+    labels: ['docs']
+  - title: '⚡ Performance'
+    labels: ['perf']
+exclude-labels:
+  - 'skip-changelog'
+version-resolver:
+  major:
+    labels: ['major']
+  minor:
+    labels: ['minor', 'feat', 'feature', 'enhancement']
+  patch:
+    labels: ['patch', 'fix', 'bug', 'bugfix']
+  default: patch
+template: |
+  ## 变更
+
+  $CHANGES
+
+  ## 致谢
+  感谢所有贡献者 💖

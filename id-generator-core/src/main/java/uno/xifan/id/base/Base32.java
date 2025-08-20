@@ -83,6 +83,18 @@ public class Base32 {
             }
         }
 
-        return result;
+        // 若仍有不足一个字节的残留位，需保证这些位均为0，否则认为输入无效
+        if (bitsLeft > 0) {
+            int mask = (1 << bitsLeft) - 1;
+            if ((buffer & mask) != 0) {
+                throw new IllegalArgumentException("Invalid trailing bits in Base32 string");
+            }
+        }
+
+        // 截断数组到实际写入的长度
+        if (index == result.length) {
+            return result;
+        }
+        return Arrays.copyOf(result, index);
     }
 }

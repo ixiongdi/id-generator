@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全问题反馈
+    url: https://github.com/ixiongdi/id-generator/security/policy
+    about: 发现安全漏洞？请通过安全策略页面私下报告。

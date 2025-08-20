@@ -19,11 +19,6 @@
             <url>https://opensource.org/licenses/MIT</url>
             <distribution>repo</distribution>
         </license>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-            <distribution>repo</distribution>
-        </license>
     </licenses>
 
     <scm>
@@ -51,13 +46,13 @@
     <properties>
         <spring-boot.version>3.5.3</spring-boot.version>
         <redisson.version>3.50.0</redisson.version>
-        <hutool.version>5.8.38</hutool.version>
+        <hutool.version>5.8.39</hutool.version>
         <guava.version>33.4.8-jre</guava.version>
         <jmh.version>1.37</jmh.version>
         <commons-codec.version>1.18.0</commons-codec.version>
-        <mysql.version>9.3.0</mysql.version>
+        <mysql.version>9.4.0</mysql.version>
         <junit.version>5.13.0</junit.version>
-        <mybatis-flex.version>1.10.9</mybatis-flex.version>
+        <mybatis-flex.version>1.11.1</mybatis-flex.version>
     </properties>
 
     <dependencyManagement>

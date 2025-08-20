@@ -14,11 +14,6 @@
             <url>https://opensource.org/licenses/MIT</url>
             <distribution>repo</distribution>
         </license>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-            <distribution>repo</distribution>
-        </license>
     </licenses>
 
     <scm>
@@ -126,7 +121,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
                 <configuration>
                     <release>21</release>
                 </configuration>

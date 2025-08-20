@@ -2,9 +2,21 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/uno.xifan/id-generator-core.svg)](https://search.maven.org/search?q=g:uno.xifan%20AND%20a:id-generator-core)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Java Version](https://img.shields.io/badge/Java-8%2B-blue.svg)](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
+[![Build](https://github.com/ixiongdi/id-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/ixiongdi/id-generator/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/ixiongdi/id-generator/actions/workflows/codeql.yml/badge.svg)](https://github.com/ixiongdi/id-generator/actions/workflows/codeql.yml)
+[![Java Version](https://img.shields.io/badge/Java-8%2B%20(core)%20%7C%2021%2B%20(spring)-blue.svg)](https://www.oracle.com/java/technologies/)
+[![Release Drafter](https://img.shields.io/badge/Release-Drafter-informational)](https://github.com/ixiongdi/id-generator/releases)
 
 本项目汇集了互联网上绝大部分的ID生成算法加上一些自己原创的算法。旨在提供简单、易用、全面的ID生成解决方案
+
+## 模块矩阵
+
+- `id-generator-core`：纯 Java 核心算法，JDK 8+
+- `id-generator-spring-redis`：分布式生成（Redisson），JDK 21+/Spring Boot 3
+- `id-generator-web`：示例 Web 应用，JDK 21+/Spring Boot 3
+- `id-generator-service-*`：多框架接入（Spring MVC/WebFlux、Vert.x、Solon、Feat）
+- `id-generator-benchmark`：JMH 基准测试
+- `id-generator-bom`/`id-generator-dependencies`：BOM 与依赖版本管理
 
 ## 特性
 
@@ -168,3 +180,11 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
 想要了解`MistIdGenerator`算法的更多，请参考[MistIdGenerator](./docs/ID生成算法介绍/14-MIST_ID.md)
 
 想要了解`UUIDv8Generator`算法的更多，请参考[UUIDv8Generator](./docs/ID生成算法介绍/36-UUIDv8.md)
+
+## 贡献与安全
+- 贡献指南见 `CONTRIBUTING.md`，行为准则见 `CODE_OF_CONDUCT.md`
+- 安全披露请参考 `SECURITY.md`，或邮件联系维护者
+
+## 版本发布说明
+- 采用语义化版本；变更记录请查看 Releases 页面。
+- 合并到 `master` 后会自动汇总变更为草稿发布；维护者校对后进行正式发布。

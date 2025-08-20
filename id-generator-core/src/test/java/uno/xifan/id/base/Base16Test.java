@@ -21,9 +21,9 @@ class Base16Test {
         String ourEncoded = uno.xifan.id.base.Base16.encode(bytes);
         String hutoolEncoded = HexUtil.encodeHexStr(bytes);
 
-        // 验证编码格式和大写一致性
+        // 我方实现输出大写，第三方实现默认输出小写，允许大小写风格不同
         assertEquals(ourEncoded.toUpperCase(), ourEncoded);
-        assertEquals(hutoolEncoded.toUpperCase(), hutoolEncoded);
+        assertEquals(hutoolEncoded.toLowerCase(), hutoolEncoded);
 
         // 验证解码正确性
         assertArrayEquals(bytes, uno.xifan.id.base.Base16.decode(ourEncoded));
@@ -38,9 +38,8 @@ class Base16Test {
         // 验证自定义实现支持小写解码
         assertArrayEquals(expected, uno.xifan.id.base.Base16.decode(lowercaseHex));
 
-        // Hutool实现预期不支持小写
-        assertThrows(IllegalArgumentException.class,
-                () -> Base16Codec.CODEC_LOWER.decode(lowercaseHex));
+        // Hutool 提供了小写编解码器，验证其能正确解码
+        assertArrayEquals(expected, Base16Codec.CODEC_LOWER.decode(lowercaseHex));
     }
 
     @Test
@@ -53,8 +52,8 @@ class Base16Test {
             String ourEncoded = uno.xifan.id.base.Base16.encode(data);
             String hutoolEncoded = HexUtil.encodeHexStr(data);
 
-            // 验证编码一致性
-            assertEquals(hutoolEncoded, ourEncoded);
+            // 验证编码一致性（忽略大小写）
+            assertTrue(hutoolEncoded.equalsIgnoreCase(ourEncoded));
 
             // 验证解码正确性
             assertArrayEquals(data, uno.xifan.id.base.Base16.decode(ourEncoded));

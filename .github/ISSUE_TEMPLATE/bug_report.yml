@@ -1,0 +1,44 @@
+name: Bug report
+description: 报告一个可以复现的问题
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 请确认你已在最新版本复现并搜索过已有 Issue。
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      placeholder: 例如 0.6.1
+    validations:
+      required: true
+  - type: textarea
+    id: describe
+    attributes:
+      label: 问题描述
+      placeholder: 简要描述问题现象
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      placeholder: 最小复现步骤/仓库
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志/堆栈
+      render: shell
+  - type: dropdown
+    id: jdk
+    attributes:
+      label: JDK 版本
+      options:
+        - 8
+        - 11
+        - 17
+        - 21
+    validations:
+      required: true
