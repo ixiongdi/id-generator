@@ -48,6 +48,7 @@
         <module>id-generator-service-vertx</module>
         <module>id-generator-service-spring-mvc</module>
         <module>id-generator-spring-data-jdbc</module>
+        <module>id-generator-spring-data-jpa</module>
     </modules>
 
 
@@ -132,26 +133,26 @@
             </plugin>
 
             <!-- GPG签名配置 - 使用环境变量MAVEN_GPG_PASSPHRASE管理密码短语 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.2.7</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                        <configuration>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                <version>3.2.7</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>sign-artifacts</id>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sign</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <gpgArguments>-->
+<!--                                <arg>&#45;&#45;pinentry-mode</arg>-->
+<!--                                <arg>loopback</arg>-->
+<!--                            </gpgArguments>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
             <!-- 中央仓库发布插件 -->
             <plugin>
@@ -163,6 +164,7 @@
                     <publishingServerId>central</publishingServerId>
                     <autoPublish>true</autoPublish>
                     <waitUntil>published</waitUntil>
+                    <checksums>all</checksums>
                 </configuration>
             </plugin>
 
