@@ -314,7 +314,7 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
 如果您需要专业的商业支持或定制服务，请联系：
 
 - 📧 **邮箱**: ixiongdi@gmail.com
-- 🌐 **网站**: [https://congee.icu](https://congee.icu)
+- 🌐 **网站**: [https://xifan.uno](https://xifan.uno)
 
 ## ⭐ Star History
 
