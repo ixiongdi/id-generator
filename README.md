@@ -63,7 +63,7 @@
  <dependency>
     <groupId>uno.xifan</groupId>
     <artifactId>id-generator-core</artifactId>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
 </dependency>
 ```
 
@@ -139,7 +139,7 @@ public class Main {
  <dependency>
     <groupId>uno.xifan</groupId>
     <artifactId>id-generator-spring-redis</artifactId>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
 </dependency>
 ```
 

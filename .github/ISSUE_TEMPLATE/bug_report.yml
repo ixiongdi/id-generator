@@ -9,7 +9,7 @@ body:
     id: version
     attributes:
       label: 版本
-      placeholder: 例如 0.6.1
+      placeholder: 例如 0.7.0
     validations:
       required: true
   - type: textarea

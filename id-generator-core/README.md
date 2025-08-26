@@ -39,14 +39,14 @@ ID Generator Core 是一个高性能、可扩展的分布式 ID 生成器库，�
 <dependency>
     <groupId>uno.xifan</groupId>
     <artifactId>id-generator-core</artifactId>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'uno.xifan:id-generator-core:0.6.1'
+implementation 'uno.xifan:id-generator-core:0.7.0'
 ```
 
 ## 快速开始
