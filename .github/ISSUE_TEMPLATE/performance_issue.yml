@@ -1,0 +1,58 @@
+name: Performance issue
+description: 报告性能相关问题
+labels: [performance, bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您报告性能问题！为了更好地诊断问题，请提供详细的性能数据和环境信息。
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      placeholder: 例如 0.6.1
+    validations:
+      required: true
+  - type: textarea
+    id: describe
+    attributes:
+      label: 性能问题描述
+      placeholder: 详细描述性能问题的表现
+    validations:
+      required: true
+  - type: textarea
+    id: benchmark
+    attributes:
+      label: 基准测试结果
+      placeholder: |
+        请提供具体的性能数据，例如：
+        - QPS/TPS
+        - 响应时间
+        - 内存使用
+        - CPU使用率
+        - JMH基准测试结果
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境
+      placeholder: |
+        - 操作系统：
+        - JDK版本：
+        - 硬件配置：
+        - 并发设置：
+        - 其他相关配置：
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望性能
+      placeholder: 描述您期望的性能表现
+  - type: textarea
+    id: workaround
+    attributes:
+      label: 临时解决方案
+      placeholder: 如果有的话，请描述您发现的任何临时解决方案

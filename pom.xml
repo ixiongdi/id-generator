@@ -5,8 +5,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>ID Generator</name>
-    <description>一个高性能的分布式ID生成器，支持多种ID生成策略，包括UUID、雪花算法等</description>
+    <description>一个高性能的分布式ID生成器，支持多种ID生成策略，包括UUID、雪花算法等。提供38种不同的ID生成算法，适用于各种业务场景。</description>
     <url>https://github.com/ixiongdi/id-generator</url>
+    <inceptionYear>2024</inceptionYear>
+
+    <organization>
+        <name>稀饭科技</name>
+        <url>https://congee.icu</url>
+    </organization>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/ixiongdi/id-generator/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>GitHub Actions</system>
+        <url>https://github.com/ixiongdi/id-generator/actions</url>
+    </ciManagement>
 
     <licenses>
         <license>
@@ -27,6 +43,25 @@
     <artifactId>id-generator-parent</artifactId>
     <version>0.6.1</version>
     <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.version>3.8.0</maven.version>
+        <java.version>21</java.version>
+        <!-- Plugin versions -->
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.8.6.4</spotbugs-maven-plugin.version>
+        <checkstyle-maven-plugin.version>3.5.0</checkstyle-maven-plugin.version>
+        <dependency-check-maven.version>10.0.4</dependency-check-maven.version>
+        <license-maven-plugin.version>4.6</license-maven-plugin.version>
+    </properties>
 
     <modules>
         <module>id-generator-benchmark</module>
@@ -115,8 +150,6 @@
                 </executions>
             </plugin>
 
-
-
             <!-- 编译器配置 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -124,6 +157,88 @@
                 <version>3.14.0</version>
                 <configuration>
                     <release>21</release>
+                </configuration>
+            </plugin>
+
+            <!-- 代码质量检查 - SpotBugs -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.8.6.4</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
+
+            <!-- 代码风格检查 - Checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>false</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+            </plugin>
+
+            <!-- 测试覆盖率 - JaCoCo -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 依赖安全检查 - OWASP -->
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>10.0.4</version>
+                <configuration>
+                    <failBuildOnCVSS>8</failBuildOnCVSS>
+                    <suppressionFiles>
+                        <suppressionFile>owasp-suppressions.xml</suppressionFile>
+                    </suppressionFiles>
+                </configuration>
+            </plugin>
+
+            <!-- 许可证检查 -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>4.6</version>
+                <configuration>
+                    <properties>
+                        <owner>Andy Xiong</owner>
+                        <email>ixiongdi@gmail.com</email>
+                    </properties>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>com/mycila/maven/plugin/license/templates/MIT.txt</header>
+                            <excludes>
+                                <exclude>**/README</exclude>
+                                <exclude>src/test/resources/**</exclude>
+                                <exclude>src/main/resources/**</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
                 </configuration>
             </plugin>
 

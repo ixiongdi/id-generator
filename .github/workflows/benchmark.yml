@@ -1,0 +1,62 @@
+name: Benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      benchmark-class:
+        description: 'Benchmark class to run (leave empty for all)'
+        required: false
+        default: ''
+  schedule:
+    # Run benchmarks weekly on Sunday at 02:00 UTC
+    - cron: '0 2 * * 0'
+
+jobs:
+  benchmark:
+    name: JMH Benchmark
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+      
+      - name: Build project
+        run: mvn clean package -B -ntp -DskipTests
+      
+      - name: Run JMH Benchmarks
+        run: |
+          cd id-generator-benchmark
+          if [ -n "${{ github.event.inputs.benchmark-class }}" ]; then
+            mvn exec:java -Dexec.mainClass="org.openjdk.jmh.Main" -Dexec.args="-rf json -rff ../benchmark-results.json ${{ github.event.inputs.benchmark-class }}"
+          else
+            mvn exec:java -Dexec.mainClass="org.openjdk.jmh.Main" -Dexec.args="-rf json -rff ../benchmark-results.json"
+          fi
+      
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmark-results.json
+          retention-days: 90
+      
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        if: github.ref == 'refs/heads/master'
+        with:
+          tool: 'jmh'
+          output-file-path: benchmark-results.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          # Show alert with commit comment on detecting possible performance regression
+          alert-threshold: '200%'
+          comment-on-alert: true
+          fail-on-alert: false

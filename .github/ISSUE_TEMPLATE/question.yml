@@ -1,0 +1,45 @@
+name: Question
+description: 提出使用相关的问题
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请确认您已查阅过文档和现有的Issue。对于简单的使用问题，可以考虑在Discussion中提问。
+  - type: textarea
+    id: question
+    attributes:
+      label: 问题描述
+      placeholder: 详细描述您遇到的问题或疑问
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 使用场景
+      placeholder: |
+        描述您的使用场景：
+        - 业务需求
+        - 技术栈
+        - 预期目标
+  - type: textarea
+    id: attempted
+    attributes:
+      label: 已尝试的方法
+      placeholder: 描述您已经尝试过的解决方法
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      placeholder: 例如 0.6.1
+  - type: dropdown
+    id: module
+    attributes:
+      label: 相关模块
+      options:
+        - id-generator-core
+        - id-generator-spring-redis
+        - id-generator-web
+        - id-generator-benchmark
+        - 其他
+        - 不确定
