@@ -51,7 +51,7 @@
         <jmh.version>1.37</jmh.version>
         <commons-codec.version>1.18.0</commons-codec.version>
         <mysql.version>9.4.0</mysql.version>
-        <junit.version>5.13.0</junit.version>
+        <junit.version>5.13.4</junit.version>
         <mybatis-flex.version>1.11.1</mybatis-flex.version>
     </properties>
 
