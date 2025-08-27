@@ -79,6 +79,7 @@
         <module>id-generator-service-spring-mvc</module>
         <module>id-generator-spring-data-jdbc</module>
         <module>id-generator-spring-data-jpa</module>
+        <module>id-generator-spring-ai-mcp-server</module>
     </modules>
 
 

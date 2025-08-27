@@ -1,0 +1,8 @@
+# Using spring-ai-starter-mcp-server
+spring:
+  ai:
+    mcp:
+      server:
+        name: stdio-mcp-server
+        version: 1.0.0
+        type: SYNC

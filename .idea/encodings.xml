@@ -19,6 +19,8 @@
     <file url="file://$PROJECT_DIR$/id-generator-service-spring-webflux/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/id-generator-service-vertx/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/id-generator-service-vertx/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/id-generator-spring-ai-mcp-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/id-generator-spring-ai-mcp-server/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/id-generator-spring-data-jdbc/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/id-generator-spring-data-jdbc/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/id-generator-spring-data-jpa/src/main/java" charset="UTF-8" />
