@@ -61,6 +61,8 @@
         <checkstyle-maven-plugin.version>3.5.0</checkstyle-maven-plugin.version>
         <dependency-check-maven.version>10.0.4</dependency-check-maven.version>
         <license-maven-plugin.version>4.6</license-maven-plugin.version>
+
+        <gpg.executable>C:/Program Files (x86)/GnuPG/bin/gpg.exe</gpg.executable>
     </properties>
 
     <modules>
@@ -243,27 +245,20 @@
                 </configuration>
             </plugin>
 
-            <!-- GPG签名配置 - 使用环境变量MAVEN_GPG_PASSPHRASE管理密码短语 -->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-gpg-plugin</artifactId>-->
-<!--                <version>3.2.7</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>sign-artifacts</id>-->
-<!--                        <phase>verify</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>sign</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <gpgArguments>-->
-<!--                                <arg>&#45;&#45;pinentry-mode</arg>-->
-<!--                                <arg>loopback</arg>-->
-<!--                            </gpgArguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.8</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <!-- 中央仓库发布插件 -->
             <plugin>
