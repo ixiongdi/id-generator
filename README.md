@@ -7,7 +7,7 @@
 [![Build](https://github.com/ixiongdi/id-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/ixiongdi/id-generator/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/ixiongdi/id-generator/actions/workflows/codeql.yml/badge.svg)](https://github.com/ixiongdi/id-generator/actions/workflows/codeql.yml)
 [![Codecov](https://codecov.io/gh/ixiongdi/id-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/ixiongdi/id-generator)
-[![Java Version](https://img.shields.io/badge/Java-8%2B%20(core)%20%7C%2021%2B%20(spring)-blue.svg)](https://www.oracle.com/java/technologies/)
+[![Java Version](https://img.shields.io/badge/Java-8%2B%20(core)%20%7C%2017%2B%20(spring)-blue.svg)](https://www.oracle.com/java/technologies/)
 [![GitHub stars](https://img.shields.io/github/stars/ixiongdi/id-generator.svg?style=social&label=Star)](https://github.com/ixiongdi/id-generator/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/ixiongdi/id-generator.svg?style=social&label=Fork)](https://github.com/ixiongdi/id-generator/network/members)
 
@@ -46,10 +46,10 @@
 | 模块 | 描述 | JDK版本 | 依赖 |
 |--------|------|----------|------|
 | `id-generator-core` | ⭐ 纯Java核心算法，38种ID生成策略 | 8+ | 无 |
-| `id-generator-spring-redis` | 🌐 分布式ID生成（Redisson） | 21+ | Spring Boot 3 |
-| `id-generator-web` | 🌍 示例Web应用，演示各种算法 | 21+ | Spring Boot 3 |
-| `id-generator-service-*` | 🔗 多框架接入（Spring MVC/WebFlux、Vert.x、Solon、Feat） | 21+ | 对应框架 |
-| `id-generator-benchmark` | ⚡ JMH基准测试，性能对比分析 | 21+ | JMH |
+| `id-generator-spring-redis` | 🌐 分布式ID生成（Redisson） | 17+ | Spring Boot 3 |
+| `id-generator-web` | 🌍 示例Web应用，演示各种算法 | 17+ | Spring Boot 3 |
+| `id-generator-service-*` | 🔗 多框架接入（Spring MVC/WebFlux、Vert.x、Solon、Feat） | 17+ | 对应框架 |
+| `id-generator-benchmark` | ⚡ JMH基准测试，性能对比分析 | 17+ | JMH |
 | `id-generator-bom`/`id-generator-dependencies` | 📦 BOM与依赖版本管理 | - | - |
 
 ## 🚀 快速开始
@@ -63,7 +63,7 @@
  <dependency>
     <groupId>uno.xifan</groupId>
     <artifactId>id-generator-core</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
 </dependency>
 ```
 
@@ -132,14 +132,14 @@ public class Main {
 
 ### 分布式版本 (Spring Redis)
 
-适合分布式系统的ID生成算法，依赖Java 21+、Spring Boot 3.4.5+和Redisson 3.46.0+。
+适合分布式系统的ID生成算法，依赖Java 17+、Spring Boot 3.4.5+和Redisson 3.46.0+。
 
 **添加Maven依赖：**
 ```xml
  <dependency>
     <groupId>uno.xifan</groupId>
     <artifactId>id-generator-spring-redis</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
 </dependency>
 ```
 
@@ -256,7 +256,7 @@ public class IdGeneratorDemoApplication implements CommandLineRunner {
 ### 测试环境
 - **CPU**: Intel i7-12700K
 - **内存**: 32GB DDR4
-- **JDK**: OpenJDK 21
+- **JDK**: OpenJDK 17
 - **测试方式**: JMH Throughput mode
 
 ### 主要算法性能对比

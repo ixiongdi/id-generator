@@ -15,7 +15,7 @@
 
 ## 开发环境
 - JDK 8+（用于 `id-generator-core`）
-- JDK 21+（用于 Spring/Vert.x/Solon 相关模块）
+- JDK 17+（用于 Spring/Vert.x/Solon 相关模块）
 - Maven 3.8+
 - IntelliJ IDEA（推荐安装 Checkstyle/SpotBugs 插件）
 

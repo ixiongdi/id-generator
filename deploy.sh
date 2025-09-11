@@ -8,7 +8,7 @@ APP_NAME="id-generator"
 REMOTE_HOST="xifan.uno"
 REMOTE_USER="root"
 REMOTE_DIR="/opt/apps/${APP_NAME}"
-JAR_NAME="id-generator-web-0.7.0.jar"
+JAR_NAME="id-generator-web-0.8.0.jar"
 JAVA_OPTS="-Xms512m -Xmx512m -XX:+HeapDumpOnOutOfMemoryError"
 
 # 日志函数

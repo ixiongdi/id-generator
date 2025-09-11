@@ -5,7 +5,7 @@
     <parent>
         <artifactId>id-generator-parent</artifactId>
         <groupId>uno.xifan</groupId>
-        <version>0.7.0</version>
+        <version>0.8.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,29 +30,29 @@
             <groupId>uno.xifan</groupId>
             <artifactId>id-generator-core</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-server</artifactId>
         </dependency>
-        
+
         <!-- 添加Spring AI工具自动配置依赖以支持@Tool注解 -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-autoconfigure-model-tool</artifactId>
         </dependency>
-        
+
         <!-- 添加Spring AI模型依赖 -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-model</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
-        
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
