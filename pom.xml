@@ -273,9 +273,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
-                    <autoPublish>true</autoPublish>
-                    <waitUntil>published</waitUntil>
-                    <checksums>all</checksums>
                 </configuration>
             </plugin>
 
@@ -290,17 +287,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <distributionManagement>
-        <site>
-            <id>github</id>
-            <url>scm:git:https://github.com/ixiongdi/id-generator.git</url>
-        </site>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/ixiongdi/id-generator</url>
-        </repository>
-    </distributionManagement>
 
 </project>
