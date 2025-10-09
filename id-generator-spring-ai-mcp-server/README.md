@@ -153,7 +153,7 @@ mvn clean package
 - Spring Web MVC
 - Jackson JSON 处理
 - Maven 构建工具
-- Java 17+
+- Java 25+
 
 ## 许可证
 
