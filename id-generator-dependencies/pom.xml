@@ -52,7 +52,7 @@
         <commons-codec.version>1.18.0</commons-codec.version>
         <mysql.version>9.4.0</mysql.version>
         <junit.version>5.13.4</junit.version>
-        <mybatis-flex.version>1.11.1</mybatis-flex.version>
+        <mybatis-flex.version>1.11.3</mybatis-flex.version>
         <gpg.executable>C:/Program Files (x86)/GnuPG/bin/gpg.exe</gpg.executable>
     </properties>
 
