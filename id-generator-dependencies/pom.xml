@@ -46,7 +46,7 @@
     <properties>
         <spring-boot.version>3.5.4</spring-boot.version>
         <redisson.version>3.51.0</redisson.version>
-        <hutool.version>5.8.39</hutool.version>
+        <hutool.version>5.8.40</hutool.version>
         <guava.version>33.4.8-jre</guava.version>
         <jmh.version>1.37</jmh.version>
         <commons-codec.version>1.18.0</commons-codec.version>
